@@ -37,34 +37,32 @@ const sortTree = (data: any) => {
     data.forEach((node: any) => sortTree(node.children));
 };
 
-const Sidebar = () => {
-    const [data, setData] = useState([]);
 
-    useEffect(() => {
-        fetch('/departments')
-            .then((response) => response.json())
-            .then((data) => setData(data))
-            .catch((error) => console.error('Error fetching data:', error));
-    }, []);
+type propsType = {
+    departments: Array<any>;
+}
+const Sidebar = (props:propsType) => {
+    const test = props.departments
 
+    
     return (
         <main>
             <div className='p-5'>
-                <SimpleTreeView
+                {<SimpleTreeView
                     aria-label="customized"
                     defaultExpandedItems={['1']}
                     sx={{ overflowX: 'hidden', minHeight: 270, flexGrow: 1, maxWidth: 500, width: 250 }}
                 >
                     {/* Render data */}
-                    {data.map((node: any) => (
-                        <StyledTreeItem key={node.id} itemId={node.id} label={node.label}>
+                    {props.departments.map((node: any) => (
+                        <StyledTreeItem key={node.org_id} itemId={node.org_id} label={node.label}>
                             {node.children &&
                                 node.children.map((child: any) => (
-                                    <StyledTreeItem key={child.id} itemId={child.id} label={child.label} />
+                                    <StyledTreeItem key={child.org_id} itemId={child.org_id} label={child.label} />
                                 ))}
                         </StyledTreeItem>
                     ))}
-                </SimpleTreeView>
+                </SimpleTreeView>}
             </div>
         </main>
     );
