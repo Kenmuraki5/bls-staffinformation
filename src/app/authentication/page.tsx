@@ -1,8 +1,15 @@
+'use client'
 import React from 'react';
 import { Button, TextField, Container, Typography, Box } from '@mui/material';
-import Image from 'next/image';
+import { login } from '../lib/action';
+import { redirect } from 'next/navigation';
 
 export default function Auth() {
+
+  const sigin = async (formData:FormData) => {
+    await login(formData)
+    redirect("/bualuang/BLS")
+  }
   return (
     <Container maxWidth="sm">
       <Box
@@ -17,18 +24,16 @@ export default function Auth() {
         }}
       >
         <Typography component="h1" variant="h5">
-          <Image src="/bls-header-logo.png" alt="" width={250} height={250} style={{ width: '100%', height: 'auto' }} priority />
-          <p className='text-center'>Sign In</p>
+          Sign In
         </Typography>
-        <Box component="form" sx={{ mt: 1 }}>
+        <form action={sigin}>
           <TextField
             margin="normal"
             required
             fullWidth
             id="email"
-            label="Email Address or StaffID"
             name="email"
-            autoComplete="email"
+            label="Email Address or StaffID"
             autoFocus
           />
           <TextField
@@ -39,7 +44,7 @@ export default function Auth() {
             label="Password"
             type="password"
             id="password"
-            autoComplete="current-password"
+            autoFocus
           />
           <Button
             type="submit"
@@ -49,7 +54,7 @@ export default function Auth() {
           >
             Sign In
           </Button>
-        </Box>
+        </form>
       </Box>
     </Container>
   );

@@ -5,49 +5,11 @@ import { SimpleTreeView } from '@mui/x-tree-view';
 import { TreeItem, treeItemClasses } from '@mui/x-tree-view/TreeItem';
 import { styled, alpha } from '@mui/material/styles';
 import dynamic from 'next/dynamic';
-import { CircularProgress } from '@mui/material';
+import { Box, CircularProgress } from '@mui/material';
+import OrganizationNode from '@/types/organization';
+import { DashboardProps, StyledTreeItemProps } from './type';
+import handleSearch from '@/app/lib/search';
 
-interface OrganizationNode {
-  organizationId: string;
-  organizationUnit: string;
-  domainId: string;
-  children?: OrganizationNode[];
-}
-
-interface EmployeeNode {
-  EmpID: string
-  OrganizationID: string
-  OrganizationUnit: string
-  BranchID: string
-  JobID: string
-  ManagerID: string
-  EnTitle: string
-  EnFirstName: string
-  EnLastName: string
-  Nickname: string
-  ThTitle: string
-  ThFirstName: string
-  ThLastName: string
-  Email: string
-  DerivativeTrader: string
-  DerivativeLicense: string
-  SingleTrader: string
-  SingleLicense: string
-  OtherLicense: string
-  StartWorkingDate: string
-  LastWorkingDate: string
-  EffectiveDate: string
-  CorporationTitle: string
-  ExtensionCode: string
-}
-interface DashboardProps {
-  organizations: OrganizationNode[];
-  employees: EmployeeNode[];
-}
-
-interface StyledTreeItemProps {
-  isSelected: boolean;
-}
 
 const StyledTreeItem = styled(({ isSelected, ...other }: StyledTreeItemProps & React.ComponentProps<typeof TreeItem>) => (
   <TreeItem {...other} />
@@ -101,12 +63,15 @@ const getAllIds = (data: OrganizationNode[]): string[] => {
 //   return data.map((node) => node.organizationId);
 // };
 const Search = dynamic(() => import('@/components/search'));
-const EmployeeTable = dynamic(() => import('@/components/employeetable'),{
-  ssr:false,
-  loading: () => <CircularProgress/>
+const EmployeeTable = dynamic(() => import('@/components/employeetable'), {
+  ssr: false,
+  loading: () =>
+    <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100%' }}>
+      <CircularProgress />
+    </Box>
 });
 
-const Dashboard: React.FC<DashboardProps> = ({organizations, employees}) => {
+const Dashboard: React.FC<DashboardProps> = ({ organizations, employees }) => {
   const router = useRouter();
   const searchParams = useSearchParams();
   const initialOrganizationId = searchParams.get('organizationId');
@@ -131,6 +96,11 @@ const Dashboard: React.FC<DashboardProps> = ({organizations, employees}) => {
     setSelectedOrganizationId(orgId);
     router.replace(`?domain=${domainId}&organizationId=${orgId}`);
   };
+
+  const search = async () => {
+    employees = await handleSearch(searchParams?.searchby, searchParams?.searchinput, searchParams?.domain)
+    console.log(employees)
+  }
 
   const renderTree = (nodes: OrganizationNode) => (
     <StyledTreeItem
@@ -157,7 +127,7 @@ const Dashboard: React.FC<DashboardProps> = ({organizations, employees}) => {
           </SimpleTreeView>
         </div>
         <div className='w-full m-5 border-2 border rounded bg-white'>
-          <Search />
+          <Search search={search}/>
           <div className='m-3'>
             <EmployeeTable dataEmployees={employees} />
           </div>

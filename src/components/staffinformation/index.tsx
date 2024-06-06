@@ -1,39 +1,9 @@
-'use client'
 import * as React from 'react';
-import { useEffect, useState } from 'react';
-import { useParams } from 'next/navigation';
 import Image from 'next/image';
+import { StaffInformationProps } from './type';
 
-async function getEmployee(empId: string) {
-  try {
-    const res = await fetch(`http://localhost:8080/v1/employee/${empId}`);
-    if (!res.ok) {
-      throw new Error('Failed to fetch employees');
-    }
-    return await res.json();
-  } catch (error) {
-    console.error('Error fetching employees:', error);
-    return [];
-  }
-}
 
-const StaffInformation = () => {
-  const [data, setData] = useState<any>(null)
-  const params = useParams<{ id: string; }>()
-
-  useEffect(() => {
-    if (params.id) {
-      getEmployee(params.id).then(fetchedData => {
-        console.log(fetchedData);
-        setData(fetchedData);
-      });
-    }
-  }, []);
-
-  if (!data) {
-    return <div>Loading...</div>;
-  }
-
+const StaffInformation: React.FC<StaffInformationProps> = ({employees}) => {
   return (
     <div className="flex flex-col md:flex-row items-start justify-between p-4 md:p-6 rounded-lg shadow-md bg-white text-black">
       <fieldset className="w-full border-2 p-4 md:p-5 flex flex-col md:flex-row">
@@ -41,47 +11,47 @@ const StaffInformation = () => {
         <div className="flex-1">
           <div className="mb-4 flex flex-col md:flex-row md:items-center">
             <label className="text-base font-semibold w-full md:w-48 xl:w-64">Staff ID :</label>
-            <span className="ml-2 text-base w-full">{data.employee.empId}</span>
+            <span className="ml-2 text-base w-full">{employees.empId}</span>
           </div>
           <div className="mb-4 flex flex-col md:flex-row md:items-center">
             <label className="text-base font-semibold w-full md:w-48 xl:w-64">Extension Code :</label>
-            <span className="ml-2 text-base w-full">{data.employee.extensionCode}</span>
+            <span className="ml-2 text-base w-full">{employees.extensionCode}</span>
           </div>
           <div className="mb-4 flex flex-col md:flex-row md:items-center">
             <label className="text-base font-semibold w-full md:w-48 xl:w-64">Direct Line :</label>
-            <span className="ml-2 text-base w-full">02618{data.employee.extensionCode}</span>
+            <span className="ml-2 text-base w-full">02618{employees.extensionCode}</span>
           </div>
           <div className="mb-4 flex flex-col md:flex-row md:items-center">
             <label className="text-base font-semibold w-full md:w-48 xl:w-64">Email :</label>
-            <span className="ml-2 text-base w-full">{data.employee.email}</span>
+            <span className="ml-2 text-base w-full">{employees.email}</span>
           </div>
           <legend className="mt-5">English Name</legend>
           <hr />
           <div className="mb-4 flex flex-col md:flex-row md:items-center">
             <label className="text-base font-semibold w-full md:w-48 xl:w-64">Title :</label>
-            <span className="ml-2 text-base w-full">{data.employee.enTitle}</span>
+            <span className="ml-2 text-base w-full">{employees.enTitle}</span>
           </div>
           <div className="mb-4 flex flex-col md:flex-row md:items-center">
             <label className="text-base font-semibold w-full md:w-48 xl:w-64">First Name :</label>
-            <span className="ml-2 text-base w-full">{data.employee.enFirstName}</span>
+            <span className="ml-2 text-base w-full">{employees.enFirstName}</span>
           </div>
           <div className="mb-4 flex flex-col md:flex-row md:items-center">
             <label className="text-base font-semibold w-full md:w-48 xl:w-64">Last Name :</label>
-            <span className="ml-2 text-base w-full">{data.employee.enLastName}</span>
+            <span className="ml-2 text-base w-full">{employees.enLastName}</span>
           </div>
           <legend className="mt-5">ชื่อไทย</legend>
           <hr />
           <div className="mb-4 flex flex-col md:flex-row md:items-center">
             <label className="text-base font-semibold w-full md:w-48 xl:w-64">คำนำหน้า :</label>
-            <span className="ml-2 text-base w-full">{data.employee.thTitle}</span>
+            <span className="ml-2 text-base w-full">{employees.thTitle}</span>
           </div>
           <div className="mb-4 flex flex-col md:flex-row md:items-center">
             <label className="text-base font-semibold w-full md:w-48 xl:w-64">ชื่อจริง :</label>
-            <span className="ml-2 text-base w-full">{data.employee.thFirstName}</span>
+            <span className="ml-2 text-base w-full">{employees.thFirstName}</span>
           </div>
           <div className="mb-4 flex flex-col md:flex-row md:items-center">
             <label className="text-base font-semibold w-full md:w-48 xl:w-64">นามสกุล :</label>
-            <span className="ml-2 text-base w-full">{data.employee.thLastName}</span>
+            <span className="ml-2 text-base w-full">{employees.thLastName}</span>
           </div>
           <div className="mb-4 flex flex-col md:flex-row md:items-center">
             <label className="text-base font-semibold w-full md:w-48 xl:w-64">Nickname :</label>
@@ -90,7 +60,7 @@ const StaffInformation = () => {
           <hr className="mt-5 mb-5" />
           <div className="mb-4 flex flex-col md:flex-row md:items-center">
             <label className="text-base font-semibold w-full md:w-48 xl:w-64">Corporation Title :</label>
-            <span className="ml-2 text-base w-full">{data.employee.corporationTitle}</span>
+            <span className="ml-2 text-base w-full">{employees.corporationTitle}</span>
           </div>
           <div className="mb-4 flex flex-col md:flex-row md:items-center">
             <label className="text-base font-semibold w-full md:w-48 xl:w-64">Job Title :</label>

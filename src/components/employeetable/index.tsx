@@ -28,7 +28,7 @@ const EmployeeTable: React.FC<PropsType> = ({ dataEmployees }) => {
 
   const handleRowClick = (params: GridRowParams) => {
     const { empId } = params.row;
-    router.push(`StaffInformation/${empId}`);  // Navigate to the employee detail page
+    router.push(`/StaffInformation/${empId}`);  // Navigate to the employee detail page
   };
 
   return (
