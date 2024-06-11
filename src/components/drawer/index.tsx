@@ -113,6 +113,9 @@ export default function PersistentDrawerLeft() {
                                 <div>
                                     <p className="p-5 font-bold xl:text-xl md:text-xl text-rose-600">STAFFINFORMATION</p>
                                 </div>
+                                <div>
+                                    <p></p>
+                                </div>
                             </div>
                         </section>
                     </Typography>

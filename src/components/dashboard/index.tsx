@@ -59,9 +59,6 @@ const getAllIds = (data: OrganizationNode[]): string[] => {
   return ids;
 };
 
-// const getRootIds = (data: OrganizationNode[]): string[] => {
-//   return data.map((node) => node.organizationId);
-// };
 const Search = dynamic(() => import('@/components/search'));
 const EmployeeTable = dynamic(() => import('@/components/employeetable'), {
   ssr: false,
@@ -97,11 +94,6 @@ const Dashboard: React.FC<DashboardProps> = ({ organizations, employees }) => {
     router.replace(`?domain=${domainId}&organizationId=${orgId}`);
   };
 
-  const search = async () => {
-    employees = await handleSearch(searchParams?.searchby, searchParams?.searchinput, searchParams?.domain)
-    console.log(employees)
-  }
-
   const renderTree = (nodes: OrganizationNode) => (
     <StyledTreeItem
       key={nodes.organizationId}
@@ -127,7 +119,7 @@ const Dashboard: React.FC<DashboardProps> = ({ organizations, employees }) => {
           </SimpleTreeView>
         </div>
         <div className='w-full m-5 border-2 border rounded bg-white'>
-          <Search search={search}/>
+          <Search />
           <div className='m-3'>
             <EmployeeTable dataEmployees={employees} />
           </div>
