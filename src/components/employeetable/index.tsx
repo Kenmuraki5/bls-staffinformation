@@ -21,10 +21,6 @@ type PropsType = {
 
 const EmployeeTable: React.FC<PropsType> = ({ dataEmployees }) => {
   const router = useRouter();  // Use useRouter
-  const data = dataEmployees?.map((employee: any, index: any) => ({
-    id: index + 1,
-    ...employee,
-  }));
 
   const handleRowClick = (params: GridRowParams) => {
     const { empId } = params.row;
@@ -38,7 +34,8 @@ const EmployeeTable: React.FC<PropsType> = ({ dataEmployees }) => {
       </div>
       <DataGrid
         autoHeight
-        rows={data || []}
+        getRowId={(row) => row.empId}
+        rows={dataEmployees || []}
         columns={columns}
         slots={{ toolbar: GridToolbar }}
         onRowClick={handleRowClick}

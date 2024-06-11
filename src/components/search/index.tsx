@@ -2,9 +2,8 @@
 import { Button, FormControl, InputLabel, MenuItem, Select, SelectChangeEvent, TextField } from '@mui/material';
 import { useParams, useRouter } from 'next/navigation';
 import React, { useState } from 'react';
-import { SearchProps } from './type';
 
-const Search: React.FC<SearchProps> = ({search}) => {
+const Search = () => {
     const {domain} = useParams<{ domain: string; }>()
     const [searchBy, setSearchBy] = useState('');
     const [searchInput, setSearchInput] = useState('');
@@ -23,8 +22,8 @@ const Search: React.FC<SearchProps> = ({search}) => {
 
     const handleKeyDown = async (event: React.KeyboardEvent) => {
         if (event.key === 'Enter') {
-            router.replace(`?searchby=${searchBy}&domain=${domain}&searchinput=${searchInput}`)
-            search();
+            router.replace(`?searchBy=${searchBy}&domain=${domain}&searchInput=${searchInput}`)
+            // search();
         }
     };
 

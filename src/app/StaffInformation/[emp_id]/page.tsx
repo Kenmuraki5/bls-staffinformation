@@ -15,7 +15,7 @@ const Search = dynamic(() => import('@/components/search'));
 async function getEmployee(empId: string) {
     try {
         const token = await getToken("session")
-        const res = await fetch(`http://localhost:8080/v1/employee/${empId}`, {
+        const res = await fetch(`http://localhost:8080/staffinformation/employee/${empId}`, {
             headers: { 'authorization': token }
         });
         if (!res.ok) {
@@ -28,6 +28,12 @@ async function getEmployee(empId: string) {
     }
 }
 
+// async function search(searchby: string ,empId: string, employee: any) {
+//     if (searchby == "name"){
+//         console.log
+//     }
+// }
+
 export default async function page({
     params,
     searchParams,
@@ -35,7 +41,7 @@ export default async function page({
     params: { emp_id: string };
     searchParams?: { [key: string]: string | string[] | undefined };
 }) {
-    const employees: any = await getEmployee(params.emp_id)
+    const employees: any = await getEmployee(params.emp_id);
     return (
         <div className="min-h-screen flex flex-col">
             <main className="flex-1 bg-white">
