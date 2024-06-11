@@ -1,10 +1,10 @@
 'use client'
 import * as React from 'react';
-import { DataGrid, GridRowsProp, GridColDef, GridToolbar, GridRowParams } from '@mui/x-data-grid';
+import { DataGrid, GridColDef, GridToolbar, GridRowParams } from '@mui/x-data-grid';
 import { useRouter } from 'next/navigation';
 
 const columns: GridColDef[] = [
-  { field: 'empId', headerName: 'StaffID', minWidth: 100, maxWidth: 200, flex: 1, },
+  { field: 'empId', headerName: 'StaffID', minWidth: 100, maxWidth: 80, flex: 1, },
   { field: 'thFirstName', headerName: 'Thai name', minWidth: 100, maxWidth: 200, flex: 1 },
   { field: 'enFirstName', headerName: 'eng name', minWidth: 100, maxWidth: 200, flex: 1 },
   { field: 'email', headerName: 'Email', minWidth: 100, maxWidth: 200, flex: 1 },
@@ -20,11 +20,11 @@ type PropsType = {
 };
 
 const EmployeeTable: React.FC<PropsType> = ({ dataEmployees }) => {
-  const router = useRouter();  // Use useRouter
+  const router = useRouter();
 
   const handleRowClick = (params: GridRowParams) => {
     const { empId } = params.row;
-    router.push(`/StaffInformation/${empId}`);  // Navigate to the employee detail page
+    router.push(`/StaffInformation/${empId}`);
   };
 
   return (

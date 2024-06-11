@@ -10,7 +10,6 @@ const StaffInformation = dynamic(() => import('@/components/staffinformation'), 
         </Box>
 });
 const PersistentDrawerLeft = dynamic(() => import('@/components/drawer'));
-const Search = dynamic(() => import('@/components/search'));
 
 async function getEmployee(empId: string) {
     try {
@@ -28,12 +27,6 @@ async function getEmployee(empId: string) {
     }
 }
 
-// async function search(searchby: string ,empId: string, employee: any) {
-//     if (searchby == "name"){
-//         console.log
-//     }
-// }
-
 export default async function page({
     params,
     searchParams,
@@ -49,8 +42,7 @@ export default async function page({
                 <hr />
                 <section id='Heirachy'>
                     <div className='flex w-screen overflow-auto'>
-                        <div className='w-full m-5 border-2 border rounded'>
-                            <Search />
+                        <div className='w-full'>
                             <div className='m-3'>
                                 <StaffInformation employees={employees.employee} />
                             </div>

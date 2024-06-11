@@ -11,7 +11,7 @@ const Home = async ({
   params,
   searchParams,
 }: {
-  params: { domain: string };
+  params: { domain: string, orgId: string };
   searchParams?: { [key: string]: string | string[] | undefined };
 }) => {
   const domain = params.domain;
@@ -20,13 +20,12 @@ const Home = async ({
   let employees: any = {};
   
   if (!searchParams?.searchBy) {
-    console.log("hello")
-    employees = await getEmployees(searchParams?.domain as string, searchParams?.organizationId as string);
+    employees = await getEmployees(params.domain as string, searchParams?.organizationId as string);
   } else {
     employees = await handleSearch(
       searchParams?.searchBy as string,
       searchParams?.searchInput as string,
-      searchParams?.domain as string
+      params?.domain as string
     );
   }
 

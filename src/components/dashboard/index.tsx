@@ -8,7 +8,6 @@ import dynamic from 'next/dynamic';
 import { Box, CircularProgress } from '@mui/material';
 import OrganizationNode from '@/types/organization';
 import { DashboardProps, StyledTreeItemProps } from './type';
-import handleSearch from '@/app/lib/search';
 
 
 const StyledTreeItem = styled(({ isSelected, ...other }: StyledTreeItemProps & React.ComponentProps<typeof TreeItem>) => (
@@ -91,7 +90,7 @@ const Dashboard: React.FC<DashboardProps> = ({ organizations, employees }) => {
   const handleTreeItemClick = (event: React.MouseEvent, orgId: string, domainId: string) => {
     event.stopPropagation();
     setSelectedOrganizationId(orgId);
-    router.replace(`?domain=${domainId}&organizationId=${orgId}`);
+    router.push(`/?organizationId=${orgId}`);
   };
 
   const renderTree = (nodes: OrganizationNode) => (

@@ -1,5 +1,4 @@
 'use server'
-import OrganizationNode from "@/types/organization";
 
 export default async function getDepartments(domainID: string | string[] | undefined | null) {
   if (domainID == undefined) {

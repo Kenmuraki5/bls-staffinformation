@@ -1,13 +1,11 @@
 'use client'
 import { Button, FormControl, InputLabel, MenuItem, Select, SelectChangeEvent, TextField } from '@mui/material';
-import { useParams, useRouter } from 'next/navigation';
+import { useRouter } from 'next/navigation';
 import React, { useState } from 'react';
 
 const Search = () => {
-    const {domain} = useParams<{ domain: string; }>()
     const [searchBy, setSearchBy] = useState('');
     const [searchInput, setSearchInput] = useState('');
-    const [searchResult, setSearchResult] = useState(null);
     const router = useRouter();
 
     const handleChange = (event: SelectChangeEvent) => {
@@ -22,11 +20,13 @@ const Search = () => {
 
     const handleKeyDown = async (event: React.KeyboardEvent) => {
         if (event.key === 'Enter') {
-            router.replace(`?searchBy=${searchBy}&domain=${domain}&searchInput=${searchInput}`)
-            // search();
+            search();
         }
     };
-
+    
+    const search = () => {
+        router.replace(`?searchBy=${searchBy}&searchInput=${searchInput}`);
+    }
 
     return (
         <div className="m-3">
@@ -43,9 +43,9 @@ const Search = () => {
                         label="Search By"
                         onChange={handleChange}
                     >
-                        <MenuItem value={"staffId"}>Staff ID</MenuItem>
-                        <MenuItem value={"name"}>Name</MenuItem>
-                        <MenuItem value={"organizationunit"}>Organization Unit</MenuItem>
+                        <MenuItem value={"employeeId"}>Staff ID</MenuItem>
+                        <MenuItem value={"employeeName"}>Name</MenuItem>
+                        <MenuItem value={"organizationUnit"}>Organization Unit</MenuItem>
                     </Select>
                 </FormControl>
                 {searchBy && (
@@ -60,17 +60,11 @@ const Search = () => {
                             onKeyDown={handleKeyDown}
                         />
                         <Button sx={{ m: 2 }} onClick={() => {
-                            
+                            search();
                         }}>Search</Button>
                     </>
                 )}
             </div>
-            {searchResult && (
-                <div className="m-3">
-                    <h3>Search Results:</h3>
-                    <pre>{JSON.stringify(searchResult, null, 2)}</pre>
-                </div>
-            )}
         </div>
     );
 }
