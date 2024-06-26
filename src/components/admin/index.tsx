@@ -22,7 +22,7 @@ import {
   GridSlots,
 } from '@mui/x-data-grid';
 import { useParams } from 'next/navigation';
-import { getToken } from '@/app/lib/action';
+import { getRole, getToken } from '@/app/lib/action';
 import { AdminEmployeemanagementProps } from './type';
 import EmployeeNode from '@/types/employee';
 import { Organization } from '@/types/organization';
@@ -30,6 +30,9 @@ import { Domain } from 'domain';
 import Manager from '@/types/manager';
 import Branch from '@/types/branch';
 import { Alert, Snackbar } from '@mui/material';
+import Job from '@/types/job';
+import UploadPicture from '../uploadpicture';
+import Image from 'next/image';
 
 interface EditToolbarProps {
   setRows: (newRows: (oldRows: GridRowsProp) => GridRowsProp) => void;
@@ -96,6 +99,11 @@ function EditToolbar(props: EditToolbarProps) {
         ...oldRows,
         { branchId: id, branchName: '', location: '', contact: null, isNew: true }
       ]);
+    } else if (type === "job") {
+      setRows((oldRows) => [
+        ...oldRows,
+        { jobId: id, jobTitle: '', isNew: true }
+      ]);
     }
 
     setRowModesModel((oldModel) => ({
@@ -113,12 +121,29 @@ function EditToolbar(props: EditToolbarProps) {
   );
 }
 
-export const StartEditButtonGrid: React.FC<AdminEmployeemanagementProps & { type: 'emp' | 'org' | 'domain' | 'branch' | "manager" }> = ({ data, type }) => {
+export const StartEditButtonGrid: React.FC<AdminEmployeemanagementProps & { type: 'emp' | 'org' | 'domain' | 'branch' | "manager" | "job" }> = ({ data, type }) => {
   const params = useParams()
   const [rows, setRows] = React.useState<any>(data);
   const [rowModesModel, setRowModesModel] = React.useState<GridRowModesModel>({});
   const [snackbarOpen, setSnackbarOpen] = React.useState(false);
   const [alertMessage, setAlertMessage] = React.useState('');
+  const [employeeId, setEmployeeId] = React.useState('');
+  const [role, setRole] = React.useState(null);
+
+  const [open, setOpen] = React.useState(false);
+
+  React.useEffect(() => {
+    async function fetchRole() {
+        try {
+            const roleData = await getRole(); 
+            setRole(roleData.role);
+        } catch (error) {
+            console.error('Error fetching role:', error);
+        }
+    }
+
+    fetchRole();
+}, []);
 
   const handleRowEditStop: GridEventListener<'rowEditStop'> = (params, event) => {
     if (params.reason === GridRowEditStopReasons.rowFocusOut) {
@@ -199,7 +224,7 @@ export const StartEditButtonGrid: React.FC<AdminEmployeemanagementProps & { type
         },
         body: JSON.stringify(payloadData)
       });
-  
+
       if (!res.ok) {
         throw new Error(`Failed to update ${params.manage}`);
       }
@@ -226,38 +251,67 @@ export const StartEditButtonGrid: React.FC<AdminEmployeemanagementProps & { type
     setRowModesModel(newRowModesModel);
   };
 
+  const handleClickOpen = (id: any) => {
+    setEmployeeId(id);
+    setOpen(true);
+  };
+  const handleClose = () => {
+    setOpen(false);
+  };
+
   const columns_emp: GridColDef[] = [
-    { field: 'empId', headerName: 'StaffID', minWidth: 100, maxWidth: 80, flex: 1, editable: true, },
-    { field: 'thTitle', headerName: 'thTitle', minWidth: 100, maxWidth: 80, flex: 1, editable: true, },
-    { field: 'thFirstName', headerName: 'Thai name', minWidth: 100, maxWidth: 200, flex: 1, editable: true, },
-    { field: 'thLastName', headerName: 'Thai Last name', minWidth: 100, maxWidth: 200, flex: 1, editable: true, },
-    { field: 'enTitle', headerName: 'EnTitle', minWidth: 100, maxWidth: 200, flex: 1, editable: true, },
-    { field: 'enFirstName', headerName: 'eng Name', minWidth: 100, maxWidth: 200, flex: 1, editable: true, },
-    { field: 'enLastName', headerName: 'eng LastName', minWidth: 100, maxWidth: 200, flex: 1, editable: true, },
-    { field: 'nickname', headerName: 'NickName', minWidth: 100, maxWidth: 200, flex: 1, editable: true, },
-    { field: 'email', headerName: 'Email', minWidth: 100, maxWidth: 200, flex: 1, editable: true, },
-    { field: 'organizationId', headerName: 'Department', minWidth: 100, maxWidth: 200, flex: 1, editable: true, },
-    { field: 'corporationTitle', headerName: 'CorporationTitle', minWidth: 100, maxWidth: 200, flex: 1, editable: true, },
-    { field: 'branchId', headerName: 'BranchId', minWidth: 100, maxWidth: 80, flex: 1, editable: true, },
-    { field: 'jobId', headerName: 'jobId', minWidth: 100, maxWidth: 80, flex: 1, editable: true, },
-    { field: 'extensionCode', headerName: 'ExtensionCode', minWidth: 100, maxWidth: 120, flex: 1, editable: true, },
-    { field: 'derivativeTrader', headerName: 'derivativeTrader', minWidth: 100, maxWidth: 120, flex: 1, editable: true, },
-    { field: 'derivativeLicense', headerName: 'derivativeLicense', minWidth: 100, maxWidth: 120, flex: 1, editable: true, },
-    { field: 'singleTrader', headerName: 'singleTrader', minWidth: 100, maxWidth: 120, flex: 1, editable: true, },
-    { field: 'singleLicense', headerName: 'singleLicense', minWidth: 100, maxWidth: 120, flex: 1, editable: true, },
-    { field: 'otherLicense', headerName: 'otherLicense', minWidth: 100, maxWidth: 120, flex: 1, editable: true, },
-    { field: 'startWorkingDate', headerName: 'startWorkingDate', minWidth: 100, maxWidth: 120, flex: 1, editable: true, },
-    { field: 'lastWorkingDate', headerName: 'lastWorkingDate', minWidth: 100, maxWidth: 120, flex: 1, editable: true, },
-    { field: 'effectiveDate', headerName: 'effectiveDate', minWidth: 100, maxWidth: 120, flex: 1, editable: true, },
+    { field: 'empId', headerName: 'StaffID', minWidth: 100, maxWidth: 80, flex: 1, headerAlign: 'center', headerClassName: 'super-app-theme--header', editable: true, },
+    { field: 'thTitle', headerName: 'thTitle', minWidth: 100, maxWidth: 80, flex: 1, headerAlign: 'center', headerClassName: 'super-app-theme--header', editable: true, },
+    { field: 'thFirstName', headerName: 'Thai name', minWidth: 100, maxWidth: 200, flex: 1, headerAlign: 'center', headerClassName: 'super-app-theme--header', editable: true, },
+    { field: 'thLastName', headerName: 'Thai Last name', minWidth: 100, maxWidth: 200, flex: 1, headerAlign: 'center', headerClassName: 'super-app-theme--header', editable: true, },
+    { field: 'enTitle', headerName: 'EnTitle', minWidth: 100, maxWidth: 200, flex: 1, headerAlign: 'center', headerClassName: 'super-app-theme--header', editable: true, },
+    { field: 'enFirstName', headerName: 'eng Name', minWidth: 100, maxWidth: 200, flex: 1, headerAlign: 'center', headerClassName: 'super-app-theme--header', editable: true, },
+    { field: 'enLastName', headerName: 'eng LastName', minWidth: 100, maxWidth: 200, flex: 1, headerAlign: 'center', headerClassName: 'super-app-theme--header', editable: true, },
+    { field: 'nickname', headerName: 'NickName', minWidth: 100, maxWidth: 200, flex: 1, headerAlign: 'center', headerClassName: 'super-app-theme--header', editable: true, },
+    { field: 'email', headerName: 'Email', minWidth: 100, maxWidth: 200, flex: 1, headerAlign: 'center', headerClassName: 'super-app-theme--header', editable: true, },
+    { field: 'organizationId', headerName: 'Department', minWidth: 100, maxWidth: 200, flex: 1, headerAlign: 'center', headerClassName: 'super-app-theme--header', editable: true, },
+    { field: 'corporationTitle', headerName: 'CorporationTitle', minWidth: 100, maxWidth: 200, flex: 1, headerAlign: 'center', headerClassName: 'super-app-theme--header', editable: true, },
+    { field: 'branchId', headerName: 'BranchId', minWidth: 100, maxWidth: 80, flex: 1, headerAlign: 'center', headerClassName: 'super-app-theme--header', editable: true, },
+    { field: 'jobId', headerName: 'jobId', minWidth: 100, maxWidth: 80, flex: 1, headerAlign: 'center', headerClassName: 'super-app-theme--header', editable: true, },
+    { field: 'extensionCode', headerName: 'ExtensionCode', minWidth: 100, maxWidth: 120, flex: 1, headerAlign: 'center', headerClassName: 'super-app-theme--header', editable: true, },
+    { field: 'derivativeTrader', headerName: 'derivativeTrader', minWidth: 100, maxWidth: 120, flex: 1, headerAlign: 'center', headerClassName: 'super-app-theme--header', editable: true, },
+    { field: 'derivativeLicense', headerName: 'derivativeLicense', minWidth: 100, maxWidth: 120, flex: 1, headerAlign: 'center', headerClassName: 'super-app-theme--header', editable: true, },
+    { field: 'singleTrader', headerName: 'singleTrader', minWidth: 100, maxWidth: 120, flex: 1, headerAlign: 'center', headerClassName: 'super-app-theme--header', editable: true, },
+    { field: 'singleLicense', headerName: 'singleLicense', minWidth: 100, maxWidth: 120, flex: 1, headerAlign: 'center', headerClassName: 'super-app-theme--header', editable: true, },
+    { field: 'otherLicense', headerName: 'otherLicense', minWidth: 100, maxWidth: 120, flex: 1, headerAlign: 'center', headerClassName: 'super-app-theme--header', editable: true, },
+    { field: 'startWorkingDate', headerName: 'startWorkingDate', minWidth: 100, maxWidth: 120, flex: 1, headerAlign: 'center', headerClassName: 'super-app-theme--header', editable: true, },
+    { field: 'lastWorkingDate', headerName: 'lastWorkingDate', minWidth: 100, maxWidth: 120, flex: 1, headerAlign: 'center', headerClassName: 'super-app-theme--header', editable: true, },
+    { field: 'effectiveDate', headerName: 'effectiveDate', minWidth: 100, maxWidth: 120, flex: 1, headerAlign: 'center', headerClassName: 'super-app-theme--header', editable: true, },
+    {
+      field: 'image',
+      headerName: 'Image',
+      minWidth: 100, maxWidth: 120,
+      headerAlign: 'center',
+      headerClassName: 'super-app-theme--header',
+      editable: false,
+      renderCell: ({ id }) => (
+        <Image
+          src={`http://127.0.0.1:8080/uploads/${id}.png`}
+          width={40}
+          height={40}
+          alt="employee"
+          className="cursor-pointer"
+          onClick={() => role == "admin" ? handleClickOpen(id) : ""}
+          style={{ width: 50, height: 50, borderRadius: '50%' }}
+        />
+      ),
+    },
     {
       field: 'actions',
       type: 'actions',
       headerName: 'Actions',
       width: 100,
       cellClassName: 'actions',
+      headerAlign: 'center',
+      headerClassName: 'super-app-theme--header',
+      hideable: true,
       getActions: ({ id }) => {
         const isInEditMode = rowModesModel[id]?.mode === GridRowModes.Edit;
-
         if (isInEditMode) {
           return [
             <GridActionsCellItem
@@ -298,14 +352,14 @@ export const StartEditButtonGrid: React.FC<AdminEmployeemanagementProps & { type
   ];
 
   const columns_org: GridColDef[] = [
-    { field: 'organizationId', headerName: 'Organization ID', minWidth: 100, flex: 1, editable: true },
-    { field: 'domainId', headerName: 'Domain ID', minWidth: 100, flex: 1, editable: true },
-    { field: 'organizationUnit', headerName: 'Organization Unit', minWidth: 100, flex: 1, editable: true },
-    { field: 'parentOrganizationId', headerName: 'Parent Organization ID', minWidth: 100, flex: 1, editable: true },
-    {
+    { field: 'organizationId', headerName: 'Organization ID', minWidth: 100, flex: 1, headerAlign: 'center', headerClassName: 'super-app-theme--header', editable: true },
+    { field: 'domainId', headerName: 'Domain ID', minWidth: 100, flex: 1, headerAlign: 'center', headerClassName: 'super-app-theme--header', editable: true },
+    { field: 'organizationUnit', headerName: 'Organization Unit', minWidth: 100, flex: 1, headerAlign: 'center', headerClassName: 'super-app-theme--header', editable: true },
+    { field: 'parentOrganizationId', headerName: 'Parent Organization ID', minWidth: 100, flex: 1, headerAlign: 'center', headerClassName: 'super-app-theme--header', editable: true },
+    { 
       field: 'actions',
       type: 'actions',
-      headerName: 'Actions',
+      headerName: 'Actions', headerAlign: 'center', headerClassName: 'super-app-theme--header',
       width: 100,
       cellClassName: 'actions',
       getActions: ({ id }) => {
@@ -351,17 +405,16 @@ export const StartEditButtonGrid: React.FC<AdminEmployeemanagementProps & { type
   ];
 
   const columns_domain: GridColDef[] = [
-    { field: 'domainId', headerName: 'Domain ID', minWidth: 100, flex: 1, editable: true },
-    { field: 'domainName', headerName: 'Domain Name', minWidth: 100, flex: 1, editable: true },
+    { field: 'domainId', headerName: 'Domain ID', minWidth: 100, flex: 1, headerAlign: 'center', headerClassName: 'super-app-theme--header', editable: true },
+    { field: 'domainName', headerName: 'Domain Name', minWidth: 100, flex: 1, headerAlign: 'center', headerClassName: 'super-app-theme--header', editable: true },
     {
       field: 'actions',
       type: 'actions',
-      headerName: 'Actions',
+      headerName: 'Actions', headerAlign: 'center', headerClassName: 'super-app-theme--header',
       width: 100,
       cellClassName: 'actions',
       getActions: ({ id }) => {
         const isInEditMode = rowModesModel[id]?.mode === GridRowModes.Edit;
-
         if (isInEditMode) {
           return [
             <GridActionsCellItem
@@ -402,19 +455,69 @@ export const StartEditButtonGrid: React.FC<AdminEmployeemanagementProps & { type
   ]
 
   const columns_branch: GridColDef[] = [
-    { field: 'branchId', headerName: 'Domain ID', minWidth: 100, flex: 1, editable: true },
-    { field: 'branchName', headerName: 'Branch Name', minWidth: 100, flex: 1, editable: true },
-    { field: 'location', headerName: 'location', minWidth: 100, flex: 1, editable: true },
-    { field: 'contact', headerName: 'Contact', minWidth: 100, flex: 1, editable: true },
+    { field: 'branchId', headerName: 'Domain ID', minWidth: 100, flex: 1, headerAlign: 'center', headerClassName: 'super-app-theme--header', editable: true },
+    { field: 'branchName', headerName: 'Branch Name', minWidth: 100, flex: 1, headerAlign: 'center', headerClassName: 'super-app-theme--header', editable: true },
+    { field: 'location', headerName: 'location', minWidth: 100, flex: 1, headerAlign: 'center', headerClassName: 'super-app-theme--header', editable: true },
+    { field: 'contact', headerName: 'Contact', minWidth: 100, flex: 1, headerAlign: 'center', headerClassName: 'super-app-theme--header', editable: true },
     {
       field: 'actions',
       type: 'actions',
-      headerName: 'Actions',
+      headerName: 'Actions', headerAlign: 'center', headerClassName: 'super-app-theme--header',
       width: 100,
       cellClassName: 'actions',
       getActions: ({ id }) => {
         const isInEditMode = rowModesModel[id]?.mode === GridRowModes.Edit;
 
+        if (isInEditMode) {
+          return [
+            <GridActionsCellItem
+              icon={<SaveIcon />}
+              label="Save"
+              sx={{
+                color: 'primary.main',
+              }}
+              onClick={handleSaveClick(id)}
+            />,
+            <GridActionsCellItem
+              icon={<CancelIcon />}
+              label="Cancel"
+              className="textPrimary"
+              onClick={handleCancelClick(id)}
+              color="inherit"
+            />,
+          ];
+        }
+
+        return [
+          <GridActionsCellItem
+            icon={<EditIcon />}
+            label="Edit"
+            className="textPrimary"
+            onClick={handleEditClick(id)}
+            color="inherit"
+          />,
+          <GridActionsCellItem
+            icon={<DeleteIcon />}
+            label="Delete"
+            onClick={handleDeleteClick(id)}
+            color="inherit"
+          />,
+        ];
+      },
+    },
+  ]
+
+  const columns_job: GridColDef[] = [
+    { field: 'jobId', headerName: 'Job ID', minWidth: 100, flex: 1, headerAlign: 'center', headerClassName: 'super-app-theme--header', editable: true },
+    { field: 'jobTitle', headerName: 'Job Title', minWidth: 100, flex: 1, headerAlign: 'center', headerClassName: 'super-app-theme--header', editable: true },
+    {
+      field: 'actions',
+      type: 'actions',
+      headerName: 'Actions', headerAlign: 'center', headerClassName: 'super-app-theme--header',
+      width: 100,
+      cellClassName: 'actions',
+      getActions: ({ id }) => {
+        const isInEditMode = rowModesModel[id]?.mode === GridRowModes.Edit;
         if (isInEditMode) {
           return [
             <GridActionsCellItem
@@ -455,13 +558,13 @@ export const StartEditButtonGrid: React.FC<AdminEmployeemanagementProps & { type
   ]
 
   const columns_manager: GridColDef[] = [
-    { field: 'managerId', headerName: 'Manager ID', minWidth: 100, flex: 1, editable: true },
-    { field: 'empId', headerName: 'Employee ID', minWidth: 100, flex: 1, editable: true },
-    { field: 'organizationId', headerName: 'Organization ID', minWidth: 100, flex: 1, editable: true },
+    { field: 'managerId', headerName: 'Manager ID', minWidth: 100, flex: 1, headerAlign: 'center', headerClassName: 'super-app-theme--header', editable: true },
+    { field: 'empId', headerName: 'Employee ID', minWidth: 100, flex: 1, headerAlign: 'center', headerClassName: 'super-app-theme--header', editable: true },
+    { field: 'organizationId', headerName: 'Organization ID', minWidth: 100, flex: 1, headerAlign: 'center', headerClassName: 'super-app-theme--header', editable: true },
     {
       field: 'actions',
       type: 'actions',
-      headerName: 'Actions',
+      headerName: 'Actions', headerAlign: 'center', headerClassName: 'super-app-theme--header',
       width: 100,
       cellClassName: 'actions',
       getActions: ({ id }) => {
@@ -506,28 +609,26 @@ export const StartEditButtonGrid: React.FC<AdminEmployeemanagementProps & { type
     },
   ]
 
-  const getRowId = (row: EmployeeNode | Organization | Domain | Manager | Branch): GridRowId => {
-    if ('managerId' in row) {
+  const getRowId = (row: EmployeeNode | Manager | Organization | Domain | Branch | Job): GridRowId => {
+    if ('managerId' in row && 'empId' in row && 'organizationId' in row && Object.keys(row).length === 3) {
       return row.managerId as string;
-    }
-    if ('empId' in row) {
+    } else if ('empId' in row && 'organizationId' in row && 'organizationUnit' in row) {
       return row.empId as string;
     } else if ('organizationId' in row) {
       return row.organizationId as string;
     } else if ('domainId' in row) {
       return row.domainId as string;
-    } else if ('managerId' in row) {
-      return row.managerId as string;
     } else if ('branchId' in row) {
       return row.branchId as string;
+    } else if ('jobId' in row) {
+      return row.jobId as string;
     }
-
     return '';
   };
 
 
 
-  const columns = type === 'emp' ? columns_emp : type === "org" ? columns_org : type === "domain" ? columns_domain : type === "branch" ? columns_branch : columns_manager;
+  const columns = type === 'emp' ? columns_emp : type === "org" ? columns_org : type === "domain" ? columns_domain : type === "branch" ? columns_branch : type == "manager" ? columns_manager : columns_job;
 
   return (
     <Box
@@ -540,9 +641,20 @@ export const StartEditButtonGrid: React.FC<AdminEmployeemanagementProps & { type
         '& .textPrimary': {
           color: 'text.primary',
         },
+        '.MuiDataGrid-columnHeaderTitle': {
+          fontWeight: 'bold !important',
+          color: 'white',
+          overflow: 'visible !important'
+        },
+        '.super-app-theme--header': {
+          backgroundColor: 'rgb(244 63 94)',
+        },
       }}
     >
       <DataGrid
+        columnVisibilityModel={{
+          actions: role != "admin" ? false : true
+        }}
         autoHeight
         rows={rows}
         columns={columns}
@@ -568,6 +680,7 @@ export const StartEditButtonGrid: React.FC<AdminEmployeemanagementProps & { type
           {alertMessage}
         </Alert>
       </Snackbar>
+      <UploadPicture open={open} close={handleClose} employeeID={employeeId} alert={setSnackbarOpen} alertMessage={setAlertMessage} />
     </Box>
   );
 }

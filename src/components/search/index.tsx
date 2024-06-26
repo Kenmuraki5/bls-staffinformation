@@ -3,7 +3,7 @@ import { Button, FormControl, InputLabel, MenuItem, Select, SelectChangeEvent, T
 import { useRouter } from 'next/navigation';
 import React, { useState } from 'react';
 
-const Search = () => {
+const Search = ({search} : any) => {
     const [searchBy, setSearchBy] = useState('');
     const [searchInput, setSearchInput] = useState('');
     const router = useRouter();
@@ -20,13 +20,10 @@ const Search = () => {
 
     const handleKeyDown = async (event: React.KeyboardEvent) => {
         if (event.key === 'Enter') {
-            search();
+            search(searchBy, searchInput);
         }
     };
     
-    const search = () => {
-        router.push(`?searchBy=${searchBy}&searchInput=${searchInput}`);
-    }
 
     return (
         <div className="m-3">
@@ -60,7 +57,7 @@ const Search = () => {
                             onKeyDown={handleKeyDown}
                         />
                         <Button sx={{ m: 2 }} onClick={() => {
-                            search();
+                            search(searchBy, searchInput);
                         }}>Search</Button>
                     </>
                 )}

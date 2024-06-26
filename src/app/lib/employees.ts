@@ -22,7 +22,8 @@ export async function getAllEmployees() {
   try {
     const token = await getToken("session")
     const res = await fetch(`http://localhost:8080/staffinformation/employee`, {
-      headers: { 'authorization': token }
+      headers: { 'authorization': token },
+      cache: 'no-store'
     });
     if (!res.ok) {
       throw new Error('Failed to fetch employees');

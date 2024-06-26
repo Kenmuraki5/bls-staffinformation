@@ -6,6 +6,7 @@ import { getAllDepartments } from '@/app/lib/departments';
 import { getAlldomain } from '@/app/lib/domain';
 import { getAllBranch } from '@/app/lib/branch';
 import { getAllManager } from '@/app/lib/manager';
+import { getAllJob } from '@/app/lib/job';
 
 export default async function AdminEmployeeManagement({
   params,
@@ -36,6 +37,10 @@ export default async function AdminEmployeeManagement({
     const res = await getAllManager();
     data = res.managers
     type = "manager";
+  } else if (params.manage == "job") {
+    const res = await getAllJob();
+    data = res.jobs
+    type = "job";
   }
 
   return (

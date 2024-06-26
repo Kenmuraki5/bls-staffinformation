@@ -28,10 +28,11 @@ const EmployeeTable: React.FC<PropsType> = ({ dataEmployees }) => {
           {params.value}
         </a>
       ),
+      headerClassName: 'super-app-theme--header', headerAlign: 'center'
     },
-    { field: 'thFirstName', headerName: 'Thai name', minWidth: 100, flex: 1 },
-    { field: 'enFirstName', headerName: 'eng name', minWidth: 100, flex: 1 },
-    { field: 'email', headerName: 'Email', minWidth: 100, flex: 1 },
+    { field: 'thFirstName', headerName: 'Thai name', minWidth: 100, flex: 1, headerClassName: 'super-app-theme--header', headerAlign: 'center' },
+    { field: 'enFirstName', headerName: 'eng name', minWidth: 100, flex: 1, headerClassName: 'super-app-theme--header', headerAlign: 'center' },
+    { field: 'email', headerName: 'Email', minWidth: 100, flex: 1, headerClassName: 'super-app-theme--header', headerAlign: 'center' },
     { field: 'organizationUnit', headerName: 'Department', minWidth: 100, flex: 1,
       renderCell: (params) => (
         <a
@@ -45,11 +46,12 @@ const EmployeeTable: React.FC<PropsType> = ({ dataEmployees }) => {
           {params.value}
         </a>
       ),
+      headerClassName: 'super-app-theme--header', headerAlign: 'center'
      },
-    { field: 'corporationTitle', headerName: 'CorporationTitle', minWidth: 100, flex: 1 },
-    { field: 'branchId', headerName: 'Branch', minWidth: 100, maxWidth: 80, flex: 1 },
-    { field: 'extensionCode', headerName: 'ExtensionCode', minWidth: 100, maxWidth: 120, flex: 1 },
-    { field: 'managerId', headerName: 'managerID', minWidth: 100, maxWidth: 120, flex: 1 },
+    { field: 'corporationTitle', headerName: 'CorporationTitle', minWidth: 100, flex: 1, headerClassName: 'super-app-theme--header', headerAlign: 'center' },
+    { field: 'branchId', headerName: 'Branch', minWidth: 100, maxWidth: 80, flex: 1, headerClassName: 'super-app-theme--header', headerAlign: 'center' },
+    { field: 'extensionCode', headerName: 'ExtensionCode', minWidth: 100, maxWidth: 120, flex: 1, headerClassName: 'super-app-theme--header', headerAlign: 'center' },
+    { field: 'managerId', headerName: 'managerID', minWidth: 100, maxWidth: 120, flex: 1, headerClassName: 'super-app-theme--header', headerAlign: 'center' },
   ];
 
   return (
@@ -58,6 +60,15 @@ const EmployeeTable: React.FC<PropsType> = ({ dataEmployees }) => {
         <p className='text-white font-bold rounded px-5'>Staff Information</p>
       </div>
       <DataGrid
+        sx={{
+        '.MuiDataGrid-columnHeaderTitle': {
+          fontWeight: 'bold !important',
+          color: 'white',
+        },
+        '.super-app-theme--header': {
+          backgroundColor: 'rgb(225 29 72)',
+        },
+        }}
         autoHeight
         getRowId={(row) => row.empId}
         rows={dataEmployees || []}

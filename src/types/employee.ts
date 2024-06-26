@@ -24,4 +24,5 @@ export default interface EmployeeNode {
     corporationTitle: string
     extensionCode: string
     branchName: string
+    image: string
 }

@@ -117,7 +117,7 @@ const StaffInformation: React.FC<StaffInformationProps> = ({employees}) => {
           </div>
         </div>
         <div className="flex-shrink-0 mb-4 md:mb-0 md:mr-4">
-          <Image src={`http://127.0.0.1:8080/uploads/1.png`} alt="Staff Image" width={200} height={200} className="rounded-full" />
+          <Image src={`http://127.0.0.1:8080/uploads/${employees?.empId}.png`} alt="Staff Image" width={200} height={200} className="rounded-full" />
         </div>
       </fieldset>
     </div>

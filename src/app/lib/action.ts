@@ -21,7 +21,7 @@ function parseJwt(token: string) {
   }
 }
 
-export async function getAvatar(){
+export async function getRole(){
   try {
     const token = await getToken("session");
     const data = parseJwt(token);

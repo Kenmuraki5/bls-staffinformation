@@ -1,5 +1,5 @@
 'use client'
-import * as React from 'react';
+import React, { useState, useEffect } from 'react';
 import { styled, useTheme } from '@mui/material/styles';
 import Box from '@mui/material/Box';
 import Drawer from '@mui/material/Drawer';
@@ -15,16 +15,17 @@ import ListItemButton from '@mui/material/ListItemButton';
 import ListItemText from '@mui/material/ListItemText';
 import Image from 'next/image';
 import { useParams, useRouter } from 'next/navigation';
-import { logout } from '@/app/lib/action';
 import DomainIcon from '@mui/icons-material/Domain';
 import FmdGoodIcon from '@mui/icons-material/FmdGood';
 import CorporateFareIcon from '@mui/icons-material/CorporateFare';
 import GroupAddIcon from '@mui/icons-material/GroupAdd';
 import ManageAccountsIcon from '@mui/icons-material/ManageAccounts';
-import PanoramaIcon from '@mui/icons-material/Panorama';
+import LogoutIcon from '@mui/icons-material/Logout';
 import MenuIcon from '@mui/icons-material/Menu';
 import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
 import ChevronRightIcon from '@mui/icons-material/ChevronRight';
+import WorkIcon from '@mui/icons-material/Work';
+import { getRole, logout } from '@/app/lib/action';
 
 const drawerWidth = 240;
 
@@ -84,9 +85,24 @@ const DrawerHeader = styled('div')(({ theme }) => ({
 export default function PersistentDrawerLeft() {
     const theme = useTheme();
     const [open, setOpen] = React.useState(false);
+    const [role, setRole] = useState(null);
 
     const router = useRouter();
     const params = useParams();
+
+    useEffect(() => {
+        async function fetchRole() {
+            try {
+                const roleData = await getRole(); 
+                setRole(roleData.role);
+            } catch (error) {
+                console.error('Error fetching role:', error);
+            }
+        }
+
+        fetchRole();
+    }, []);
+
     const handleDrawerOpen = () => {
         setOpen(true);
     };
@@ -96,17 +112,19 @@ export default function PersistentDrawerLeft() {
     };
 
     const signout = async () => {
+        // Implement your signout logic
         await logout();
-        router.push("/authentication")
+        router.push("/authentication");
     }
 
     const navigate = async (manage: string) => {
-        router.push(`/${params.domain}/${manage}/Management`)
+        router.push(`/${params.domain}/${manage}/Management`);
     }
 
     const createAccount = () => {
-        router.push(`/${params.domain}/createAccount`)
+        router.push(`/${params.domain}/createAccount`);
     }
+
     return (
         <Box sx={{ display: 'flex' }}>
             <CssBaseline />
@@ -164,7 +182,7 @@ export default function PersistentDrawerLeft() {
                         </ListItem>
                     ))}
                 </List>
-                <Divider textAlign='left'>Management</Divider>
+                <Divider textAlign='left'>{role == "admin" ? "Management" : "Data Dictionary"}</Divider>
                 <List>
                     <ListItem disablePadding>
                         <ListItemButton className='text-black-600 font-bold' onClick={() => navigate("employee")}>
@@ -172,6 +190,12 @@ export default function PersistentDrawerLeft() {
                                 <path fillRule="evenodd" d="M12 6a3.5 3.5 0 1 0 0 7 3.5 3.5 0 0 0 0-7Zm-1.5 8a4 4 0 0 0-4 4 2 2 0 0 0 2 2h7a2 2 0 0 0 2-2 4 4 0 0 0-4-4h-3Zm6.82-3.096a5.51 5.51 0 0 0-2.797-6.293 3.5 3.5 0 1 1 2.796 6.292ZM19.5 18h.5a2 2 0 0 0 2-2 4 4 0 0 0-4-4h-1.1a5.503 5.503 0 0 1-.471.762A5.998 5.998 0 0 1 19.5 18ZM4 7.5a3.5 3.5 0 0 1 5.477-2.889 5.5 5.5 0 0 0-2.796 6.293A3.501 3.501 0 0 1 4 7.5ZM7.1 12H6a4 4 0 0 0-4 4 2 2 0 0 0 2 2h.5a5.998 5.998 0 0 1 5.548-5.334A5.503 5.503 0 0 1 7.1 12Z" clipRule="evenodd" />
                             </svg>
                             Employees
+                        </ListItemButton>
+                    </ListItem>
+                    <ListItem disablePadding>
+                        <ListItemButton className='text-black-600 font-bold' onClick={() => navigate("job")}>
+                            <WorkIcon className="w-6 h-6 text-black-600 mr-3" />
+                            Jobs
                         </ListItemButton>
                     </ListItem>
                     <ListItem disablePadding>
@@ -198,16 +222,16 @@ export default function PersistentDrawerLeft() {
                             Branch
                         </ListItemButton>
                     </ListItem>
-                    <ListItem disablePadding>
+                    {role == "admin" && (<ListItem disablePadding>
                         <ListItemButton className='text-black-600 font-bold' onClick={() => createAccount()}>
                             <GroupAddIcon className="w-6 h-6 text-black-600 mr-3" />
                             Create Account
                         </ListItemButton>
-                    </ListItem>
+                    </ListItem>)}
                     <ListItem disablePadding>
-                        <ListItemButton className='text-black-600 font-bold' onClick={() => console.log("hello")}>
-                            <PanoramaIcon className="w-6 h-6 text-black-600 mr-3" />
-                            EmployeePicture
+                        <ListItemButton className='text-red-600 font-bold' onClick={() => signout()}>
+                            <LogoutIcon className="w-6 h-6 text-black-600 mr-3" />
+                            logout
                         </ListItemButton>
                     </ListItem>
                 </List>
