@@ -30,20 +30,22 @@ export function middleware(request: NextRequest) {
       const url = request.nextUrl.pathname;
 
       // Check if the role is 'admin' for restricted paths
-      if ((url.startsWith('/organizationManagement') || url.startsWith('/employeeManagement')) && role === 'admin') {
-        return NextResponse.next();
+      if ((url.startsWith('/BLS/employee/Management') || url.startsWith('/BLS/organization/Management')) && role != 'admin') {
+        return  NextResponse.redirect(new URL('/not-found', request.url));
       }
 
       // Check if the role is allowed for other paths
-      if (role === 'desiredRole') { // Replace 'desiredRole' with the role you want to check for other paths
+      if (role === 'user') { // Replace 'desiredRole' with the role you want to check for other paths
         return NextResponse.next();
       }
     }
   }
+  else {
+    return NextResponse.redirect(new URL('/authentication', request.url));
+  }
   
-  return NextResponse.redirect(new URL('/authentication', request.url));
 }
 
 export const config = {
-  matcher: ['/bualuang/:domain*', '/StaffInformation/:id*', '/organizationManagement*', '/employeeManagement*'],
+  matcher: ['/bualuang/:domain*', '/StaffInformation/:id*', '/:domain/:manage/Management'],
 }

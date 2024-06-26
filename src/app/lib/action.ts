@@ -6,6 +6,31 @@ export async function getToken(name: string) {
   return cookies().get(name)?.value ?? '';
 }
 
+function base64Decode(str: string) {
+  return Buffer.from(str, 'base64').toString('utf8');
+}
+
+function parseJwt(token: string) {
+  try {
+    const base64Url = token.split('.')[1];
+    const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
+    const jsonPayload = base64Decode(base64);
+    return JSON.parse(jsonPayload);
+  } catch (e) {
+    return null;
+  }
+}
+
+export async function getAvatar(){
+  try {
+    const token = await getToken("session");
+    const data = parseJwt(token);
+    return data;
+  } catch (error) {
+    console.log(error);
+  }
+}
+
 export async function login(formData: FormData) {
   try {
     const data = Object.fromEntries(formData.entries());

@@ -1,5 +1,5 @@
 import EmployeeNode from "@/types/employee";
-import OrganizationNode from "@/types/organization";
+import {OrganizationNode} from "@/types/organization";
 
 interface DashboardProps {
     organizations: OrganizationNode[];
@@ -7,7 +7,8 @@ interface DashboardProps {
 }
 
 interface StyledTreeItemProps {
-    isSelected: boolean;
+    isselected: boolean;
+    haschildren?: boolean;
 }
 
 export type {

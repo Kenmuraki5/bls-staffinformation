@@ -2,13 +2,7 @@ import { getToken } from '@/app/lib/action';
 import { Box, CircularProgress } from '@mui/material';
 import dynamic from 'next/dynamic';
 
-const StaffInformation = dynamic(() => import('@/components/staffinformation'), {
-    ssr: false,
-    loading: () =>
-        <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100%' }}>
-            <CircularProgress />
-        </Box>
-});
+const StaffInformation = dynamic(() => import('@/components/staffinformation'));
 const PersistentDrawerLeft = dynamic(() => import('@/components/drawer'));
 
 async function getEmployee(empId: string) {

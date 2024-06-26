@@ -25,7 +25,7 @@ const Search = () => {
     };
     
     const search = () => {
-        router.replace(`?searchBy=${searchBy}&searchInput=${searchInput}`);
+        router.push(`?searchBy=${searchBy}&searchInput=${searchInput}`);
     }
 
     return (

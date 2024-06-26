@@ -1,7 +1,7 @@
 import React from 'react';
 import dynamic from 'next/dynamic';
-import getEmployees from '@/app/lib/employees';
-import getDepartments from '@/app/lib/departments';
+import {getEmployeesByOrgID} from '@/app/lib/employees';
+import { getAllDepartmentsHeirachy } from '@/app/lib/departments';
 import handleSearch from '@/app/lib/search';
 
 const MainComponent = dynamic(() => import('@/components/dashboard'));
@@ -15,12 +15,12 @@ const Home = async ({
   searchParams?: { [key: string]: string | string[] | undefined };
 }) => {
   const domain = params.domain;
-  const organizations: any = await getDepartments(domain);
+  const organizations: any = await getAllDepartmentsHeirachy(domain);
 
   let employees: any = {};
   
   if (!searchParams?.searchBy) {
-    employees = await getEmployees(params.domain as string, searchParams?.organizationId as string);
+    employees = await getEmployeesByOrgID(params.domain as string, searchParams?.organizationId as string);
   } else {
     employees = await handleSearch(
       searchParams?.searchBy as string,
@@ -30,14 +30,12 @@ const Home = async ({
   }
 
   return (
-    <div className="min-h-screen flex flex-col">
-      <main className="flex-1 bg-white overflow-scroll">
-        <PersistentDrawerLeft />
+    <div className="min-h-screen flex flex-col bg-white">
+      <PersistentDrawerLeft />
         <MainComponent 
           organizations={organizations.organizations || []} 
           employees={employees.employees || []} 
         />
-      </main>
       <footer className='bg-pink-950 w-full p-2 text-white text-center'>
         Copyright 2011© Bualuang Securities PCL
       </footer>
