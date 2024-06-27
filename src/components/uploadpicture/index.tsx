@@ -67,7 +67,7 @@ export default function UploadPicture({ open, close, employeeID, alert, alertMes
       <DialogTitle>Upload Employee Picture</DialogTitle>
       <DialogContent>
         <DialogContentText>
-          Please select a picture to upload for Employee ID: {employeeID}.
+          Please select a picture (*png) to upload for Employee ID: {employeeID}.
         </DialogContentText>
         <TextField
           label="Employee ID"
@@ -79,6 +79,7 @@ export default function UploadPicture({ open, close, employeeID, alert, alertMes
         />
         <div className="mb-4">
           <input
+            accept='image/png'
             type="file"
             id="file-input"
             style={{ display: 'none' }}

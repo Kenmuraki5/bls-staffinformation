@@ -118,11 +118,11 @@ export default function PersistentDrawerLeft() {
     }
 
     const navigate = async (manage: string) => {
-        router.push(`/${params.domain}/${manage}/Management`);
+        router.push(`/${manage}/Management`);
     }
 
     const createAccount = () => {
-        router.push(`/${params.domain}/createAccount`);
+        router.push(`/createAccount`);
     }
 
     return (

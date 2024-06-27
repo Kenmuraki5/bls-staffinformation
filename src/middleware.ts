@@ -29,11 +29,6 @@ export function middleware(request: NextRequest) {
       const role = decodedToken.role;
       const url = request.nextUrl.pathname;
 
-      // Check if the role is 'admin' for restricted paths
-      if ((url.startsWith('/BLS/employee/Management') || url.startsWith('/BLS/organization/Management')) && role != 'admin') {
-        return  NextResponse.redirect(new URL('/not-found', request.url));
-      }
-
       // Check if the role is allowed for other paths
       if (role === 'user') { // Replace 'desiredRole' with the role you want to check for other paths
         return NextResponse.next();
@@ -47,5 +42,5 @@ export function middleware(request: NextRequest) {
 }
 
 export const config = {
-  matcher: ['/bualuang/:domain*', '/StaffInformation/:id*', '/:domain/:manage/Management'],
+  matcher: ['/bualuang/:domain*', '/:domain/StaffInformation/:id*', '/:domain/:manage/Management'],
 }

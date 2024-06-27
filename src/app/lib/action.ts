@@ -21,7 +21,7 @@ function parseJwt(token: string) {
   }
 }
 
-export async function getRole(){
+export async function getRole() {
   try {
     const token = await getToken("session");
     const data = parseJwt(token);
@@ -61,6 +61,33 @@ export async function login(formData: FormData) {
   }
 }
 
+
+export async function createAccount(formData: FormData) {
+  try {
+    const data = Object.fromEntries(formData.entries());
+    const res = await fetch('http://localhost:8082/authpb.AuthService/Register', {
+      method: 'POST',
+      body: JSON.stringify(data),
+      headers: {
+        'Content-type': 'application/json',
+      },
+    })
+
+    if (!res.ok) {
+      throw new Error(`HTTP error! status: ${res.status}`);
+    }
+
+    const result = await res.json();
+
+    if (!result.success) {
+      console.log("helotgewrwerw")
+      throw new Error(`Create Account failed: ${result.message}`);
+    }
+    return;
+  } catch (error: any) {
+    throw error;
+  }
+}
 
 export async function logout() {
   try {

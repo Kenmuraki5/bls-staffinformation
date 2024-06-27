@@ -1,6 +1,6 @@
 import * as React from 'react';
 import PersistentDrawerLeft from '@/components/drawer';
-import { getAllEmployees } from '../../../lib/employees';
+import { getAllEmployees } from '../../lib/employees';
 import { StartEditButtonGrid } from '@/components/admin';
 import { getAllDepartments } from '@/app/lib/departments';
 import { getAlldomain } from '@/app/lib/domain';
