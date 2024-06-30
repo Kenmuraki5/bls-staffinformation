@@ -17,7 +17,6 @@ import {
   GridActionsCellItem,
   GridEventListener,
   GridRowId,
-  GridRowModel,
   GridRowEditStopReasons,
   GridSlots,
   GridToolbarExport,
@@ -37,6 +36,7 @@ import { Alert, Snackbar } from '@mui/material';
 import Job from '@/types/job';
 import UploadPicture from '../uploadpicture';
 import { generateNewRow } from './generateNewRole';
+import Image from 'next/image';
 
 interface EditToolbarProps {
   setRows: (newRows: (oldRows: GridRowsProp) => GridRowsProp) => void;
@@ -54,11 +54,12 @@ function EditToolbar(props: EditToolbarProps) {
     const id = Math.floor(Math.random() * 9999).toString();
   
     setRows((oldRows) => [
-      ...oldRows,
-      generateNewRow(type, id)
+      generateNewRow(type, id),
+      ...oldRows
     ]);
   
     setRowModesModel((oldModel) => ({
+      ...oldModel,
       [id]: { mode: GridRowModes.Edit, fieldToFocus: type === "emp" ? 'thTitle' : 'managerId' },
     }));
   };
@@ -117,29 +118,40 @@ export const StartEditButtonGrid: React.FC<AdminEmployeemanagementProps & { type
     setRowModesModel({ ...rowModesModel, [id]: { mode: GridRowModes.View } });
   };
 
-  const handleDeleteClick = (id: GridRowId) => () => {
-    deleteRecord(id);
-    setRows(rows.filter((row: any) => {
-      if (type === 'emp') {
-        return row.empId !== id;
-      } else if (type === 'org') {
-        return row.organizationId !== id;
-      } else if (type === 'domain') {
-        return row.domainId !== id;
-      } else if (type === 'branch') {
-        return row.branchId !== id;
-      } else if (type === 'manager') {
-        return row.managerId !== id;
-      }
-      return true;
-    }));
+  const handleDeleteClick = (id: GridRowId) => async () => {
+    try {
+      await deleteRecord(id);
+      setRows(rows.filter((row: any) => {
+        switch (type) {
+          case 'emp':
+            return row.empId !== id;
+          case 'org':
+            return row.organizationId !== id;
+          case 'domain':
+            return row.domainId !== id;
+          case 'branch':
+            return row.branchId !== id;
+          case 'manager':
+            return row.managerId !== id;
+          default:
+            return true;
+        }
+      }));
+      setSnackbarOpen(true);
+      setError(false);
+      setAlertMessage('Successfully Deleted');
+    } catch (error: any) {
+      setSnackbarOpen(true);
+      setError(true);
+      setAlertMessage(error.message);
+    }
   };
 
   async function deleteRecord(id: string | number) {
     try {
       const token = await getToken("session");
       const port = params.manage === "employee" ? 8080 : 8081;
-      const res = await fetch(`http://localhost:${port}/staffinformation/${params.manage}/${id}`, {
+      const res = await fetch(`http://${process.env.NEXT_PUBLIC_BASEURL}:${port}/staffinformation/${params.manage}/${id}`, {
         method: "DELETE",
         headers: {
           "authorization": token,
@@ -151,19 +163,12 @@ export const StartEditButtonGrid: React.FC<AdminEmployeemanagementProps & { type
         const errorMessage = responseData.message || `Failed to delete ${params.manage}`;
         throw new Error(errorMessage);
       }
-
-      setSnackbarOpen(true);
-      setError(false);
-      setAlertMessage('Delete successful');
       return responseData;
     } catch (error: any) {
-      setSnackbarOpen(true);
-      setError(true);
-      setAlertMessage(error.message);
-      console.error(`Error deleting ${params.manage}:`, error);
-      throw error;
+      throw new Error(error.message || error);
     }
   }
+  
 
   const handleCancelClick = (id: GridRowId) => () => {
     setRowModesModel({
@@ -177,12 +182,12 @@ export const StartEditButtonGrid: React.FC<AdminEmployeemanagementProps & { type
     }
   };
 
-  async function updateRecord(data: Organization | EmployeeNode) {
+  async function updateRecord(data: any) {
     try {
       const token = await getToken("session");
       const payloadData = { ...data };
       const port = params.manage === "employee" ? 8080 : 8081;
-      const res = await fetch(`http://localhost:${port}/staffinformation/${params.manage}`, {
+      const res = await fetch(`http://${process.env.NEXT_PUBLIC_BASEURL}:${port}/staffinformation/${params.manage}`, {
         method: "POST",
         headers: {
           "authorization": token,
@@ -196,17 +201,9 @@ export const StartEditButtonGrid: React.FC<AdminEmployeemanagementProps & { type
         const errorMessage = responseData.message || `Failed to update: ${res.statusText}`;
         throw new Error(errorMessage);
       }
-
-      setSnackbarOpen(true);
-      setError(false);
-      setAlertMessage('Update successful');
       return responseData;
-    } catch (error: any) {
-      setSnackbarOpen(true);
-      setError(true);
-      setAlertMessage(error.message);
-      console.error(`Error updating ${params.manage}:`, error);
-      throw error;
+    } catch (error:any) {
+      throw new Error(error);
     }
   }
 
@@ -214,8 +211,15 @@ export const StartEditButtonGrid: React.FC<AdminEmployeemanagementProps & { type
   const processRowUpdate = async (updatedRow: any, originalRow: any) => {
     try {
       const updateRow = await updateRecord(updatedRow);
+      setSnackbarOpen(true);
+      setError(false);
+      setAlertMessage('Successfully Updated');
       return updateRow;
-    } catch (error) {
+    } catch (error: any) {
+      setSnackbarOpen(true);
+      setError(true);
+      setAlertMessage(error.message);
+      console.error(`Error updating ${params.manage}:`, error);
       return originalRow;
     }
   };
@@ -280,8 +284,9 @@ export const StartEditButtonGrid: React.FC<AdminEmployeemanagementProps & { type
       headerClassName: 'super-app-theme--header',
       editable: false,
       renderCell: ({ id }) => (
-        <img
-          src={`http://127.0.0.1:8080/uploads/${id}.png`}
+        <Image
+          priority
+          src={`http://${process.env.NEXT_PUBLIC_BASEURL}:8080/uploads/${id}.png`}
           width={40}
           height={40}
           alt="employee"
@@ -338,7 +343,6 @@ export const StartEditButtonGrid: React.FC<AdminEmployeemanagementProps & { type
 
 
   if (role === 'admin') {
-    console.log(initialColumns);
     initialColumns.push({
       field: 'actions',
       type: 'actions',
@@ -351,11 +355,13 @@ export const StartEditButtonGrid: React.FC<AdminEmployeemanagementProps & { type
         if (isInEditMode) {
           return [
             <GridActionsCellItem
+              key={id}
               icon={<SaveIcon />}
               label="Save"
               onClick={handleSaveClick(id)}
             />,
             <GridActionsCellItem
+              key={id}
               icon={<CancelIcon />}
               label="Cancel"
               className="textPrimary"
@@ -367,6 +373,7 @@ export const StartEditButtonGrid: React.FC<AdminEmployeemanagementProps & { type
   
         return [
           <GridActionsCellItem
+            key={id}
             icon={<EditIcon />}
             label="Edit"
             className="textPrimary"
@@ -374,6 +381,7 @@ export const StartEditButtonGrid: React.FC<AdminEmployeemanagementProps & { type
             color="inherit"
           />,
           <GridActionsCellItem
+            key={id}
             icon={<DeleteIcon />}
             label="Delete"
             onClick={handleDeleteClick(id)}

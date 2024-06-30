@@ -8,7 +8,7 @@ export async function getAllDepartments(domainID: string | string[] | undefined 
   }
   try {
     const token = await getToken("session")
-    const res = await fetch(`http://localhost:8081/staffinformation/organizations`, {
+    const res = await fetch(`http://${process.env.NEXT_PUBLIC_BASEURL}:8081/staffinformation/organizations`, {
       headers: { 'authorization': token },
       cache: 'no-store'
     });
@@ -28,7 +28,7 @@ export async function getAllDepartmentsHeirachy(domainID: string | string[] | un
   }
   try {
     const token = await getToken("session")
-    const res = await fetch(`http://localhost:8081/staffinformation/organizations/hierachy/${domainID}`, { 
+    const res = await fetch(`http://${process.env.NEXT_PUBLIC_BASEURL}:8081/staffinformation/organizations/hierachy/${domainID}`, { 
       headers: { 'authorization': token },
       next: { revalidate: 3600 } 
     });

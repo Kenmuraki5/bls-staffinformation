@@ -12,7 +12,7 @@ const StyledTreeItem = styled(({ isselected, ...other }: StyledTreeItemProps & R
   <TreeItem {...other} />
 ))(({ theme, isselected }) => ({
   color: theme.palette.mode === 'light' ? theme.palette.grey[800] : theme.palette.grey[200],
-  backgroundColor: isselected ? alpha(theme.palette.primary.main, 0.1) : 'inherit',
+  backgroundColor: isselected ? "#fee2e2" : 'inherit',
   maxHeight: 'calc(100vh)',
   overflowY: 'auto',
   [`& .${treeItemClasses.content}`]: {
@@ -119,7 +119,6 @@ const Dashboard: React.FC<DashboardProps> = ({ organizations, employees }) => {
   };
 
   const breadcrumbClickHandler = (id: string) => {
-    console.log(id);
     router.push(`?organizationId=${id}`);
   };
 

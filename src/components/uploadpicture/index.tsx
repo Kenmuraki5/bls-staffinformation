@@ -5,10 +5,12 @@ import CloudUploadIcon from '@mui/icons-material/CloudUpload';
 import { getToken } from '@/app/lib/action';
 
 export default function UploadPicture({ open, close, employeeID, alert, alertMessage }: any) {
-  const [file, setFile] = useState(null);
+  const [file, setFile] = useState<File | null>(null);
 
-  const handleFileChange = (e) => {
-    setFile(e.target.files[0]);
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e.target.files && e.target.files.length > 0) {
+      setFile(e.target.files[0]);
+    }
   };
 
   const handleUpload = async () => {
@@ -20,40 +22,42 @@ export default function UploadPicture({ open, close, employeeID, alert, alertMes
 
     const reader = new FileReader();
     reader.onloadend = () => {
-      const base64String = reader.result.split(',')[1]; // Get the base64 string without the prefix
-      const imageExtension = file.name.split('.').pop();
+      if (reader.result) {
+        const base64String = (reader.result as string).split(',')[1]; // Get the base64 string without the prefix
+        const imageExtension = file.name.split('.').pop();
 
-      const requestBody = {
-        empId: employeeID,
-        imageData: base64String,
-        imageExtension: imageExtension
-      };
+        const requestBody = {
+          empId: employeeID,
+          imageData: base64String,
+          imageExtension: imageExtension
+        };
 
-      fetch('http://localhost:8080/staffinformation/employee/uploadPicture', {
-        method: 'POST',
-        headers: {
-          'Authorization': token,
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(requestBody)
-      })
-        .then(async response => {
-          if (!response.ok) {
-            const errorText = await response.text();
-            throw new Error(`HTTP error! Status: ${response.status} - ${errorText}`);
-          }
-          alertMessage("Uploadpicture success")
-          alert(true)
-          return response.json();
+        fetch(`http://${process.env.NEXT_PUBLIC_BASEURL}:8080/staffinformation/employee/uploadPicture`, {
+          method: 'POST',
+          headers: {
+            'Authorization': token,
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify(requestBody)
         })
-        .then(data => {
-          console.log('Success:', data);
-          close();
-        })
-        .catch((error) => {
-          console.error('Error:', error);
-          alert(`Error: ${error.message}`);
-        });
+          .then(async response => {
+            if (!response.ok) {
+              const errorText = await response.text();
+              throw new Error(`HTTP error! Status: ${response.status} - ${errorText}`);
+            }
+            alertMessage("Upload picture success");
+            alert(true);
+            return response.json();
+          })
+          .then(data => {
+            console.log('Success:', data);
+            close();
+          })
+          .catch((error) => {
+            console.error('Error:', error);
+            alert(`Error: ${error.message}`);
+          });
+      }
     };
     reader.readAsDataURL(file); // Read the file as a data URL
   };

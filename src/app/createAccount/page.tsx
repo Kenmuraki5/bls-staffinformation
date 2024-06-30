@@ -3,6 +3,7 @@ import { Alert, InputLabel, MenuItem, Select, Snackbar } from '@mui/material';
 import dynamic from 'next/dynamic';
 import React from 'react';
 import { createAccount } from '@/app/lib/action';
+import Image from 'next/image';
 
 const PersistentDrawerLeft = dynamic(() => import('@/components/drawer'));
 const imageUrl = '/bls-header-logo.png';
@@ -18,7 +19,7 @@ export default function Page() {
             setSnackbarOpen(true);
             setError(false);
             setAlertMessage('Create Account successful');
-        } catch (error) {
+        } catch (error: any) {
             setSnackbarOpen(true);
             setError(true);
             setAlertMessage(error.message);
@@ -64,7 +65,7 @@ export default function Page() {
                         <button type="submit" className="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">Submit</button>
                     </form>
                     <div className="justify-center items-center p-10">
-                        <img src={imageUrl} alt="Image" width={400} height={400} />
+                        <Image src={imageUrl} alt="Image" width={400} height={400} />
                     </div>
                 </div>
             </main>

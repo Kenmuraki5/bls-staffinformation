@@ -8,7 +8,7 @@ const PersistentDrawerLeft = dynamic(() => import('@/components/drawer'));
 async function getEmployee(empId: string) {
     try {
         const token = await getToken("session")
-        const res = await fetch(`http://localhost:8080/staffinformation/employee/${empId}`, {
+        const res = await fetch(`http://${process.env.NEXT_PUBLIC_BASEURL}:8080/staffinformation/employee/${empId}`, {
             headers: { 'authorization': token }
         });
         if (!res.ok) {

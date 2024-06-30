@@ -34,7 +34,7 @@ export async function getRole() {
 export async function login(formData: FormData) {
   try {
     const data = Object.fromEntries(formData.entries());
-    const res = await fetch("http://localhost:8082/authpb.AuthService/Login", {
+    const res = await fetch(`http://${process.env.NEXT_PUBLIC_BASEURL}:8082/authpb.AuthService/Login`, {
       method: 'POST',
       body: JSON.stringify(data),
       headers: {
@@ -65,7 +65,7 @@ export async function login(formData: FormData) {
 export async function createAccount(formData: FormData) {
   try {
     const data = Object.fromEntries(formData.entries());
-    const res = await fetch('http://localhost:8082/authpb.AuthService/Register', {
+    const res = await fetch(`http://${process.env.NEXT_PUBLIC_BASEURL}:8082/authpb.AuthService/Register`, {
       method: 'POST',
       body: JSON.stringify(data),
       headers: {

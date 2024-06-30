@@ -5,7 +5,7 @@ import { getToken } from "./action";
 export async function getEmployeesByOrgID(domainID: string | string[] | undefined, orgID: string | string[] | undefined) {
   try {
     const token = await getToken("session")
-    const res = await fetch(`http://localhost:8080/staffinformation/employee/id/employeeOrg/${domainID}/${orgID}`, {
+    const res = await fetch(`http://${process.env.NEXT_PUBLIC_BASEURL}:8080/staffinformation/employee/id/employeeOrg/${domainID}/${orgID}`, {
       headers: { 'authorization': token }
     });
     if (!res.ok) {
@@ -21,7 +21,7 @@ export async function getEmployeesByOrgID(domainID: string | string[] | undefine
 export async function getAllEmployees() {
   try {
     const token = await getToken("session")
-    const res = await fetch(`http://localhost:8080/staffinformation/employee`, {
+    const res = await fetch(`http://${process.env.NEXT_PUBLIC_BASEURL}:8080/staffinformation/employee`, {
       headers: { 'authorization': token },
       cache: 'no-store'
     });

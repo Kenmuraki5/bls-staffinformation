@@ -3,7 +3,7 @@ import { getToken } from "./action";
 export async function getAllJob() {
     try {
       const token = await getToken("session")
-      const res = await fetch(`http://localhost:8080/staffinformation/job`, {
+      const res = await fetch(`http://${process.env.NEXT_PUBLIC_BASEURL}:8080/staffinformation/job`, {
         headers: { 'authorization': token }
       });
       if (!res.ok) {

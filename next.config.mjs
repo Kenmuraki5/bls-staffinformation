@@ -4,7 +4,13 @@ const nextConfig = {
         BASE_URL: process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:8081'
     },
     images: {
-      domains: ['127.0.0.1'], // Add other domains as needed
+      remotePatterns: [
+        {
+          protocol: 'http',
+          hostname: '172.29.240.1',
+          pathname: '**',
+        },
+      ],
     },
     async redirects() {
         return [
