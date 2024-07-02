@@ -150,7 +150,7 @@ export const StartEditButtonGrid: React.FC<AdminEmployeemanagementProps & { type
   async function deleteRecord(id: string | number) {
     try {
       const token = await getToken("session");
-      const port = params.manage === "employee" ? 8080 : 8081;
+      const port = 8080;
       const res = await fetch(`http://${process.env.NEXT_PUBLIC_BASEURL}:${port}/staffinformation/${params.manage}/${id}`, {
         method: "DELETE",
         headers: {
@@ -186,7 +186,7 @@ export const StartEditButtonGrid: React.FC<AdminEmployeemanagementProps & { type
     try {
       const token = await getToken("session");
       const payloadData = { ...data };
-      const port = params.manage === "employee" ? 8080 : 8081;
+      const port = 8080;
       const res = await fetch(`http://${process.env.NEXT_PUBLIC_BASEURL}:${port}/staffinformation/${params.manage}`, {
         method: "POST",
         headers: {
