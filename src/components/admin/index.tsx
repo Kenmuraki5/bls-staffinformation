@@ -3,81 +3,51 @@ import * as React from 'react';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import AddIcon from '@mui/icons-material/Add';
-import EditIcon from '@mui/icons-material/Edit';
-import DeleteIcon from '@mui/icons-material/DeleteOutlined';
-import SaveIcon from '@mui/icons-material/Save';
-import CancelIcon from '@mui/icons-material/Close';
 import {
-  GridRowsProp,
   GridRowModesModel,
-  GridRowModes,
   DataGrid,
   GridColDef,
   GridToolbarContainer,
-  GridActionsCellItem,
   GridEventListener,
   GridRowId,
   GridRowEditStopReasons,
   GridSlots,
-  GridToolbarExport,
-  GridToolbarFilterButton,
-  GridToolbarColumnsButton,
-  GridToolbarDensitySelector,
 } from '@mui/x-data-grid';
 import { useParams } from 'next/navigation';
-import { getRole, getToken } from '@/app/lib/action';
+import { getRole, getToken } from '@/app/utils/auth';
 import { AdminEmployeemanagementProps } from './type';
-import EmployeeNode from '@/types/employee';
-import { Organization } from '@/types/organization';
-import { Domain } from 'domain';
-import Manager from '@/types/manager';
-import Branch from '@/types/branch';
-import { Alert, Snackbar } from '@mui/material';
-import Job from '@/types/job';
-import UploadPicture from '../uploadpicture';
-import { generateNewRow } from './generateNewRole';
-import Image from 'next/image';
+import EmployeeModal from '../addModal/addEmployee';
+import OrganizationModal from '../addModal/addOrganization';
+import DomainModal from '../addModal/addDomain';
+import JobModal from '../addModal/addJob';
+import BranchModal from '../addModal/addBranch';
+import ManagerModal from '../addModal/addManager';
+import AlertResponse from '../snackbar';
 
 interface EditToolbarProps {
-  setRows: (newRows: (oldRows: GridRowsProp) => GridRowsProp) => void;
-  setRowModesModel: (
-    newModel: (oldModel: GridRowModesModel) => GridRowModesModel,
-  ) => void;
-  type: string,
+  type: string
   role: any
+  handleOpenAddModal: (setOpenAddModal: string, row: any) => void
 }
 
 function EditToolbar(props: EditToolbarProps) {
-  const { setRows, setRowModesModel, type, role } = props;
+  const { handleOpenAddModal, role, type } = props;
 
   const handleClick = () => {
-    const id = Math.floor(Math.random() * 9999).toString();
-  
-    setRows((oldRows) => [
-      generateNewRow(type, id),
-      ...oldRows
-    ]);
-  
-    setRowModesModel((oldModel) => ({
-      ...oldModel,
-      [id]: { mode: GridRowModes.Edit, fieldToFocus: type === "emp" ? 'thTitle' : 'managerId' },
-    }));
+    handleOpenAddModal(type, null); // Pass null to clear the selectedRow state
   };
 
   return (
     <GridToolbarContainer>
-      {
-        role == "admin" && (<Button color="primary" startIcon={<AddIcon />} onClick={handleClick}>
+      {role === "AdminStaffInformation" && (
+        <Button color="primary" startIcon={<AddIcon />} onClick={handleClick}>
           Add record
-        </Button>)
-      }
-      <GridToolbarColumnsButton />
-      <GridToolbarDensitySelector />
-      <GridToolbarFilterButton />
-      <GridToolbarExport />
+        </Button>
+      )}
     </GridToolbarContainer>
   );
 }
+
 
 export const StartEditButtonGrid: React.FC<AdminEmployeemanagementProps & { type: 'emp' | 'org' | 'domain' | 'branch' | "manager" | "job" }> = ({ data, type }) => {
   const params = useParams()
@@ -86,16 +56,65 @@ export const StartEditButtonGrid: React.FC<AdminEmployeemanagementProps & { type
   const [snackbarOpen, setSnackbarOpen] = React.useState(false);
   const [errorResponse, setError] = React.useState(false);
   const [alertMessage, setAlertMessage] = React.useState('');
-  const [employeeId, setEmployeeId] = React.useState('');
   const [role, setRole] = React.useState<any>(null);
 
-  const [open, setOpen] = React.useState(false);
+
+  const [openEmployeeModal, setOpenEmployeeModal] = React.useState(false);
+  const [openOrganizationModal, setOpenOrganizationModal] = React.useState(false);
+  const [openDomainModal, setOpenDomainModal] = React.useState(false);
+  const [openManagerModal, setOpenManagerModal] = React.useState(false);
+  const [openBranchModal, setOpenBranchModal] = React.useState(false);
+  const [openJobModal, setOpenJobModal] = React.useState(false);
+  const [selectedRow, setSelectedRow] = React.useState(null);
+  const handleOpenAddModal = (type: string, row: any) => {
+    setSelectedRow(row || null);
+    if (type == "emp") {
+      setOpenEmployeeModal(true)
+    }
+    if (type == "org") {
+      setOpenOrganizationModal(true)
+    }
+    if (type == "domain") {
+      setOpenDomainModal(true)
+    }
+    if (type == "branch") {
+      setOpenBranchModal(true)
+    }
+    if (type == "manager") {
+      setOpenManagerModal(true)
+    }
+    if (type == "job") {
+      setOpenJobModal(true)
+    }
+
+  };
+  const handleCloseAddModal = () => {
+    if (type == "emp") {
+      setOpenEmployeeModal(false)
+    }
+    if (type == "org") {
+      setOpenOrganizationModal(false)
+    }
+    if (type == "domain") {
+      setOpenDomainModal(false)
+    }
+    if (type == "branch") {
+      setOpenBranchModal(false)
+    }
+    if (type == "manager") {
+      setOpenManagerModal(false)
+    }
+    if (type == "job") {
+      setOpenJobModal(false)
+    }
+    setSelectedRow(null)
+  };
 
   React.useEffect(() => {
     async function fetchRole() {
       try {
         const roleData = await getRole();
-        setRole(roleData.role);
+        setRole(roleData);
       } catch (error) {
         console.error('Error fetching role:', error);
       }
@@ -110,15 +129,13 @@ export const StartEditButtonGrid: React.FC<AdminEmployeemanagementProps & { type
     }
   };
 
-  const handleEditClick = (id: GridRowId) => () => {
-    setRowModesModel({ ...rowModesModel, [id]: { mode: GridRowModes.Edit } });
-  };
-
-  const handleSaveClick = (id: GridRowId) => () => {
-    setRowModesModel({ ...rowModesModel, [id]: { mode: GridRowModes.View } });
-  };
-
   const handleDeleteClick = (id: GridRowId) => async () => {
+    const isConfirmed = window.confirm('Are you sure you want to delete this record?');
+  
+    if (!isConfirmed) {
+      return;
+    }
+  
     try {
       await deleteRecord(id);
       setRows(rows.filter((row: any) => {
@@ -133,6 +150,8 @@ export const StartEditButtonGrid: React.FC<AdminEmployeemanagementProps & { type
             return row.branchId !== id;
           case 'manager':
             return row.managerId !== id;
+          case 'job':
+            return row.jobId !== id;
           default:
             return true;
         }
@@ -140,21 +159,23 @@ export const StartEditButtonGrid: React.FC<AdminEmployeemanagementProps & { type
       setSnackbarOpen(true);
       setError(false);
       setAlertMessage('Successfully Deleted');
+      setRows((prevRows: any) => prevRows.filter((row: any) => row.id !== id));
+      handleCloseAddModal();
     } catch (error: any) {
       setSnackbarOpen(true);
       setError(true);
       setAlertMessage(error.message);
     }
   };
+  
 
   async function deleteRecord(id: string | number) {
     try {
-      const token = await getToken("session");
-      const port = 8080;
-      const res = await fetch(`http://${process.env.NEXT_PUBLIC_BASEURL}:${port}/staffinformation/${params.manage}/${id}`, {
+      const token = await getToken("auth_token");
+      const res = await fetch(`${process.env.NEXT_PUBLIC_BASEURL}/staffinformation/${params.manage}/${id}`, {
         method: "DELETE",
         headers: {
-          "authorization": token,
+          "authorization": "Bearer " + token,
           "Content-Type": "application/json"
         },
       });
@@ -168,29 +189,15 @@ export const StartEditButtonGrid: React.FC<AdminEmployeemanagementProps & { type
       throw new Error(error.message || error);
     }
   }
-  
-
-  const handleCancelClick = (id: GridRowId) => () => {
-    setRowModesModel({
-      ...rowModesModel,
-      [id]: { mode: GridRowModes.View, ignoreModifications: true },
-    });
-
-    const editedRow = rows.find((row: any) => row.id === id);
-    if (editedRow && editedRow.isNew) {
-      setRows(rows.filter((row: any) => row.id !== id));
-    }
-  };
 
   async function updateRecord(data: any) {
     try {
-      const token = await getToken("session");
+      const token = await getToken("auth_token");
       const payloadData = { ...data };
-      const port = 8080;
-      const res = await fetch(`http://${process.env.NEXT_PUBLIC_BASEURL}:${port}/staffinformation/${params.manage}`, {
-        method: "POST",
+      const res = await fetch(`${process.env.NEXT_PUBLIC_BASEURL}/staffinformation/${params.manage}`, {
+        method: "PUT",
         headers: {
-          "authorization": token,
+          "authorization": "Bearer " + token,
           "Content-Type": "application/json"
         },
         body: JSON.stringify(payloadData)
@@ -201,8 +208,42 @@ export const StartEditButtonGrid: React.FC<AdminEmployeemanagementProps & { type
         const errorMessage = responseData.message || `Failed to update: ${res.statusText}`;
         throw new Error(errorMessage);
       }
+      setSnackbarOpen(true);
+      setError(false);
+      setAlertMessage('Successfully Updated');
       return responseData;
-    } catch (error:any) {
+    } catch (error: any) {
+      throw new Error(error);
+    }
+  }
+
+  async function addRecord(data: any) {
+    try {
+      const token = await getToken("auth_token");
+      const payloadData = { ...data };
+      const res = await fetch(`${process.env.NEXT_PUBLIC_BASEURL}/staffinformation/${params.manage}`, {
+        method: "POST",
+        headers: {
+          "authorization": "Bearer " + token,
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify(payloadData)
+      });
+
+      const responseData = await res.json();
+      if (!res.ok) {
+        const errorMessage = responseData.message || `Failed to update: ${res.statusText}`;
+        throw new Error(errorMessage);
+      }
+      setSnackbarOpen(true);
+      setError(false);
+      setAlertMessage('Successfully Updated');
+      setRows((oldRows: any) => [
+        data,
+        ...oldRows
+      ])
+      return responseData;
+    } catch (error: any) {
       throw new Error(error);
     }
   }
@@ -211,9 +252,6 @@ export const StartEditButtonGrid: React.FC<AdminEmployeemanagementProps & { type
   const processRowUpdate = async (updatedRow: any, originalRow: any) => {
     try {
       const updateRow = await updateRecord(updatedRow);
-      setSnackbarOpen(true);
-      setError(false);
-      setAlertMessage('Successfully Updated');
       return updateRow;
     } catch (error: any) {
       setSnackbarOpen(true);
@@ -228,107 +266,152 @@ export const StartEditButtonGrid: React.FC<AdminEmployeemanagementProps & { type
     setRowModesModel(newRowModesModel);
   };
 
-  const handleClickOpen = (id: any) => {
-    setEmployeeId(id);
-    setOpen(true);
-  };
-  const handleClose = () => {
-    setOpen(false);
-  };
 
-  const getRowId = (row: EmployeeNode | Manager | Organization | Domain | Branch | Job): GridRowId => {
-    if ('managerId' in row && 'empId' in row && 'organizationId' in row && Object.keys(row).length === 3) {
-      return row.managerId as string;
-    } else if ('empId' in row && 'organizationId' in row && 'organizationUnit' in row) {
-      return row.empId as string;
-    } else if ('organizationId' in row) {
-      return row.organizationId as string;
-    } else if ('domainId' in row) {
-      return row.domainId as string;
-    } else if ('branchId' in row) {
-      return row.branchId as string;
-    } else if ('jobId' in row) {
-      return row.jobId as string;
+  const getRowId = (row: any): GridRowId => {
+    switch (type) {
+      case 'emp':
+        return row.empId;
+      case 'org':
+        return row.organizationId;
+      case 'domain':
+        return row.domainId;
+      case 'branch':
+        return row.branchId;
+      case 'manager':
+        return row.managerId;
+      case 'job':
+        return row.jobId;
+      default:
+        return '';
     }
-    return '';
   };
 
   const columns_emp: GridColDef[] = [
-    { field: 'empId', headerName: 'StaffID', minWidth: 100, maxWidth: 120, flex: 1, headerAlign: 'center', headerClassName: 'super-app-theme--header', editable: true, hideable: true},
-    { field: 'thTitle', headerName: 'thTitle', minWidth: 100, maxWidth: 120, flex: 1, headerAlign: 'center', headerClassName: 'super-app-theme--header', editable: true, },
-    { field: 'thFirstName', headerName: 'Thai name', minWidth: 100, maxWidth: 200, flex: 1, headerAlign: 'center', headerClassName: 'super-app-theme--header', editable: true, },
-    { field: 'thLastName', headerName: 'Thai Last name', minWidth: 120, maxWidth: 200, flex: 1, headerAlign: 'center', headerClassName: 'super-app-theme--header', editable: true, },
-    { field: 'enTitle', headerName: 'EnTitle', minWidth: 100, maxWidth: 200, flex: 1, headerAlign: 'center', headerClassName: 'super-app-theme--header', editable: true, },
-    { field: 'enFirstName', headerName: 'eng Name', minWidth: 120, maxWidth: 200, flex: 1, headerAlign: 'center', headerClassName: 'super-app-theme--header', editable: true, },
-    { field: 'enLastName', headerName: 'eng LastName', minWidth: 120, maxWidth: 200, flex: 1, headerAlign: 'center', headerClassName: 'super-app-theme--header', editable: true, },
-    { field: 'nickname', headerName: 'NickName', minWidth: 100, maxWidth: 200, flex: 1, headerAlign: 'center', headerClassName: 'super-app-theme--header', editable: true, },
-    { field: 'email', headerName: 'Email', minWidth: 200, maxWidth: 300, flex: 1, headerAlign: 'center', headerClassName: 'super-app-theme--header', editable: true, },
-    { field: 'organizationId', headerName: 'Department', minWidth: 100, maxWidth: 200, flex: 1, headerAlign: 'center', headerClassName: 'super-app-theme--header', editable: true, },
-    { field: 'corporationTitle', headerName: 'CorporationTitle', minWidth: 200, maxWidth: 400, flex: 1, headerAlign: 'center', headerClassName: 'super-app-theme--header', editable: true, },
-    { field: 'branchId', headerName: 'BranchId', minWidth: 100, maxWidth: 80, flex: 1, headerAlign: 'center', headerClassName: 'super-app-theme--header', editable: true, },
-    { field: 'jobId', headerName: 'jobId', minWidth: 100, maxWidth: 80, flex: 1, headerAlign: 'center', headerClassName: 'super-app-theme--header', editable: true, },
-    { field: 'extensionCode', headerName: 'ExtensionCode', minWidth: 120, maxWidth: 120, flex: 1, headerAlign: 'center', headerClassName: 'super-app-theme--header', editable: true, },
-    { field: 'derivativeTrader', headerName: 'derivativeTrader', minWidth: 120, maxWidth: 120, flex: 1, headerAlign: 'center', headerClassName: 'super-app-theme--header', editable: true, },
-    { field: 'derivativeLicense', headerName: 'derivativeLicense', minWidth: 140, maxWidth: 120, flex: 1, headerAlign: 'center', headerClassName: 'super-app-theme--header', editable: true, },
-    { field: 'singleTrader', headerName: 'singleTrader', minWidth: 100, maxWidth: 120, flex: 1, headerAlign: 'center', headerClassName: 'super-app-theme--header', editable: true, },
-    { field: 'singleLicense', headerName: 'singleLicense', minWidth: 100, maxWidth: 120, flex: 1, headerAlign: 'center', headerClassName: 'super-app-theme--header', editable: true, },
-    { field: 'otherLicense', headerName: 'otherLicense', minWidth: 140, maxWidth: 160, flex: 1, headerAlign: 'center', headerClassName: 'super-app-theme--header', editable: true, },
-    { field: 'startWorkingDate', headerName: 'startWorkingDate', minWidth: 140, maxWidth: 120, flex: 1, headerAlign: 'center', headerClassName: 'super-app-theme--header', editable: true, },
-    { field: 'lastWorkingDate', headerName: 'lastWorkingDate', minWidth: 140, maxWidth: 120, flex: 1, headerAlign: 'center', headerClassName: 'super-app-theme--header', editable: true, },
-    { field: 'effectiveDate', headerName: 'effectiveDate', minWidth: 140, maxWidth: 120, flex: 1, headerAlign: 'center', headerClassName: 'super-app-theme--header', editable: true, },
     {
-      field: 'image',
-      headerName: 'Image',
-      minWidth: 100, maxWidth: 120,
-      headerAlign: 'center',
-      headerClassName: 'super-app-theme--header',
-      editable: false,
-      renderCell: ({ id }) => (
-        <Image
-          priority
-          src={`http://${process.env.NEXT_PUBLIC_BASEURL}:8080/uploads/${id}.png`}
-          width={40}
-          height={40}
-          alt="employee"
-          className="cursor-pointer"
-          onClick={() => role == "admin" ? handleClickOpen(id) : ""}
-          style={{ width: 50, height: 50, borderRadius: '50%' }}
-        />
+      field: 'empId', headerName: 'Staff ID', minWidth: 100, maxWidth: 120, flex: 1, headerAlign: 'center', headerClassName: 'super-app-theme--header', align: 'center', editable: false, hideable: true,
+      renderCell: (params) => (
+        <div
+          onClick={() => handleOpenAddModal(type, params.row)}
+          className='text-center text-blue-500 cursor-pointer flex items-center justify-center h-full hover:underline'
+        >
+          {params.value}
+        </div>
       ),
     },
+    { field: 'thTitle', headerName: 'Thai Title', minWidth: 100, maxWidth: 120, flex: 1, headerAlign: 'center', headerClassName: 'super-app-theme--header', align: 'center', },
+    { field: 'thFirstName', headerName: 'Thai name', minWidth: 100, maxWidth: 200, flex: 1, headerAlign: 'center', headerClassName: 'super-app-theme--header', align: 'center', },
+    { field: 'thLastName', headerName: 'Thai Last name', minWidth: 120, maxWidth: 200, flex: 1, headerAlign: 'center', headerClassName: 'super-app-theme--header', align: 'center', },
+    { field: 'enTitle', headerName: 'English Title', minWidth: 100, maxWidth: 200, flex: 1, headerAlign: 'center', headerClassName: 'super-app-theme--header', align: 'center', },
+    { field: 'enFirstName', headerName: 'English Name', minWidth: 140, maxWidth: 200, flex: 1, headerAlign: 'center', headerClassName: 'super-app-theme--header', align: 'center', },
+    { field: 'enLastName', headerName: 'English LastName', minWidth: 140, maxWidth: 200, flex: 1, headerAlign: 'center', headerClassName: 'super-app-theme--header', align: 'center', },
+    { field: 'nickname', headerName: 'Nick Name', minWidth: 100, maxWidth: 200, flex: 1, headerAlign: 'center', headerClassName: 'super-app-theme--header', align: 'center', },
+    { field: 'email', headerName: 'Email', minWidth: 200, maxWidth: 300, flex: 1, headerAlign: 'center', headerClassName: 'super-app-theme--header', align: 'center', },
+    { field: 'organizationId', headerName: 'Department', minWidth: 100, maxWidth: 200, flex: 1, headerAlign: 'center', headerClassName: 'super-app-theme--header', align: 'center', },
+    { field: 'corporationTitle', headerName: 'CorporationTitle', minWidth: 200, maxWidth: 400, flex: 1, headerAlign: 'center', headerClassName: 'super-app-theme--header', align: 'center', },
+    { field: 'branchId', headerName: 'Branch ID', minWidth: 100, maxWidth: 80, flex: 1, headerAlign: 'center', headerClassName: 'super-app-theme--header', align: 'center', },
+    { field: 'jobId', headerName: 'job ID', minWidth: 100, maxWidth: 80, flex: 1, headerAlign: 'center', headerClassName: 'super-app-theme--header', align: 'center', },
+    { field: 'extensionCode', headerName: 'ExtensionCode', minWidth: 120, maxWidth: 120, flex: 1, headerAlign: 'center', headerClassName: 'super-app-theme--header', align: 'center', },
+    { field: 'derivativeTrader', headerName: 'DerivativeTrader', minWidth: 120, maxWidth: 120, flex: 1, headerAlign: 'center', headerClassName: 'super-app-theme--header', align: 'center', },
+    { field: 'derivativeLicense', headerName: 'DerivativeLicense', minWidth: 140, maxWidth: 120, flex: 1, headerAlign: 'center', headerClassName: 'super-app-theme--header', align: 'center', },
+    { field: 'singleTrader', headerName: 'SingleTrader', minWidth: 100, maxWidth: 120, flex: 1, headerAlign: 'center', headerClassName: 'super-app-theme--header', align: 'center', },
+    { field: 'singleLicense', headerName: 'SingleLicense', minWidth: 100, maxWidth: 120, flex: 1, headerAlign: 'center', headerClassName: 'super-app-theme--header', align: 'center', },
+    { field: 'otherLicense', headerName: 'OtherLicense', minWidth: 140, maxWidth: 160, flex: 1, headerAlign: 'center', headerClassName: 'super-app-theme--header', align: 'center', },
+    { field: 'startWorkingDate', headerName: 'StartWorkingDate', minWidth: 140, maxWidth: 120, flex: 1, headerAlign: 'center', headerClassName: 'super-app-theme--header', align: 'center', },
+    { field: 'lastWorkingDate', headerName: 'LastWorkingDate', minWidth: 140, maxWidth: 120, flex: 1, headerAlign: 'center', headerClassName: 'super-app-theme--header', align: 'center', },
+    { field: 'effectiveDate', headerName: 'EffectiveDate', minWidth: 140, maxWidth: 120, flex: 1, headerAlign: 'center', headerClassName: 'super-app-theme--header', align: 'center', },
   ];
 
   const columns_org: GridColDef[] = [
-    { field: 'organizationId', headerName: 'Organization ID', minWidth: 100, flex: 1, headerAlign: 'center', headerClassName: 'super-app-theme--header', editable: true },
-    { field: 'domainId', headerName: 'Domain ID', minWidth: 100, flex: 1, headerAlign: 'center', headerClassName: 'super-app-theme--header', editable: true },
-    { field: 'organizationUnit', headerName: 'Organization Unit', minWidth: 100, flex: 1, headerAlign: 'center', headerClassName: 'super-app-theme--header', editable: true },
-    { field: 'parentOrganizationId', headerName: 'Parent Organization ID', minWidth: 100, flex: 1, headerAlign: 'center', headerClassName: 'super-app-theme--header', editable: true },
+    {
+      field: 'organizationId', headerName: 'Organization ID', minWidth: 100, flex: 1, headerAlign: 'center', headerClassName: 'super-app-theme--header', align: 'center',
+      renderCell: (params) => (
+        <div
+          onClick={() => handleOpenAddModal(type, params.row)}
+          className='text-center text-blue-500 cursor-pointer flex items-center justify-center h-full hover:underline'
+        >
+          {params.value}
+        </div>
+      ),
+    },
+    { field: 'domainId', headerName: 'Domain ID', minWidth: 100, flex: 1, headerAlign: 'center', headerClassName: 'super-app-theme--header', align: 'center' },
+    { field: 'organizationUnit', headerName: 'Organization Unit', minWidth: 100, flex: 1, headerAlign: 'center', headerClassName: 'super-app-theme--header' },
+    { field: 'parentOrganizationId', headerName: 'Parent Organization ID', minWidth: 100, flex: 1, headerAlign: 'center', headerClassName: 'super-app-theme--header', align: 'center' },
   ];
-  
+
   const columns_domain: GridColDef[] = [
-    { field: 'domainId', headerName: 'Domain ID', minWidth: 100, flex: 1, headerAlign: 'center', headerClassName: 'super-app-theme--header', editable: true },
-    { field: 'domainName', headerName: 'Domain Name', minWidth: 100, flex: 1, headerAlign: 'center', headerClassName: 'super-app-theme--header', editable: true },
-  ]
-  
+    {
+      field: 'domainId',
+      headerName: 'Domain ID',
+      minWidth: 100,
+      flex: 1,
+      headerAlign: 'center',
+      headerClassName: 'super-app-theme--header', align: 'center',
+      renderCell: (params) => (
+        <div
+          onClick={() => handleOpenAddModal(type, params.row)}
+          className='text-center text-blue-500 cursor-pointer flex items-center justify-center h-full hover:underline'
+        >
+          {params.value}
+        </div>
+      ),
+    },
+    {
+      field: 'domainName',
+      headerName: 'Domain Name',
+      minWidth: 100,
+      flex: 1,
+      headerAlign: 'center',
+      headerClassName: 'super-app-theme--header', align: 'center',
+    },
+  ];
+
   const columns_branch: GridColDef[] = [
-    { field: 'branchId', headerName: 'Domain ID', minWidth: 100, flex: 1, headerAlign: 'center', headerClassName: 'super-app-theme--header', editable: true },
-    { field: 'branchName', headerName: 'Branch Name', minWidth: 100, flex: 1, headerAlign: 'center', headerClassName: 'super-app-theme--header', editable: true },
-    { field: 'location', headerName: 'location', minWidth: 100, flex: 1, headerAlign: 'center', headerClassName: 'super-app-theme--header', editable: true },
-    { field: 'contact', headerName: 'Contact', minWidth: 100, flex: 1, headerAlign: 'center', headerClassName: 'super-app-theme--header', editable: true },
+    {
+      field: 'branchId', headerName: 'Branch ID', minWidth: 100, flex: 1, headerAlign: 'center', headerClassName: 'super-app-theme--header', align: 'center',
+      renderCell: (params) => (
+        <div
+          onClick={() => handleOpenAddModal(type, params.row)}
+          className='text-center text-blue-500 cursor-pointer flex items-center justify-center h-full hover:underline'
+        >
+          {params.value}
+        </div>
+      ),
+    },
+    { field: 'branchName', headerName: 'Branch Name', minWidth: 100, flex: 1, headerAlign: 'center', headerClassName: 'super-app-theme--header', align: 'center' },
+    { field: 'location', headerName: 'location', minWidth: 100, flex: 1, headerAlign: 'center', headerClassName: 'super-app-theme--header' },
+    { field: 'contact', headerName: 'Contact', minWidth: 100, flex: 1, headerAlign: 'center', headerClassName: 'super-app-theme--header' },
   ]
-  
+
   const columns_job: GridColDef[] = [
-    { field: 'jobId', headerName: 'Job ID', minWidth: 100, flex: 1, headerAlign: 'center', headerClassName: 'super-app-theme--header', editable: true },
-    { field: 'jobTitle', headerName: 'Job Title', minWidth: 100, flex: 1, headerAlign: 'center', headerClassName: 'super-app-theme--header', editable: true },
+    {
+      field: 'jobId', headerName: 'Job ID', minWidth: 100, flex: 1, headerAlign: 'center', headerClassName: 'super-app-theme--header', align: 'center',
+      renderCell: (params) => (
+        <div
+          onClick={() => handleOpenAddModal(type, params.row)}
+          className='text-center text-blue-500 cursor-pointer flex items-center justify-center h-full hover:underline'
+        >
+          {params.value}
+        </div>
+      )
+    },
+    { field: 'jobTitle', headerName: 'Job Title', minWidth: 100, flex: 1, headerAlign: 'center', headerClassName: 'super-app-theme--header', align: 'center' },
   ]
-  
+
   const columns_manager: GridColDef[] = [
-    { field: 'managerId', headerName: 'Manager ID', minWidth: 100, flex: 1, headerAlign: 'center', headerClassName: 'super-app-theme--header', editable: true },
-    { field: 'empId', headerName: 'Employee ID', minWidth: 100, flex: 1, headerAlign: 'center', headerClassName: 'super-app-theme--header', editable: true },
-    { field: 'organizationId', headerName: 'Organization ID', minWidth: 100, flex: 1, headerAlign: 'center', headerClassName: 'super-app-theme--header', editable: true },
+    {
+      field: 'managerId', headerName: 'Manager ID', minWidth: 100, flex: 1, headerAlign: 'center', headerClassName: 'super-app-theme--header', align: 'center',
+      renderCell: (params) => (
+        <div
+          onClick={() => handleOpenAddModal(type, params.row)}
+          className='text-center text-blue-500 cursor-pointer flex items-center justify-center h-full hover:underline'
+        >
+          {params.value}
+        </div>
+      ),
+    },
+    { field: 'empId', headerName: 'Employee ID', minWidth: 100, flex: 1, headerAlign: 'center', headerClassName: 'super-app-theme--header', align: 'center' },
+    { field: 'organizationId', headerName: 'Organization ID', minWidth: 100, flex: 1, headerAlign: 'center', headerClassName: 'super-app-theme--header', align: 'center' },
   ]
-
-
 
   const columnsMap = {
     'emp': columns_emp,
@@ -338,108 +421,133 @@ export const StartEditButtonGrid: React.FC<AdminEmployeemanagementProps & { type
     'manager': columns_manager,
     'job': columns_job,
   };
-  
+
   const initialColumns = columnsMap[type] || [];
 
-
-  if (role === 'admin') {
-    initialColumns.push({
-      field: 'actions',
-      type: 'actions',
-      headerName: 'Actions',
-      headerAlign: 'center', headerClassName: 'super-app-theme--header',
-      width: 100,
-      cellClassName: 'actions',
-      getActions: ({ id }: { id: GridRowId }) => {
-        const isInEditMode = rowModesModel[id]?.mode === GridRowModes.Edit;
-        if (isInEditMode) {
-          return [
-            <GridActionsCellItem
-              key={id}
-              icon={<SaveIcon />}
-              label="Save"
-              onClick={handleSaveClick(id)}
-            />,
-            <GridActionsCellItem
-              key={id}
-              icon={<CancelIcon />}
-              label="Cancel"
-              className="textPrimary"
-              onClick={handleCancelClick(id)}
-              color="inherit"
-            />,
-          ];
-        }
-  
-        return [
-          <GridActionsCellItem
-            key={id}
-            icon={<EditIcon />}
-            label="Edit"
-            className="textPrimary"
-            onClick={handleEditClick(id)}
-            color="inherit"
-          />,
-          <GridActionsCellItem
-            key={id}
-            icon={<DeleteIcon />}
-            label="Delete"
-            onClick={handleDeleteClick(id)}
-            color="inherit"
-          />,
-        ];
-      },
-    });
-  }
   return (
     <Box
       sx={{
         height: '30%',
         width: '100%',
-        '& .actions': {
-          color: 'text.secondary',
-        },
-        '& .textPrimary': {
-          color: 'text.primary',
-        },
         '.MuiDataGrid-columnHeaderTitle': {
           fontWeight: 'bold !important',
-          color: 'white',
           overflow: 'visible !important'
         },
-        '.super-app-theme--header': {
-          backgroundColor: 'rgb(244 63 94)',
-        },
+        marginTop: 2
       }}
     >
-      <DataGrid
-        isCellEditable={() => role == "admin"}
-        autoHeight
-        rows={rows}
-        columns={initialColumns}
-        getRowId={getRowId}
-        editMode="row"
-        rowModesModel={rowModesModel}
-        onRowModesModelChange={handleRowModesModelChange}
-        onRowEditStop={handleRowEditStop}
-        processRowUpdate={processRowUpdate}
-        slots={{
-          toolbar: EditToolbar as GridSlots['toolbar'],
-        }}
-        slotProps={{
-          toolbar: { setRows, setRowModesModel, type, role },
-        }}
-      />
-      <Snackbar
-        open={snackbarOpen}
-        autoHideDuration={6000}
-        onClose={() => setSnackbarOpen(false)}
-      >
-        <Alert onClose={() => setSnackbarOpen(false)} severity={!errorResponse ? "success" : "error"} variant="filled">
-          {alertMessage}
-        </Alert>
-      </Snackbar>
-      <UploadPicture open={open} close={handleClose} employeeID={employeeId} alert={setSnackbarOpen} alertMessage={setAlertMessage} />
+      <div style={{ height: '93vh', width: '100%' }}>
+        <DataGrid
+          autoHeight={false}
+          rows={rows}
+          columns={initialColumns}
+          getRowId={getRowId}
+          editMode="row"
+          rowModesModel={rowModesModel}
+          onRowModesModelChange={handleRowModesModelChange}
+          onRowEditStop={handleRowEditStop}
+          processRowUpdate={processRowUpdate}
+          slots={{
+            toolbar: EditToolbar as GridSlots['toolbar'],
+          }}
+          slotProps={{
+            toolbar: { type, role, handleOpenAddModal },
+          }}
+          sx={{ height: '100%', width: '100%' }}
+        />
+      </div>
+      <AlertResponse snackbarOpen={snackbarOpen} setSnackbarOpen={setSnackbarOpen} alertMessage={alertMessage} errorResponse={errorResponse} />
+      {type === "emp" && (
+        <EmployeeModal
+          open={openEmployeeModal}
+          handleClose={handleCloseAddModal}
+          addRecord={addRecord}
+          updateRecord={updateRecord}
+          deleteRecord={handleDeleteClick}
+          setRows={setRows}
+          setSnackbarOpen={setSnackbarOpen}
+          setAlertMessage={setAlertMessage}
+          setError={setError}
+          selectedRow={selectedRow}
+          role={role}
+        />
+      )}
+      {type === "org" && (
+        <OrganizationModal
+          open={openOrganizationModal}
+          handleClose={handleCloseAddModal}
+          addRecord={addRecord}
+          updateRecord={updateRecord}
+          deleteRecord={handleDeleteClick}
+          setRows={setRows}
+          setSnackbarOpen={setSnackbarOpen}
+          setAlertMessage={setAlertMessage}
+          setError={setError}
+          selectedRow={selectedRow}
+          role={role}
+        />
+      )}
+      {type === "job" && (
+        <JobModal
+          open={openJobModal}
+          handleClose={handleCloseAddModal}
+          addRecord={addRecord}
+          updateRecord={updateRecord}
+          deleteRecord={handleDeleteClick}
+          setRows={setRows}
+          setSnackbarOpen={setSnackbarOpen}
+          setAlertMessage={setAlertMessage}
+          setError={setError}
+          selectedRow={selectedRow}
+          role={role}
+        />
+      )}
+      {type === "domain" && (
+        <DomainModal
+          open={openDomainModal}
+          handleClose={handleCloseAddModal}
+          addRecord={addRecord}
+          updateRecord={updateRecord}
+          deleteRecord={handleDeleteClick}
+          setRows={setRows}
+          setSnackbarOpen={setSnackbarOpen}
+          setAlertMessage={setAlertMessage}
+          setError={setError}
+          selectedRow={selectedRow}
+          role={role}
+        />
+      )}
+      {type === "branch" && (
+        <BranchModal
+          open={openBranchModal}
+          handleClose={handleCloseAddModal}
+          addRecord={addRecord}
+          updateRecord={updateRecord}
+          deleteRecord={handleDeleteClick}
+          setRows={setRows}
+          setSnackbarOpen={setSnackbarOpen}
+          setAlertMessage={setAlertMessage}
+          setError={setError}
+          selectedRow={selectedRow}
+          role={role}
+        />
+      )}
+      {type === "manager" && (
+        <ManagerModal
+          open={openManagerModal}
+          handleClose={handleCloseAddModal}
+          addRecord={addRecord}
+          updateRecord={updateRecord}
+          deleteRecord={handleDeleteClick}
+          setRows={setRows}
+          setSnackbarOpen={setSnackbarOpen}
+          setAlertMessage={setAlertMessage}
+          setError={setError}
+          selectedRow={selectedRow}
+          role={role}
+        />
+      )}
+
     </Box>
   );
 }

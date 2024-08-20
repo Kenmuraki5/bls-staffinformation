@@ -1,0 +1,789 @@
+'use client'
+import React, { useEffect, useState } from 'react';
+import { Modal, Box, Typography, TextField, Button, IconButton, Divider, Grid, Avatar, Slide, Autocomplete, FormHelperText, InputLabel, Select, MenuItem } from '@mui/material';
+import ArrowBackIcon from '@mui/icons-material/ArrowBack';
+import CameraAltIcon from '@mui/icons-material/CameraAlt';
+import SaveOutlinedIcon from '@mui/icons-material/SaveOutlined';
+import DeleteOutlineOutlinedIcon from '@mui/icons-material/DeleteOutlineOutlined';
+import { getAllDepartmentsClientSide } from '@/app/api/departments';
+import { getAllJobClientSide } from '@/app/api/job';
+import { getAlldomainClientSide } from '@/app/api/domain';
+import { getToken } from '@/app/utils/auth';
+import fetchWithAuthClient from '@/app/utils/fetchWithAuthClientSide';
+
+const EmployeeModal = ({ open, handleClose, addRecord, updateRecord, deleteRecord, setRows, setSnackbarOpen, setAlertMessage, setError, selectedRow, role }: any) => {
+  const [organizations, setOrganizations] = useState([]);
+  const [jobs, setJobs] = useState([]);
+  const [domains, setDomains] = useState([]);
+
+  const [empId, setStaffId] = useState('');
+  const [startWorkingDate, setHireDate] = useState('');
+  const [lastWorkingDate, setLastWorkingDate] = useState('');
+  const [effectiveDate, setEffectiveDate] = useState('');
+  const [title, setTitle] = useState('');
+  const [thFirstName, setThFirstName] = useState('');
+  const [thLastName, setThLastName] = useState('');
+  const [enFirstName, setEnFirstName] = useState('');
+  const [enLastName, setEnLastName] = useState('');
+  const [nickname, setNickName] = useState('');
+  const [extension, setExtension] = useState('');
+  const [corporationTitle, setCorporationTitle] = useState('');
+  const [email, setEmail] = useState('');
+  const [organizationId, setOrganizationId] = useState(null);
+  const [jobId, setJobId] = useState(null);
+  const [derivativeTrader, setDerivativeTrader] = useState('');
+  const [derivativeLicense, setDerivativeLicense] = useState('');
+  const [singleTrader, setSingleTrader] = useState('');
+  const [singleLicense, setSingleLicense] = useState('');
+  const [otherLicense, setOtherLicense] = useState('');
+  const [branchId, setBranchId] = useState('');
+  const [domainId, setDomainId] = useState(null);
+
+  const [avatarImage, setAvatarImage] = useState<string | null>(null);
+  const [file, setFile] = useState<File | null>(null);
+
+  const [errors, setErrors] = useState<any>({
+    empId: '',
+    startWorkingDate: '',
+    thFirstName: '',
+    thLastName: '',
+    enFirstName: '',
+    enLastName: '',
+    email: '',
+    extension: '',
+  });
+
+  const corporationAutocomplete = [
+    'Chief Executive Officer',
+    'Chief Financial Officer',
+    'Chief Operating Officer',
+    'President',
+    'Chief Marketing Officer',
+    'Vice President',
+    'Chief Information Officer',
+    'Chief Technology Officer',
+    'Director',
+    'Director of Operations',
+    'Chairperson',
+    'Director General',
+    'Human Resources Manager',
+    'Administrative Assistant',
+    'Finance Manager',
+    'Founder',
+    'Manager',
+    'Managing Director',
+    'Partner',
+    'Marketing Manager',
+    'Accountant',
+    'Chief Talent Officer',
+    'Chief Compliance Officer',
+    'Creative Director'
+  ];
+
+  async function fetchData() {
+    try {
+      const departments = await getAllDepartmentsClientSide();
+      const jobs = await getAllJobClientSide();
+      const domains = await getAlldomainClientSide();
+      setOrganizations(departments.organizations || []);
+      setJobs(jobs.jobs || []);
+      setDomains(domains.domains || []);
+    } catch (error) {
+      console.error('Error fetching data:', error);
+      setOrganizations([]);
+      setJobs([]);
+      setDomains([]);
+    }
+  }
+
+
+
+
+  useEffect(() => {
+    fetchData();
+  }, []);
+
+  useEffect(() => {
+    if (selectedRow) {
+      setStaffId(selectedRow.empId || '');
+      setHireDate(selectedRow.startWorkingDate || '');
+      setTitle(selectedRow.thTitle + '/' + selectedRow.enTitle || '');
+      setThFirstName(selectedRow.thFirstName || '');
+      setThLastName(selectedRow.thLastName || '');
+      setEnFirstName(selectedRow.enFirstName || '');
+      setEnLastName(selectedRow.enLastName || '');
+      setNickName(selectedRow.nickname || '');
+      setExtension(selectedRow.extensionCode || '');
+      setCorporationTitle(selectedRow.corporationTitle || '');
+      setEmail(selectedRow.email || '');
+      setOrganizationId(selectedRow.organizationId || null);
+      setJobId(selectedRow.jobId || null);
+      setDomainId(selectedRow.domainId);
+      setDerivativeTrader(selectedRow.derivativeTrader || '');
+      setDerivativeLicense(selectedRow.derivativeLicense || '');
+      setSingleTrader(selectedRow.singleTrader || '');
+      setSingleLicense(selectedRow.singleLicense || '');
+      setOtherLicense(selectedRow.otherLicense || '');
+      setBranchId(selectedRow.branchId || null);
+      setDomainId(selectedRow.domainId || null);
+      const imageUrl = `${process.env.NEXT_PUBLIC_BASEURL}/uploads/${selectedRow.empId}.png`;
+      setAvatarImage(imageUrl ? imageUrl : null);
+      setHireDate(formatDate(selectedRow.startWorkingDate));
+      setLastWorkingDate(formatDate(selectedRow.lastWorkingDate));
+      setEffectiveDate(formatDate(selectedRow.effectiveDate));
+      setErrors({});
+    } else {
+      resetState();
+      setErrors({});
+    }
+  }, [selectedRow]);
+
+  const resetState = () => {
+    setStaffId('');
+    setHireDate('');
+    setLastWorkingDate('');
+    setEffectiveDate('');
+    setTitle('');
+    setThFirstName('');
+    setThLastName('');
+    setEnFirstName('');
+    setEnLastName('');
+    setNickName('');
+    setExtension('');
+    setCorporationTitle('');
+    setEmail('');
+    setOrganizationId(null);
+    setJobId(null);
+    setDerivativeTrader('');
+    setDerivativeLicense('');
+    setSingleTrader('');
+    setSingleLicense('');
+    setOtherLicense('');
+    setBranchId('');
+    setDomainId(null);
+    setAvatarImage(null);
+  };
+
+  const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file: any = event.target.files?.[0];
+    setFile(file);
+    if (file) {
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setAvatarImage(reader.result as string);
+      };
+      reader.readAsDataURL(file);
+    }
+  };
+
+  const formatDateToISO = (dateString: string) => {
+    const date = new Date(dateString);
+    const offset = -date.getTimezoneOffset();
+    const offsetHours = Math.floor(offset / 60);
+    const offsetMinutes = offset % 60;
+    const isoString = date.toISOString().split('T')[0] + `T00:00:00${offsetHours >= 0 ? '+' : '-'}${String(Math.abs(offsetHours)).padStart(2, '0')}:${String(offsetMinutes).padStart(2, '0')}`;
+    return isoString;
+  };
+
+  const formatDate = (dateString: string) => {
+    if (!dateString) return "";
+    const isoDateString = dateString;
+    const date = new Date(isoDateString);
+    const formattedDate = date.toISOString().split('T')[0];
+    return formattedDate;
+  }
+
+  const isValidEnglishName = (name: string) => /^[a-zA-Z\s]+$/.test(name);
+  const isValidThaiName = (name: string) => /^[\u0E00-\u0E7F\s]+$/.test(name);
+  const isValidEmail = (email: string) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+  const isValidExtensionCode = (code: string) => /^\d{4}$/.test(code);
+
+  const handleSave = async () => {
+    const newErrors: any = {};
+
+    // Validation checks
+    if (!isValidEnglishName(enFirstName) || !isValidEnglishName(enLastName)) {
+      newErrors.enFirstName = 'English names must contain only English letters.';
+    }
+
+    if (!isValidThaiName(thFirstName) || !isValidThaiName(thLastName)) {
+      newErrors.thFirstName = 'Thai names and Last names must contain only Thai characters.';
+    }
+
+    if (!isValidEmail(email)) {
+      newErrors.email = 'Please provide a valid email address.';
+    }
+
+    if (!isValidExtensionCode(extension)) {
+      newErrors.extension = 'Extension code must be a 4-digit number.';
+    }
+
+    if (Object.keys(newErrors).length > 0) {
+      setErrors(newErrors);
+      return;
+    }
+
+    try {
+      const formattedStartDate = formatDateToISO(startWorkingDate);
+      const data = {
+        empId,
+        organizationId,
+        branchId,
+        jobId,
+        enTitle: title.split("/")[1],
+        enFirstName,
+        enLastName,
+        nickname,
+        thTitle: title.split("/")[0],
+        thFirstName,
+        thLastName,
+        email,
+        derivativeTrader,
+        derivativeLicense,
+        singleTrader,
+        singleLicense,
+        otherLicense,
+        startWorkingDate: formattedStartDate,
+        lastWorkingDate: "",
+        effectiveDate: "",
+        corporationTitle: corporationTitle,
+        extensionCode: extension,
+      };
+      if (file) {
+        await handleUpload();
+      }
+      if (selectedRow != null) {
+        await updateRecord(data);
+        setRows((oldRows: any) =>
+          oldRows.map((row: any) =>
+            row.empId === selectedRow.empId ? { ...row, ...data } : row
+          )
+        );
+      } else {
+        await addRecord(data);
+      }
+      handleClose(true);
+      setSnackbarOpen(true);
+      setError(false);
+      setAlertMessage('Successfully Updated');
+    } catch (error: any) {
+      setSnackbarOpen(true);
+      setError(true);
+      setAlertMessage(error.message);
+    }
+  };
+
+  const handleUpload = async () => {
+    const token = await getToken("auth_token");
+    if (!empId || !file) {
+      alert('Please provide both Employee ID and a file.');
+      return;
+    }
+
+    const reader = new FileReader();
+
+    reader.onloadend = () => {
+      if (reader.result) {
+        const base64String = (reader.result as string).split(',')[1];
+        const imageExtension = file.name.split('.').pop() || '';
+
+        const requestBody = {
+          empId: empId,
+          imageData: base64String,
+          imageExtension: imageExtension
+        };
+        fetchWithAuthClient(`${process.env.NEXT_PUBLIC_BASEURL}/staffinformation/employee/uploadPicture`, {
+          method: 'POST',
+          headers: {
+            'Authorization': `Bearer ${token}`,
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify(requestBody)
+        })
+          .then(async response => {
+            if (!response.ok) {
+              const errorText = await response.text();
+              throw new Error(`HTTP error! Status: ${response.status} - ${errorText}`);
+            }
+            alert('Upload successful!');
+            return response.json();
+          })
+          .then(data => {
+            console.log('Success:', data);
+            handleClose(true);
+          })
+          .catch((error) => {
+            console.error('Error:', error);
+            alert(`Error: ${error.message}`);
+          });
+      }
+    };
+
+    if (file) {
+      reader.readAsDataURL(file);
+    }
+  };
+
+
+
+  return (
+    <Modal
+      open={open}
+      onClose={handleClose}
+      aria-labelledby="modal-modal-title"
+      aria-describedby="modal-modal-description"
+      BackdropProps={{
+        invisible: true,
+      }}
+      style={{ display: 'flex', alignItems: 'center', justifyContent: 'flex-end', zIndex: 1200 }}
+    >
+      <Box
+        className="bg-white p-6 shadow-lg"
+        sx={{
+          width: '100%',
+          maxWidth: '960px',
+          height: 'calc(100vh - 64px)',
+          overflowY: 'auto',
+          position: 'fixed',
+          top: 64,
+          right: 0,
+          zIndex: 1200,
+        }}
+      >
+        <Box className="flex items-center justify-between">
+          <IconButton onClick={handleClose} className='hover:text-blue-500'>
+            <ArrowBackIcon />
+          </IconButton>
+          <Typography variant="h6" component="h2" className="ml-12 text-black font-bold">
+            {selectedRow && Object.keys(selectedRow).length > 0 && role == "AdminStaffInformation"
+              ? "Edit Staff Information" : selectedRow == null && role == "AdminStaffInformation" ? "Add Employee" : "Staff Information"}
+          </Typography>
+          <Box sx={{ ml: 'auto', display: 'flex', alignItems: 'center' }}>
+            {role === "AdminStaffInformation" && (
+              <>
+                <Button
+                  variant="outlined"
+                  onClick={handleSave}
+                  startIcon={<SaveOutlinedIcon />}
+                  sx={{ mr: 1 }}
+                >
+                  Save
+                </Button>
+              </>
+            )}
+          </Box>
+          {role === "AdminStaffInformation" && selectedRow != null && (
+            <Box>
+              <Button
+                color='error'
+                variant="outlined"
+                onClick={deleteRecord(selectedRow?.empId)}
+                startIcon={<DeleteOutlineOutlinedIcon />}
+              >
+                Delete
+              </Button>
+            </Box>
+          )}
+        </Box>
+
+        <Divider sx={{ my: 2 }} />
+
+        <Grid container spacing={2}>
+          {/* Left Column */}
+          <Grid item xs={12} md={4} sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+            <Avatar
+              alt="Employee Avatar"
+              src={avatarImage || ''}
+              sx={{ width: 150, height: 150 }}
+            />
+            {role == "AdminStaffInformation" && (
+              <>
+                <input
+                  type="file"
+                  accept="image/*"
+                  onChange={handleFileChange}
+                  style={{ display: 'none' }}
+                  id="upload-avatar"
+                />
+                <label htmlFor="upload-avatar">
+                  <IconButton color="primary" component="span">
+                    <CameraAltIcon />
+                  </IconButton>
+                </label>
+              </>
+            )}
+
+            <TextField
+              fullWidth
+              required
+              label="Employee ID"
+              variant="outlined"
+              value={empId}
+              onChange={(e) => setStaffId(e.target.value)}
+              error={!!errors.empId}
+              helperText={errors.empId}
+              sx={{ mt: 2 }}
+              InputProps={{
+                readOnly: selectedRow && Object.keys(selectedRow).length > 0,
+              }}
+            />
+
+
+            <TextField
+              fullWidth
+              required
+              label="Email"
+              variant="outlined"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              error={!!errors.email}
+              helperText={errors.email}
+              sx={{ mt: 2 }}
+              InputProps={{
+                readOnly: role != "AdminStaffInformation",
+              }}
+            />
+            <TextField
+              fullWidth
+              required
+              
+              label="Extension"
+              variant="outlined"
+              value={extension}
+              onChange={(e) => setExtension(e.target.value)}
+              error={!!errors.extension}
+              helperText={errors.extension}
+              sx={{ mt: 2 }}
+              InputProps={{
+                readOnly: role != "AdminStaffInformation",
+              }}
+            />
+          </Grid>
+
+          {/* Vertical Divider */}
+          <Grid item>
+            <Divider orientation="vertical" flexItem sx={{ borderRightWidth: 1, height: '100%', mx: 2 }} />
+          </Grid>
+
+          {/* Right Column */}
+          <Grid item xs={12} md={7}>
+            <Grid container spacing={2}>
+              {/* First Row */}
+              <Grid item xs={12} sm={6}>
+                <InputLabel>Title</InputLabel>
+                <Select
+                  fullWidth
+                  value={title}
+                  onChange={(e) => setTitle(e.target.value)}
+                  label="Title"
+                  readOnly={role != "AdminStaffInformation"}
+                >
+                  <MenuItem value="นาย/Mr.">นาย / Mr.</MenuItem>
+                  <MenuItem value="นาง/Ms.">นาง / Ms.</MenuItem>
+                </Select>
+                {errors.title && <FormHelperText>{errors.title}</FormHelperText>}
+              </Grid>
+              <Grid item xs={12} sm={6} mt={3}>
+                <TextField
+                  fullWidth
+                  label="Nick Name"
+                  variant="outlined"
+                  value={nickname}
+                  onChange={(e) => setNickName(e.target.value)}
+                  error={!!errors.thFirstName}
+                  helperText={errors.thFirstName}
+                  InputProps={{
+                    readOnly: role != "AdminStaffInformation",
+                  }}
+                />
+              </Grid>
+
+              {/* Second Row */}
+              <Grid item xs={12} sm={6}>
+                <TextField
+                  fullWidth
+                  label="Thai First Name"
+                  variant="outlined"
+                  value={thFirstName}
+                  onChange={(e) => setThFirstName(e.target.value)}
+                  error={!!errors.thFirstName}
+                  helperText={errors.thFirstName}
+                  InputProps={{
+                    readOnly: role != "AdminStaffInformation",
+                  }}
+                />
+              </Grid>
+              
+              <Grid item xs={12} sm={6}>
+                <TextField
+                  fullWidth
+                  label="Thai Last Name"
+                  variant="outlined"
+                  value={thLastName}
+                  onChange={(e) => setThLastName(e.target.value)}
+                  error={!!errors.thLastName}
+                  helperText={errors.thLastName}
+                  InputProps={{
+                    readOnly: role != "AdminStaffInformation",
+                  }}
+                />
+              </Grid>
+
+              {/* Third Row */}
+              <Grid item xs={12} sm={6}>
+                <TextField
+                  fullWidth
+                  label="English First Name"
+                  variant="outlined"
+                  value={enFirstName}
+                  onChange={(e) => setEnFirstName(e.target.value)}
+                  error={!!errors.enFirstName}
+                  helperText={errors.enFirstName}
+                  InputProps={{
+                    readOnly: role != "AdminStaffInformation",
+                  }}
+                />
+              </Grid>
+              <Grid item xs={12} sm={6}>
+                <TextField
+                  fullWidth
+                  label="English Last Name"
+                  variant="outlined"
+                  value={enLastName}
+                  onChange={(e) => setEnLastName(e.target.value)}
+                  error={!!errors.enLastName}
+                  helperText={errors.enLastName}
+                  InputProps={{
+                    readOnly: role != "AdminStaffInformation",
+                  }}
+                />
+              </Grid>
+
+              <Grid item xs={12}>
+                <Divider sx={{ my: 2 }} />
+              </Grid>
+
+              {/* Fourth Row */}
+              <Grid item xs={12} sm={6}>
+                <Autocomplete
+                  freeSolo
+                  options={corporationAutocomplete}
+                  value={corporationTitle}
+                  onChange={(e, newValue) => setCorporationTitle(newValue || '')}
+                  isOptionEqualToValue={(option: any, value: any) =>
+                    option.organizationId === value.organizationId &&
+                    option.domainId === value.domainId
+                  }
+                  getOptionLabel={(option: any) => typeof option === 'string' ? option : option.organizationUnit}
+                  renderInput={(params) => (
+                    <TextField
+                      {...params}
+                      label="Corporation Title"
+                      variant="outlined"
+                    />
+                  )}
+                  readOnly={role !== "AdminStaffInformation"}
+                />
+              </Grid>
+              <Grid item xs={12} sm={6}>
+              </Grid>
+
+              {/* Fifth Row */}
+              <Grid item xs={12} sm={6}>
+                <Autocomplete
+                  id="domain-autocomplete"
+                  options={domains}
+                  getOptionLabel={(option: any) => option.domainId}
+                  value={domains.find((domain: any) => domain.domainId === domainId) || null}
+                  onChange={(event, newValue) => {
+                    setDomainId(newValue ? newValue.domainId : null);
+                    setOrganizationId(null);
+                  }}
+                  renderInput={(params) => <TextField {...params} label="Domain" />}
+                  readOnly={role !== "AdminStaffInformation"}
+                />
+              </Grid>
+              <Grid item xs={12} sm={6}>
+                <Autocomplete
+                  id="organization-autocomplete"
+                  options={organizations?.filter((org: any) => domainId === org.domainId)}
+                  getOptionLabel={(option: any) => option.organizationId + ": (" + option.domainId + ") " + option.organizationUnit}
+                  value={organizations?.find((org: any) => org.organizationId === organizationId) || null}
+                  onChange={(event, newValue) => {
+                    setOrganizationId(newValue ? newValue.organizationId : null);
+                  }}
+                  renderInput={(params) => <TextField {...params} label="Organization Unit" />}
+                  readOnly={role != "AdminStaffInformation"}
+                />
+              </Grid>
+
+              {/* Sixth Row */}
+              <Grid item xs={12} sm={6}>
+                <Autocomplete
+                  id="jobs-autocomplete"
+                  options={jobs}
+                  getOptionLabel={(option: any) => option.jobTitle}
+                  value={jobs?.find((job: any) => job.jobId === jobId) || null}
+                  onChange={(event, newValue) => {
+                    setJobId(newValue ? newValue.jobId : null);
+                  }}
+                  renderInput={(params) => <TextField {...params} label="Jobs" />}
+                  readOnly={role != "AdminStaffInformation"}
+                />
+              </Grid>
+              <Grid item xs={12} sm={6}>
+                <TextField
+                  fullWidth
+                  label="Branch"
+                  variant="outlined"
+                  value={branchId}
+                  onChange={(e) => setBranchId(e.target.value)}
+                  error={!!errors.branchId}
+                  helperText={errors.branchId}
+                  InputProps={{
+                    readOnly: role != "AdminStaffInformation",
+                  }}
+                />
+              </Grid>
+
+              <Grid item xs={12}>
+                <Divider sx={{ my: 2 }} />
+              </Grid>
+
+              {/* Last Row */}
+              <Grid item xs={12} sm={6}>
+                <TextField
+                  fullWidth
+                  required
+                  label="Start Working Date"
+                  type="date"
+                  InputLabelProps={{ shrink: true }}
+                  variant="outlined"
+                  value={startWorkingDate}
+                  onChange={(e) => setHireDate(e.target.value)}
+                  error={!!errors.startWorkingDate}
+                  helperText={errors.startWorkingDate}
+                  InputProps={{
+                    readOnly: role != "AdminStaffInformation",
+                  }}
+                />
+              </Grid>
+              <Grid item xs={12} sm={6}>
+                <TextField
+                  fullWidth
+                  label="Last Working Date"
+                  type="date"
+                  InputLabelProps={{ shrink: true }}
+                  variant="outlined"
+                  value={lastWorkingDate}
+                  onChange={(e) => setLastWorkingDate(e.target.value)}
+                  error={!!errors.lastWorkingDate}
+                  helperText={errors.lastWorkingDate}
+                  InputProps={{
+                    readOnly: role != "AdminStaffInformation",
+                  }}
+                />
+              </Grid>
+              <Grid item xs={12} sm={6}>
+                <TextField
+                  fullWidth
+                  label="Effective Date"
+                  type="date"
+                  InputLabelProps={{ shrink: true }}
+                  variant="outlined"
+                  value={effectiveDate}
+                  onChange={(e) => setEffectiveDate(e.target.value)}
+                  error={!!errors.effectiveDate}
+                  helperText={errors.effectiveDate}
+                  InputProps={{
+                    readOnly: role != "AdminStaffInformation",
+                  }}
+                />
+              </Grid>
+              <Grid item xs={12}>
+                <Divider sx={{ my: 2 }} />
+              </Grid>
+              <Grid item xs={12} sm={6}>
+                <TextField
+                  fullWidth
+                  label="Derivative Trader"
+                  variant="outlined"
+                  value={derivativeTrader}
+                  onChange={(e) => setDerivativeTrader(e.target.value)}
+                  error={!!errors.branchId}
+                  helperText={errors.branchId}
+                  InputProps={{
+                    readOnly: role != "AdminStaffInformation",
+                  }}
+                />
+              </Grid>
+              <Grid item xs={12} sm={6}>
+                <TextField
+                  fullWidth
+                  label="Derivative License"
+                  variant="outlined"
+                  value={derivativeLicense}
+                  onChange={(e) => setDerivativeLicense(e.target.value)}
+                  error={!!errors.branchId}
+                  helperText={errors.branchId}
+                  InputProps={{
+                    readOnly: role != "AdminStaffInformation",
+                  }}
+                />
+              </Grid>
+              <Grid item xs={12} sm={6}>
+                <TextField
+                  fullWidth
+                  label="Single (Equity) Trader"
+                  variant="outlined"
+                  value={singleTrader}
+                  onChange={(e) => setSingleTrader(e.target.value)}
+                  error={!!errors.branchId}
+                  helperText={errors.branchId}
+                  InputProps={{
+                    readOnly: role != "AdminStaffInformation",
+                  }}
+                />
+              </Grid>
+              <Grid item xs={12} sm={6}>
+                <TextField
+                  fullWidth
+                  label="Single (Equity) License"
+                  variant="outlined"
+                  value={singleLicense}
+                  onChange={(e) => setSingleLicense(e.target.value)}
+                  error={!!errors.branchId}
+                  helperText={errors.branchId}
+                  InputProps={{
+                    readOnly: role != "AdminStaffInformation",
+                  }}
+                />
+              </Grid>
+              <Grid item xs={12} sm={6}>
+                <TextField
+                  fullWidth
+                  label="Other License(s)"
+                  variant="outlined"
+                  value={otherLicense}
+                  onChange={(e) => setOtherLicense(e.target.value)}
+                  error={!!errors.branchId}
+                  helperText={errors.branchId}
+                  InputProps={{
+                    readOnly: role != "AdminStaffInformation",
+                  }}
+                />
+              </Grid>
+            </Grid>
+          </Grid>
+        </Grid>
+      </Box>
+
+
+
+    </Modal>
+
+
+  );
+};
+
+export default EmployeeModal;

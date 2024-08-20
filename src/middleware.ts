@@ -1,42 +1,29 @@
+// middleware.ts
+
+import { NextRequest, NextResponse } from 'next/server'
 import { cookies } from 'next/headers'
-import { NextResponse } from 'next/server'
-import type { NextRequest } from 'next/server'
+import { parseJwt } from './app/utils/auth'; // ตรวจสอบให้แน่ใจว่าเส้นทางถูกต้อง
 
-function base64Decode(str: string) {
-  return Buffer.from(str, 'base64').toString('utf8');
-}
-
-function parseJwt(token: string) {
-  try {
-    const base64Url = token.split('.')[1];
-    const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
-    const jsonPayload = base64Decode(base64);
-    return JSON.parse(jsonPayload);
-  } catch (e) {
-    return null;
-  }
-}
 
 export function middleware(request: NextRequest) {
   const cookieStore = cookies();
-  const sessionCookie = cookieStore.get('session');
+  const sessionCookie = cookieStore.get('auth_token');
   const session: string | undefined = sessionCookie?.value;
 
   if (session) {
-    const decodedToken = parseJwt(session);
+    const decodedToken:any = parseJwt(session);
     
     if (decodedToken) {
-      const role = decodedToken.role;
-      const url = request.nextUrl.pathname;
-
-      // Check if the role is allowed for other paths
-      if (role === 'user') { // Replace 'desiredRole' with the role you want to check for other paths
-        return NextResponse.next();
+      const roles = decodedToken.roles;
+      if (Array.isArray(roles) && roles.length > 0) {
+        if (roles.includes("ReadTest")) {
+          return NextResponse.next();
+        }
       }
-    }
+    }    
   }
   else {
-    return NextResponse.redirect(new URL('/authentication', request.url));
+    return NextResponse.redirect(new URL(`${process.env.NEXT_PUBLIC_AUTH_URL}/login`, request.url));
   }
   
 }

@@ -12,9 +12,10 @@ const StyledTreeItem = styled(({ isselected, ...other }: StyledTreeItemProps & R
   <TreeItem {...other} />
 ))(({ theme, isselected }) => ({
   color: theme.palette.mode === 'light' ? theme.palette.grey[800] : theme.palette.grey[200],
-  backgroundColor: isselected ? "#fee2e2" : 'inherit',
+  backgroundColor: isselected ? "primary" : 'inherit',
   maxHeight: 'calc(100vh)',
   overflowY: 'auto',
+  overflowX: 'auto',
   [`& .${treeItemClasses.content}`]: {
     borderRadius: theme.spacing(0.5),
     padding: theme.spacing(0.5, 1),
@@ -33,8 +34,6 @@ const StyledTreeItem = styled(({ isselected, ...other }: StyledTreeItemProps & R
     cursor: 'pointer',
   },
   [`& .${treeItemClasses.groupTransition}`]: {
-    marginLeft: 15,
-    paddingLeft: 18,
     borderLeft: `1px dashed ${alpha(theme.palette.text.primary, 0.4)}`,
   },
 }));
@@ -102,7 +101,7 @@ const Dashboard: React.FC<DashboardProps> = ({ organizations, employees }) => {
       setSelectedOrganizationId(orgId);
       const result = findPathById(organizations, orgId);
       setBreadcrumbPath(result || { path: [], ids: [] });
-      router.push(`/?organizationId=${orgId}`);
+      router.push(`?organizationId=${orgId}`);
     },
     [organizations, router]
   );
@@ -140,42 +139,47 @@ const Dashboard: React.FC<DashboardProps> = ({ organizations, employees }) => {
       key={nodes.organizationId}
       itemId={nodes.organizationId}
       label={
-        <Box onClick={(event) => clickHandler(event, nodes.organizationId, !!nodes.children)}>
+        <Box
+          onClick={(event) => clickHandler(event, nodes.organizationId, !!nodes.children)}
+          sx={{
+            fontWeight: nodes.children && nodes.children.length > 0 ? 'bold' : 'normal',
+          }}
+        >
           {nodes.organizationUnit}
         </Box>
       }
       onClick={(event) => clickHandler(event, nodes.organizationId, !!nodes.children)}
       isselected={nodes?.organizationId === selectedOrganizationId}
-      haschildren={!!nodes.children}
     >
       {Array.isArray(nodes.children) ? nodes.children.map((node) => renderTree(node)) : null}
     </StyledTreeItem>
+
   );
 
   return (
     <main>
-      <Button className='mt-5' onClick={toggleTreeViewVisibility}>
-        {isTreeViewVisible ? "Hide" : "Show"}
+      <Button className="mt-5" onClick={toggleTreeViewVisibility}>
+        {isTreeViewVisible ? "Hide Panel" : "Show"}
       </Button>
-      <div className='flex flex-row w-screen px-5 mb-5'>
+      <div className="flex flex-col md:flex-row w-full px-5 mb-5">
         {isTreeViewVisible && (
-        <div className='h-full border-2 rounded p-2' style={{ width: isTreeViewVisible ? '350px' : '0' }}>
-          <SimpleTreeView
-            defaultExpandedItems={allIds}
-            aria-label="customized"
-            sx={{ overflowX: 'scroll', minHeight: 270, flexGrow: 1, maxWidth: 500 }}
-          >
-            {sortedData.map((node) => renderTree(node))}
-          </SimpleTreeView>
-
-        </div>)}
-        <div className='w-full mx-3 p-3 border-2 border rounded bg-white' style={{ width: isTreeViewVisible ? 'calc(100% - 370px)' : '100%' }}>
+          <div className="border-2 rounded p-2 w-full md:w-1/4 mb-5 md:mb-0">
+            <SimpleTreeView
+              defaultExpandedItems={allIds}
+              aria-label="customized"
+              className="min-h-[270px] flex-grow max-w-full md:max-w-[500px]"
+            >
+              {sortedData.map((node) => renderTree(node))}
+            </SimpleTreeView>
+          </div>
+        )}
+        <div className={`w-full mx-3 p-3 border-2 rounded bg-white ${isTreeViewVisible ? 'md:w-3/4' : 'md:w-full'}`}>
           <Search search={search} />
-          <div className='m-3'>
+          <div className="mx-3">
             <Breadcrumbs separator="›" aria-label="breadcrumb" maxItems={4}>
               {breadcrumbPath.path.map((label, index) => (
                 <Link
-                  className='hover:text-blue-700'
+                  className="hover:text-blue-700"
                   style={{ cursor: 'pointer' }}
                   key={breadcrumbPath.ids[index]}
                   color="inherit"

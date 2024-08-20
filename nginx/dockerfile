@@ -1,0 +1,13 @@
+# Dockerfile
+
+# ใช้ Nginx image จาก Docker Hub
+FROM nginx:alpine
+
+# คัดลอกไฟล์คอนฟิกไปยัง container
+COPY default.conf /etc/nginx/conf.d/default.conf
+
+# เปิดพอร์ต 80
+EXPOSE 80
+
+# คำสั่งเริ่มต้นของ Nginx
+CMD ["nginx", "-g", "daemon off;"]

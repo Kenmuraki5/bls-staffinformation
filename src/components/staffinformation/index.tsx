@@ -16,7 +16,7 @@ const StaffInformation: React.FC<StaffInformationProps> = ({employees}) => {
   return (
     <div className="flex flex-col md:flex-row items-start justify-between p-4 md:p-6 rounded-lg shadow-md bg-white text-black">
       <fieldset className="w-full border-2 p-4 md:p-5 flex flex-col md:flex-row">
-        <legend>Staff Information</legend>
+        <legend className='text-lg font-bold mb-5'>Staff Information</legend>
         <div className="flex-1">
           <div className="mb-4 flex flex-col md:flex-row md:items-center">
             <label className="text-base font-semibold w-full md:w-48 xl:w-64">Staff ID :</label>
@@ -34,7 +34,7 @@ const StaffInformation: React.FC<StaffInformationProps> = ({employees}) => {
             <label className="text-base font-semibold w-full md:w-48 xl:w-64">Email :</label>
             <span className="ml-2 text-base w-full">{employees?.email}</span>
           </div>
-          <legend className="mt-5">English Name</legend>
+          <legend className="mt-10">English Name</legend>
           <hr />
           <div className="mb-4 flex flex-col md:flex-row md:items-center">
             <label className="text-base font-semibold w-full md:w-48 xl:w-64">Title :</label>
@@ -48,7 +48,7 @@ const StaffInformation: React.FC<StaffInformationProps> = ({employees}) => {
             <label className="text-base font-semibold w-full md:w-48 xl:w-64">Last Name :</label>
             <span className="ml-2 text-base w-full">{employees?.enLastName}</span>
           </div>
-          <legend className="mt-5">ชื่อไทย</legend>
+          <legend className="mt-10">ชื่อไทย</legend>
           <hr />
           <div className="mb-4 flex flex-col md:flex-row md:items-center">
             <label className="text-base font-semibold w-full md:w-48 xl:w-64">คำนำหน้า :</label>
@@ -66,14 +66,14 @@ const StaffInformation: React.FC<StaffInformationProps> = ({employees}) => {
             <label className="text-base font-semibold w-full md:w-48 xl:w-64">Nickname :</label>
             <span className="ml-2 text-base w-full"></span>
           </div>
-          <hr className="mt-5 mb-5" />
+          <hr className="mt-10 mb-5" />
           <div className="mb-4 flex flex-col md:flex-row md:items-center">
             <label className="text-base font-semibold w-full md:w-48 xl:w-64">Corporation Title :</label>
             <span className="ml-2 text-base w-full">{employees?.corporationTitle}</span>
           </div>
           <div className="mb-4 flex flex-col md:flex-row md:items-center">
             <label className="text-base font-semibold w-full md:w-48 xl:w-64">Job Title :</label>
-            <span className="ml-2 text-base w-full"></span>
+            <span className="ml-2 text-base w-full">{employees?.jobTitle}</span>
           </div>
           <div className="mb-4 flex flex-col md:flex-row md:items-center">
             <label className="text-base font-semibold w-full md:w-48 xl:w-64">Organization Unit :</label>
@@ -117,7 +117,7 @@ const StaffInformation: React.FC<StaffInformationProps> = ({employees}) => {
           </div>
         </div>
         <div className="flex-shrink-0 mb-4 md:mb-0 md:mr-4">
-          <img src={`http://${process.env.NEXT_PUBLIC_BASEURL}:8080/uploads/${employees?.empId}.png`} alt="Staff Image" width={200} height={200} className="rounded-full" />
+          <Image src={`${process.env.NEXT_PUBLIC_BASEURL}/uploads/${employees?.empId}.png`} alt="Staff Image" width={200} height={200} className="rounded-full" />
         </div>
       </fieldset>
     </div>

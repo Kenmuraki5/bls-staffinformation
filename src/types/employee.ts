@@ -4,6 +4,7 @@ export default interface EmployeeNode {
     organizationUnit: string
     branchId: string
     jobId: string
+    jobTitle: string
     managerId: string
     enTitle: string
     enFirstName: string
