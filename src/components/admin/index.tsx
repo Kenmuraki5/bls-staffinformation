@@ -49,7 +49,7 @@ function EditToolbar(props: EditToolbarProps) {
 }
 
 
-export const StartEditButtonGrid: React.FC<AdminEmployeemanagementProps & { type: 'emp' | 'org' | 'domain' | 'branch' | "manager" | "job" }> = ({ data, type }) => {
+export const StartEditButtonGrid: React.FC<AdminEmployeemanagementProps & { type: "employees" | "organizations" | 'domains' | 'branchs' | "managers" | "jobs" }> = ({ data, type }) => {
   const params = useParams()
   const [rows, setRows] = React.useState<any>(data);
   const [rowModesModel, setRowModesModel] = React.useState<GridRowModesModel>({});
@@ -68,43 +68,43 @@ export const StartEditButtonGrid: React.FC<AdminEmployeemanagementProps & { type
   const [selectedRow, setSelectedRow] = React.useState(null);
   const handleOpenAddModal = (type: string, row: any) => {
     setSelectedRow(row || null);
-    if (type == "emp") {
+    if (type == "employees") {
       setOpenEmployeeModal(true)
     }
-    if (type == "org") {
+    if (type == "organizations") {
       setOpenOrganizationModal(true)
     }
-    if (type == "domain") {
+    if (type == "domains") {
       setOpenDomainModal(true)
     }
-    if (type == "branch") {
+    if (type == "branchs") {
       setOpenBranchModal(true)
     }
-    if (type == "manager") {
+    if (type == "managers") {
       setOpenManagerModal(true)
     }
-    if (type == "job") {
+    if (type == "jobs") {
       setOpenJobModal(true)
     }
 
   };
   const handleCloseAddModal = () => {
-    if (type == "emp") {
+    if (type == "employees") {
       setOpenEmployeeModal(false)
     }
-    if (type == "org") {
+    if (type == "organizations") {
       setOpenOrganizationModal(false)
     }
-    if (type == "domain") {
+    if (type == "domains") {
       setOpenDomainModal(false)
     }
-    if (type == "branch") {
+    if (type == "branchs") {
       setOpenBranchModal(false)
     }
-    if (type == "manager") {
+    if (type == "managers") {
       setOpenManagerModal(false)
     }
-    if (type == "job") {
+    if (type == "jobs") {
       setOpenJobModal(false)
     }
     setSelectedRow(null)
@@ -140,17 +140,17 @@ export const StartEditButtonGrid: React.FC<AdminEmployeemanagementProps & { type
       await deleteRecord(id);
       setRows(rows.filter((row: any) => {
         switch (type) {
-          case 'emp':
+          case "employees":
             return row.empId !== id;
-          case 'org':
+          case "organizations":
             return row.organizationId !== id;
-          case 'domain':
+          case 'domains':
             return row.domainId !== id;
-          case 'branch':
+          case 'branchs':
             return row.branchId !== id;
-          case 'manager':
+          case 'managers':
             return row.managerId !== id;
-          case 'job':
+          case 'jobs':
             return row.jobId !== id;
           default:
             return true;
@@ -159,7 +159,6 @@ export const StartEditButtonGrid: React.FC<AdminEmployeemanagementProps & { type
       setSnackbarOpen(true);
       setError(false);
       setAlertMessage('Successfully Deleted');
-      setRows((prevRows: any) => prevRows.filter((row: any) => row.id !== id));
       handleCloseAddModal();
     } catch (error: any) {
       setSnackbarOpen(true);
@@ -167,7 +166,6 @@ export const StartEditButtonGrid: React.FC<AdminEmployeemanagementProps & { type
       setAlertMessage(error.message);
     }
   };
-  
 
   async function deleteRecord(id: string | number) {
     try {
@@ -248,20 +246,6 @@ export const StartEditButtonGrid: React.FC<AdminEmployeemanagementProps & { type
     }
   }
 
-
-  const processRowUpdate = async (updatedRow: any, originalRow: any) => {
-    try {
-      const updateRow = await updateRecord(updatedRow);
-      return updateRow;
-    } catch (error: any) {
-      setSnackbarOpen(true);
-      setError(true);
-      setAlertMessage(error.message);
-      console.error(`Error updating ${params.manage}:`, error);
-      return originalRow;
-    }
-  };
-
   const handleRowModesModelChange = (newRowModesModel: GridRowModesModel) => {
     setRowModesModel(newRowModesModel);
   };
@@ -269,17 +253,17 @@ export const StartEditButtonGrid: React.FC<AdminEmployeemanagementProps & { type
 
   const getRowId = (row: any): GridRowId => {
     switch (type) {
-      case 'emp':
+      case "employees":
         return row.empId;
-      case 'org':
+      case "organizations":
         return row.organizationId;
-      case 'domain':
+      case 'domains':
         return row.domainId;
-      case 'branch':
+      case 'branchs':
         return row.branchId;
-      case 'manager':
+      case 'managers':
         return row.managerId;
-      case 'job':
+      case 'jobs':
         return row.jobId;
       default:
         return '';
@@ -398,8 +382,7 @@ export const StartEditButtonGrid: React.FC<AdminEmployeemanagementProps & { type
   ]
 
   const columns_manager: GridColDef[] = [
-    {
-      field: 'managerId', headerName: 'Manager ID', minWidth: 100, flex: 1, headerAlign: 'center', headerClassName: 'super-app-theme--header', align: 'center',
+    { field: 'empId', headerName: 'Staff ID', minWidth: 150, maxWidth:150, flex: 1, headerAlign: 'center', headerClassName: 'super-app-theme--header', align: 'center',
       renderCell: (params) => (
         <div
           onClick={() => handleOpenAddModal(type, params.row)}
@@ -408,18 +391,18 @@ export const StartEditButtonGrid: React.FC<AdminEmployeemanagementProps & { type
           {params.value}
         </div>
       ),
-    },
-    { field: 'empId', headerName: 'Employee ID', minWidth: 100, flex: 1, headerAlign: 'center', headerClassName: 'super-app-theme--header', align: 'center' },
-    { field: 'organizationId', headerName: 'Organization ID', minWidth: 100, flex: 1, headerAlign: 'center', headerClassName: 'super-app-theme--header', align: 'center' },
+     },
+    { field: 'empName', headerName: 'Name', minWidth: 200, flex: 1, headerAlign: 'center', headerClassName: 'super-app-theme--header', align: 'center' },
+    { field: 'organizationId', headerName: 'Head of Department', minWidth: 100, flex: 1, headerAlign: 'center', headerClassName: 'super-app-theme--header', align: 'center' },
   ]
 
   const columnsMap = {
-    'emp': columns_emp,
-    'org': columns_org,
-    'domain': columns_domain,
-    'branch': columns_branch,
-    'manager': columns_manager,
-    'job': columns_job,
+    "employees": columns_emp,
+    "organizations": columns_org,
+    'domains': columns_domain,
+    'branchs': columns_branch,
+    'managers': columns_manager,
+    'jobs': columns_job,
   };
 
   const initialColumns = columnsMap[type] || [];
@@ -446,7 +429,6 @@ export const StartEditButtonGrid: React.FC<AdminEmployeemanagementProps & { type
           rowModesModel={rowModesModel}
           onRowModesModelChange={handleRowModesModelChange}
           onRowEditStop={handleRowEditStop}
-          processRowUpdate={processRowUpdate}
           slots={{
             toolbar: EditToolbar as GridSlots['toolbar'],
           }}
@@ -457,7 +439,7 @@ export const StartEditButtonGrid: React.FC<AdminEmployeemanagementProps & { type
         />
       </div>
       <AlertResponse snackbarOpen={snackbarOpen} setSnackbarOpen={setSnackbarOpen} alertMessage={alertMessage} errorResponse={errorResponse} />
-      {type === "emp" && (
+      {type === "employees" && (
         <EmployeeModal
           open={openEmployeeModal}
           handleClose={handleCloseAddModal}
@@ -472,7 +454,7 @@ export const StartEditButtonGrid: React.FC<AdminEmployeemanagementProps & { type
           role={role}
         />
       )}
-      {type === "org" && (
+      {type === "organizations" && (
         <OrganizationModal
           open={openOrganizationModal}
           handleClose={handleCloseAddModal}
@@ -487,7 +469,7 @@ export const StartEditButtonGrid: React.FC<AdminEmployeemanagementProps & { type
           role={role}
         />
       )}
-      {type === "job" && (
+      {type === "jobs" && (
         <JobModal
           open={openJobModal}
           handleClose={handleCloseAddModal}
@@ -502,7 +484,7 @@ export const StartEditButtonGrid: React.FC<AdminEmployeemanagementProps & { type
           role={role}
         />
       )}
-      {type === "domain" && (
+      {type === "domains" && (
         <DomainModal
           open={openDomainModal}
           handleClose={handleCloseAddModal}
@@ -517,7 +499,7 @@ export const StartEditButtonGrid: React.FC<AdminEmployeemanagementProps & { type
           role={role}
         />
       )}
-      {type === "branch" && (
+      {type === "branchs" && (
         <BranchModal
           open={openBranchModal}
           handleClose={handleCloseAddModal}
@@ -532,7 +514,7 @@ export const StartEditButtonGrid: React.FC<AdminEmployeemanagementProps & { type
           role={role}
         />
       )}
-      {type === "manager" && (
+      {type === "managers" && (
         <ManagerModal
           open={openManagerModal}
           handleClose={handleCloseAddModal}

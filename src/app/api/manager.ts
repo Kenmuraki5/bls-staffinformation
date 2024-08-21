@@ -1,3 +1,4 @@
+import { redirect } from 'next/navigation';
 import fetchWithAuth from '../utils/fetchWithAuth';
 
 export async function getAllManager() {
@@ -10,7 +11,10 @@ export async function getAllManager() {
     }
 
     return await res.json();
-  } catch (error) {
+  } catch (error:any) {
+    if (error.message == "Unauthorized"){
+      redirect("http://localhost:8082/login")
+    }
     console.error('Error fetching manager:', error);
     return [];
   }

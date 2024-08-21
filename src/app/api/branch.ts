@@ -1,3 +1,4 @@
+import { redirect } from 'next/navigation';
 import fetchWithAuth from '../utils/fetchWithAuth';
 
 export async function getAllBranch() {
@@ -7,7 +8,10 @@ export async function getAllBranch() {
       throw new Error('Failed to fetch branch');
     }
     return await res.json();
-  } catch (error) {
+  } catch (error:any) {
+    if (error.message == "Unauthorized"){
+      redirect("http://localhost:8082/login")
+    }
     console.error('Error fetching branch:', error);
     return [];
   }

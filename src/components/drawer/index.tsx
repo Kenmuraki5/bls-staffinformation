@@ -63,7 +63,7 @@ const AppBar = styled(MuiAppBar, {
     }),
     background: 'linear-gradient(to right, #172554, #1e3a8a)',
     borderBottom: '4px solid',
-    position: 'relative',
+    position: 'fixed',
     '&::before': {
         content: '""',
         position: 'absolute',

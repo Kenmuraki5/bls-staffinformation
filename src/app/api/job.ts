@@ -1,3 +1,4 @@
+import { redirect } from 'next/navigation';
 import fetchWithAuth from '../utils/fetchWithAuth';
 import fetchWithAuthClient from '../utils/fetchWithAuthClientSide';
 
@@ -11,7 +12,10 @@ export async function getAllJob() {
     }
     
     return await res.json();
-  } catch (error) {
+  } catch (error:any) {
+    if (error.message == "Unauthorized"){
+      redirect("http://localhost:8082/login")
+    }
     console.error('Error fetching jobs:', error);
     return [];
   }

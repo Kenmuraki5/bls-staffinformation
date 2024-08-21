@@ -22,6 +22,7 @@ export default function AddEmployee({
   const [managerId, setManagerId] = useState('');
   const [empId, setEmpId] = useState<string | null>(null);
   const [emp, setEmp] = useState([]);
+  const [name, setName] = useState("");
   const [organizationId, setOrganizationId] = useState<string | null>(null);
   const [organizations, setOrganizations] = useState([]);
   const [errors, setErrors] = useState<{ [key: string]: string }>({});
@@ -49,6 +50,7 @@ export default function AddEmployee({
       setManagerId(selectedRow.managerId || '');
       setEmpId(selectedRow.empId || '');
       setOrganizationId(selectedRow.organizationId);
+      setName(selectedRow.empName);
     } else {
       resetState();
     }
@@ -56,9 +58,6 @@ export default function AddEmployee({
 
   const validate = () => {
     const newErrors: { [key: string]: string } = {};
-    if (!managerId) {
-      newErrors.managerId = 'Manager ID must not be empty.';
-    }
     if (!empId) {
       newErrors.empId = 'Employee ID must not be empty.';
     }
@@ -73,6 +72,7 @@ export default function AddEmployee({
     setManagerId('');
     setEmpId(null);
     setOrganizationId(null);
+    setName("");
     setErrors({});
   };
 
@@ -147,7 +147,7 @@ export default function AddEmployee({
               <>
                 <Button
                   variant="outlined"
-                  onClick={handleSave}
+                  onClick={() => handleSave()}
                   startIcon={<SaveOutlinedIcon />}
                   sx={{ mr: 1 }} // Add some space between the buttons
                 >
@@ -161,7 +161,7 @@ export default function AddEmployee({
               <Button
                 color='error'
                 variant="outlined"
-                onClick={deleteRecord(selectedRow?.managerId)} // Replace with your delete function
+                onClick={deleteRecord(selectedRow?.empId, selectedRow.organizationId)} // Replace with your delete function
                 startIcon={<DeleteOutlineOutlinedIcon />}
               >
                 Delete
@@ -172,19 +172,6 @@ export default function AddEmployee({
         <Divider className="mb-4" />
         <Grid container spacing={2}>
           <Grid item xs={12}>
-            <TextField
-              label="Manager ID"
-              variant="standard"
-              fullWidth
-              className="mb-4"
-              value={managerId}
-              onChange={(e) => setManagerId(e.target.value)}
-              error={!!errors.managerId}
-              helperText={errors.managerId}
-              InputProps={{
-                readOnly: role != "AdminStaffInformation",
-              }}
-            />
             <Autocomplete
               className='mb-4'
               id="employeeID-autocomplete"
@@ -193,6 +180,7 @@ export default function AddEmployee({
               value={emp?.find((employee: any) => employee.empId === empId) || null}
               onChange={(event, newValue) => {
                 setEmpId(newValue ? newValue.empId : null);
+                setName(`${newValue.thFirstName} ${newValue.thLastName} ${newValue.enFirstName} ${newValue.enLastName}`)
               }}
               renderInput={(params) => <TextField {...params} label="Staff ID" error={!!errors.empId} helperText={errors.empId} />}
               readOnly={role != "AdminStaffInformation"}

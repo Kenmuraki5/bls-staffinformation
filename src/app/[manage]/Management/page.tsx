@@ -16,18 +16,17 @@ export default async function AdminEmployeeManagement({
   searchParams?: { [key: string]: string | string[] | undefined };
 }) {
   const fetchDataMap: Record<string, { fetch: () => Promise<any>; type: any }> = {
-    employee: { fetch: getAllEmployees, type: "emp" },
-    organization: { fetch: getAllDepartments, type: "org" },
-    domain: { fetch: getAlldomain, type: "domain" },
-    branch: { fetch: getAllBranch, type: "branch" },
-    manager: { fetch: getAllManager, type: "manager" },
-    job: { fetch: getAllJob, type: "job" },
+    employee: { fetch: getAllEmployees, type: "employees" },
+    organization: { fetch: getAllDepartments, type: "organizations" },
+    domain: { fetch: getAlldomain, type: "domains" },
+    branch: { fetch: getAllBranch, type: "branchs" },
+    manager: { fetch: getAllManager, type: "managers" },
+    job: { fetch: getAllJob, type: "jobs" },
   };
 
   const { fetch, type } = fetchDataMap[params.manage] || {};
   const res = fetch ? await fetch() : null;
-  const data = res ? res[type + (type === "emp" ? "loyees" : "s")] : [];
-
+  const data = res ? res[type] : [];
   return (
     <div className="min-h-screen bg-white flex flex-col">
       <PersistentDrawerLeft />

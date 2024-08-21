@@ -1,5 +1,6 @@
 'use server'
 
+import { redirect } from "next/navigation";
 import fetchWithAuth from "../utils/fetchWithAuth";
 
 export default async function handleSearch(searchBy: string, searchInput: string, domain: string) {
@@ -29,9 +30,11 @@ export default async function handleSearch(searchBy: string, searchInput: string
         }
 
         const data = await response.json();
-        console.log("search result:", data);
         return data || null;
-    } catch (error) {
+    } catch (error:any) {
+        if (error.message == "Unauthorized"){
+            redirect("http://localhost:8082/login")
+        }
         console.error('Error fetching data:', error);
         return [];
     }

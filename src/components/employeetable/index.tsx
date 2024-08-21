@@ -2,7 +2,7 @@
 import * as React from 'react';
 import { DataGrid, GridColDef } from '@mui/x-data-grid';
 import { Box, styled, ToggleButton, ToggleButtonGroup } from '@mui/material';
-import { useParams, useRouter } from 'next/navigation';
+import { useParams, useRouter, useSearchParams } from 'next/navigation';
 
 type PropsType = {
   dataEmployees: any;
@@ -60,6 +60,17 @@ const EmployeeTable: React.FC<PropsType> = ({ dataEmployees }) => {
   const [alignment, setAlignment] = React.useState('managers');
   const router = useRouter();
   const params = useParams();
+  const searchParams = useSearchParams();
+  const search = searchParams.get('organizationId');
+  const searchBy = searchParams.get('searchBy');
+
+  React.useEffect(() => {
+    if (searchBy) {
+      setAlignment("all");
+    } else {
+      setAlignment('managers');
+    }
+  }, [searchBy])
 
   const handleChange = (event: React.MouseEvent<HTMLElement>, newAlignment: string) => {
     if (newAlignment !== null) {
@@ -116,7 +127,7 @@ const EmployeeTable: React.FC<PropsType> = ({ dataEmployees }) => {
     return abbreviation;
   }
 
-  const filteredEmployees = alignment === 'all' ? dataEmployees : dataEmployees.filter((employee: any) => employee.managerId !== "");
+  const filteredEmployees = alignment === 'all' ? dataEmployees : dataEmployees.filter((employee: any) =>  employee.managerId !== "" || employee.organizationId === search);
 
   return (
     <div style={{ width: '100%' }}>
@@ -131,7 +142,7 @@ const EmployeeTable: React.FC<PropsType> = ({ dataEmployees }) => {
         aria-label="Employee Filter"
         className='mb-3'
       >
-        <ToggleButton value="managers">Show Only Managers</ToggleButton>
+        <ToggleButton value="managers">Only IN Department</ToggleButton>
         <ToggleButton value="all">Show All Employees</ToggleButton>
       </ToggleButtonGroup>
       <DataGrid

@@ -1,4 +1,5 @@
-import fetchWithAuth from '../utils/fetchWithAuth';
+import { redirect } from 'next/navigation';
+import fetchWithAuth from '../utils/fetchWithAuth'; // Server-side
 import fetchWithAuthClient from '../utils/fetchWithAuthClientSide';
 
 export async function getAllDepartments() {
@@ -11,7 +12,10 @@ export async function getAllDepartments() {
     }
     const data = await res.json();
     return data;
-  } catch (error) {
+  } catch (error:any) {
+    if (error.message == "Unauthorized"){
+      redirect("http://localhost:8082/login")
+    }
     console.error('Error fetching departments:', error);
     return { organizations: [] };
   }
@@ -48,7 +52,10 @@ export async function getAllDepartmentsHeirachy(domainID: string | string[] | un
       throw new Error('Failed to fetch DepartmentsHeirachy');
     }
     return await res.json();
-  } catch (error) {
+  } catch (error:any) {
+    if (error.message == "Unauthorized"){
+      redirect("http://localhost:8082/login")
+    }
     console.error('Error fetching DepartmentsHeirachy:', error);
     return [];
   }
