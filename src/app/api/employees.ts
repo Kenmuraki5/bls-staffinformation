@@ -15,7 +15,7 @@ export async function getEmployeesByOrgID(domainID: string | string[] | undefine
     return await res.json();
   } catch (error:any) {
     if (error.message == "Unauthorized"){
-      redirect("http://localhost:8082/login")
+      redirect(`${process.env.NEXT_PUBLIC_AUTH_URL}/login`)
     }
     console.error('Error fetching employees:', error);
     return [];
@@ -34,7 +34,7 @@ export async function getAllEmployees() {
     return await res.json();
   } catch (error:any) {
     if (error.message == "Unauthorized"){
-      redirect("http://localhost:8082/login")
+      redirect(`${process.env.NEXT_PUBLIC_AUTH_URL}/login`)
     }
     console.error('Error fetching employees:', error);
     return [];

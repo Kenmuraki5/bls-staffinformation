@@ -14,7 +14,7 @@ export async function getAllDepartments() {
     return data;
   } catch (error:any) {
     if (error.message == "Unauthorized"){
-      redirect("http://localhost:8082/login")
+      redirect(`${process.env.NEXT_PUBLIC_AUTH_URL}/login`)
     }
     console.error('Error fetching departments:', error);
     return { organizations: [] };
@@ -54,7 +54,7 @@ export async function getAllDepartmentsHeirachy(domainID: string | string[] | un
     return await res.json();
   } catch (error:any) {
     if (error.message == "Unauthorized"){
-      redirect("http://localhost:8082/login")
+      redirect(`${process.env.NEXT_PUBLIC_AUTH_URL}/login`)
     }
     console.error('Error fetching DepartmentsHeirachy:', error);
     return [];
