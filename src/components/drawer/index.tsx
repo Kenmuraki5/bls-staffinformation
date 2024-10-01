@@ -18,7 +18,6 @@ import { useParams, useRouter } from 'next/navigation';
 import DomainIcon from '@mui/icons-material/Domain';
 import FmdGoodIcon from '@mui/icons-material/FmdGood';
 import CorporateFareIcon from '@mui/icons-material/CorporateFare';
-import GroupAddIcon from '@mui/icons-material/GroupAdd';
 import ManageAccountsIcon from '@mui/icons-material/ManageAccounts';
 import LogoutIcon from '@mui/icons-material/Logout';
 import MenuIcon from '@mui/icons-material/Menu';
@@ -28,6 +27,7 @@ import WorkIcon from '@mui/icons-material/Work';
 import { getRole } from '@/app/utils/auth';
 import Link from 'next/link';
 import AccountBoxIcon from '@mui/icons-material/AccountBox';
+import HelpIcon from '@mui/icons-material/Help';
 
 const drawerWidth = 240;
 
@@ -191,7 +191,7 @@ export default function PersistentDrawerLeft() {
                                     {params.domain == "BCAP" && <Image src={`/bcap-header-logo.png`} alt="" width={250} height={250} style={{ width: '150px', height: 'auto' }} priority />}
                                 </div>
                                 <div className='flex justify-between items-center w-full'>
-                                    <p className="font-bold text-white text-base sm:text-base md:text-xl">
+                                    <p className="font-bold text-white text-base sm:text-base md:text-lg">
                                         STAFF INFORMATION
                                     </p>
                                 </div>
@@ -214,11 +214,11 @@ export default function PersistentDrawerLeft() {
                 <Divider textAlign='left' className='mt-3' sx={{ fontWeight: 'bold', color: '#1e3a8a' }}>Domains</Divider>
                 <List>
                     {domains.map((text) => (
-                        <Link key={text.id} href={`/bualuang/${text.id}`}>
+                        <Link key={text.id} href={`/bualuang/${text.id}`} onClick={handleDrawerClose}>
                             <ListItem disablePadding>
                                 <ListItemButtonStyled>
                                     <IconStyled>
-                                        <Image src={text.img} alt={text.id} width={30} height={30} style={{ width: '100%', height: 'auto', backgroundColor: 'white' }} />
+                                        <Image src={text.img} alt={text.id} width={30} height={30} style={{ width: '100%', height: 'auto' }} />
                                     </IconStyled>
                                     <ListItemText primary={text.id} />
                                 </ListItemButtonStyled>
@@ -226,61 +226,69 @@ export default function PersistentDrawerLeft() {
                         </Link>
                     ))}
                 </List>
-                <Divider textAlign='left' sx={{ fontWeight: 'bold', color: '#1e3a8a' }}>
-                    {role === "AdminStaffInformation" ? "Management Information" : "Data Categories"}
-                </Divider>
-                <List>
-                    <Link href="/employee/Management" key="employees">
-                        <ListItem disablePadding>
-                            <ListItemButtonStyled>
-                                <AccountBoxIcon className="w-6 h-6 text-black-600 mr-3" />
-                                Employees
-                            </ListItemButtonStyled>
-                        </ListItem>
-                    </Link>
-                    <Link href="/manager/Management" key="managers">
-                        <ListItem disablePadding>
-                            <ListItemButtonStyled>
-                                <ManageAccountsIcon className="w-6 h-6 text-black-600 mr-3" />
-                                Managers
-                            </ListItemButtonStyled>
-                        </ListItem>
-                    </Link>
-                    <Link href="/job/Management" key="jobs">
-                        <ListItem disablePadding>
-                            <ListItemButtonStyled>
-                                <WorkIcon className="w-6 h-6 text-black-600 mr-3" />
-                                Jobs
-                            </ListItemButtonStyled>
-                        </ListItem>
-                    </Link>
-                    <Link href="/organization/Management" key="organizations">
-                        <ListItem disablePadding>
-                            <ListItemButtonStyled>
-                                <CorporateFareIcon className="w-6 h-6 text-black-600 mr-3" />
-                                Organizations
-                            </ListItemButtonStyled>
-                        </ListItem>
-                    </Link>
-                    <Link href="/domain/Management" key="domains">
-                        <ListItem disablePadding>
-                            <ListItemButtonStyled>
-                                <DomainIcon className="w-6 h-6 text-black-600 mr-3" />
-                                Domains
-                            </ListItemButtonStyled>
-                        </ListItem>
-                    </Link>
-                    <Link href="/branch/Management" key="locations">
-                        <ListItem disablePadding>
-                            <ListItemButtonStyled>
-                                <FmdGoodIcon className="w-6 h-6 text-black-600 mr-3" />
-                                Branch
-                            </ListItemButtonStyled>
-                        </ListItem>
-                    </Link>
-                </List>
+                {role === "AdminStaffInformation" && (
+                    <><Divider textAlign='left' sx={{ fontWeight: 'bold', color: '#1e3a8a' }}>
+                        {role === "AdminStaffInformation" ? "Management Information" : "Data Categories"}
+                    </Divider><List>
+                            <Link href="/employee/Management" key="employees">
+                                <ListItem disablePadding>
+                                    <ListItemButtonStyled onClick={handleDrawerClose}>
+                                        <AccountBoxIcon className="w-6 h-6 text-black-600 mr-3" />
+                                        Employees
+                                    </ListItemButtonStyled>
+                                </ListItem>
+                            </Link>
+                            <Link href="/manager/Management" key="managers">
+                                <ListItem disablePadding>
+                                    <ListItemButtonStyled onClick={handleDrawerClose}>
+                                        <ManageAccountsIcon className="w-6 h-6 text-black-600 mr-3" />
+                                        Managers
+                                    </ListItemButtonStyled>
+                                </ListItem>
+                            </Link>
+                            <Link href="/job/Management" key="jobs">
+                                <ListItem disablePadding>
+                                    <ListItemButtonStyled onClick={handleDrawerClose}>
+                                        <WorkIcon className="w-6 h-6 text-black-600 mr-3" />
+                                        Jobs
+                                    </ListItemButtonStyled>
+                                </ListItem>
+                            </Link>
+                            <Link href="/organization/Management" key="organizations">
+                                <ListItem disablePadding>
+                                    <ListItemButtonStyled onClick={handleDrawerClose}>
+                                        <CorporateFareIcon className="w-6 h-6 text-black-600 mr-3" />
+                                        Organizations
+                                    </ListItemButtonStyled>
+                                </ListItem>
+                            </Link>
+                            <Link href="/domain/Management" key="domains">
+                                <ListItem disablePadding>
+                                    <ListItemButtonStyled onClick={handleDrawerClose}>
+                                        <DomainIcon className="w-6 h-6 text-black-600 mr-3" />
+                                        Domains
+                                    </ListItemButtonStyled>
+                                </ListItem>
+                            </Link>
+                            <Link href="/branch/Management" key="locations">
+                                <ListItem disablePadding>
+                                    <ListItemButtonStyled onClick={handleDrawerClose}>
+                                        <FmdGoodIcon className="w-6 h-6 text-black-600 mr-3" />
+                                        Branch
+                                    </ListItemButtonStyled>
+                                </ListItem>
+                            </Link>
+                        </List></>
+                )}
                 <Divider />
                 <List>
+                    <ListItem disablePadding>
+                        <ListItemButtonStyled onClick={handleDrawerClose}>
+                            <HelpIcon color="action" className="w-6 h-6 mr-3" />
+                            <Typography color="textSecondary">Help</Typography>
+                        </ListItemButtonStyled>
+                    </ListItem>
+
                     <ListItem disablePadding>
                         <ListItemButton className='text-red-600 font-bold' onClick={() => signout()}>
                             <LogoutIcon className="w-6 h-6 text-black-600 mr-3" />

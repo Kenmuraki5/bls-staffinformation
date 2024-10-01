@@ -15,7 +15,7 @@ export default async function fetchWithAuth(url: string, options: FetchOptions =
     },
   });
 
-  if (response.status === 401 || response.status === 500) {
+  if (response.status === 403) {
     throw new Error('Unauthorized');
   }
 

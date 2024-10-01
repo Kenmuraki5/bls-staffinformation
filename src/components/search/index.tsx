@@ -1,11 +1,11 @@
 'use client'
-import { Button, FormControl, InputLabel, MenuItem, Select, SelectChangeEvent, TextField } from '@mui/material';
+import { Button, FormControl, InputLabel, MenuItem, Select, SelectChangeEvent, TextField, Autocomplete } from '@mui/material';
 import { useRouter } from 'next/navigation';
 import React, { useState } from 'react';
 import InputAdornment from '@mui/material/InputAdornment';
 import SearchIcon from '@mui/icons-material/Search';
 
-const Search = ({ search }: any) => {
+const Search = ({ search, organizationUnits }: any) => {
     const [searchBy, setSearchBy] = useState('');
     const [searchInput, setSearchInput] = useState('');
     const router = useRouter();
@@ -19,7 +19,6 @@ const Search = ({ search }: any) => {
         setSearchInput(event.target.value);
     };
 
-
     const handleKeyDown = async (event: React.KeyboardEvent) => {
         if (event.key === 'Enter') {
             try {
@@ -30,14 +29,13 @@ const Search = ({ search }: any) => {
         }
     };
 
-
     return (
-        <div className="m-3">
+        <div className="mx-3 mt-3">
             <div className='bg-blue-950 rounded'>
                 <p className='text-white font-bold rounded px-5'>SEARCH</p>
             </div>
             <div className="flex items-center mt-3">
-                <FormControl sx={{ pr: 2, minWidth: 150, width: 250 }} size='small'>
+                <FormControl sx={{ pr: 2, minWidth: 150, width: 250, m:1 }} size='small'>
                     <InputLabel id="demo-simple-select-label">Search By</InputLabel>
                     <Select
                         labelId="demo-simple-select-label"
@@ -52,7 +50,7 @@ const Search = ({ search }: any) => {
                         <MenuItem aria-label={"Organization Unit"} value={"organizationUnit"}>Organization Unit</MenuItem>
                     </Select>
                 </FormControl>
-                {searchBy && (
+                {searchBy && searchBy !== 'organizationUnit' && (
                     <>
                         <TextField
                             label="Search"
@@ -70,7 +68,40 @@ const Search = ({ search }: any) => {
                                 ),
                             }}
                         />
-                        <Button sx={{ m: 2 }} onClick={() => {
+                        <Button onClick={() => {
+                            search(searchBy, searchInput);
+                        }}>Search</Button>
+                    </>
+                )}
+                {searchBy === 'organizationUnit' && (
+                    <>
+                        <Autocomplete
+                            disablePortal
+                            options={organizationUnits.map((org: any) => org.organizationUnit)}
+                            fullWidth
+                            size="small"
+                            value={searchInput}
+                            onChange={(event: any, newValue: string | null) => {
+                                setSearchInput(newValue || '');
+                            }}
+                            onKeyDown={handleKeyDown}
+                            renderInput={(params) => (
+                                <TextField
+                                    {...params}
+                                    label="Search"
+                                    InputProps={{
+                                        ...params.InputProps,
+                                        startAdornment: (
+                                            <InputAdornment position="start">
+                                                <SearchIcon />
+                                            </InputAdornment>
+                                        ),
+                                    }}
+                                />
+                            )}
+                        />
+
+                        <Button onClick={() => {
                             search(searchBy, searchInput);
                         }}>Search</Button>
                     </>

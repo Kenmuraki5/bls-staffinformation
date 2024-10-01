@@ -13,7 +13,7 @@ export default async function fetchWithAuthClient(url: string, options: RequestI
     },
   });
 
-  if (response.status === 401 || response.status === 500) {
+  if (response.status === 403) {
     console.error("Authentication failed or server error. Redirecting to login.");
     window.location.href = `${process.env.NEXT_PUBLIC_AUTH_URL}/login`;
   }

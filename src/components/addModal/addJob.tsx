@@ -4,7 +4,7 @@ import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import SaveOutlinedIcon from '@mui/icons-material/SaveOutlined';
 import DeleteOutlineOutlinedIcon from '@mui/icons-material/DeleteOutlineOutlined';
 
-export default function AddJob({ open, handleClose, addRecord, updateRecord, deleteRecord, setRows, setSnackbarOpen, setAlertMessage, setError, selectedRow, role }: any) {
+export default function JobModal({ open, handleClose, addRecord, updateRecord, deleteRecord, setRows, setSnackbarOpen, setAlertMessage, setError, selectedRow, role }: any) {
   const [jobId, setJobId] = useState('');
   const [jobTitle, setJobTitle] = useState('');
   const [errors, setErrors] = useState<{ [key: string]: string }>({});
@@ -107,7 +107,7 @@ export default function AddJob({ open, handleClose, addRecord, updateRecord, del
             <IconButton onClick={handleClose} className='hover:text-blue-500'>
               <ArrowBackIcon />
             </IconButton>
-            <Typography variant="h6" component="h2" className="ml-12 text-black font-bold">
+            <Typography variant="h6" component="h6" className="ml-12 text-black">
               {selectedRow != null && role == "AdminStaffInformation" ? "Edit Job" : selectedRow == null && role == "AdminStaffInformation" ? "Add Job" : "Job Information"}
             </Typography>
           </Box>

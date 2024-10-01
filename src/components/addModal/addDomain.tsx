@@ -4,7 +4,7 @@ import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import SaveOutlinedIcon from '@mui/icons-material/SaveOutlined';
 import DeleteOutlineOutlinedIcon from '@mui/icons-material/DeleteOutlineOutlined';
 
-export default function AddDomain({
+export default function DomainModal({
   open,
   handleClose,
   addRecord,
@@ -116,7 +116,7 @@ export default function AddDomain({
             <IconButton onClick={handleClose} className='hover:text-blue-500'>
               <ArrowBackIcon />
             </IconButton>
-            <Typography variant="h6" component="h2" className="ml-12 text-black font-bold">
+            <Typography variant="h6" component="h6" className="ml-12 text-black">
               {selectedRow != null && role == "AdminStaffInformation" ? "Edit Domain" : selectedRow == null && role == "AdminStaffInformation" ? "Add Domain" : "Domain Information"}
             </Typography>
           </Box>

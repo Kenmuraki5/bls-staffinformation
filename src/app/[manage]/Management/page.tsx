@@ -1,5 +1,4 @@
 import * as React from 'react';
-import PersistentDrawerLeft from '@/components/drawer';
 import { getAllEmployees } from '../../api/employees';
 import { StartEditButtonGrid } from '@/components/admin';
 import { getAllDepartments } from '@/app/api/departments';
@@ -29,7 +28,6 @@ export default async function AdminEmployeeManagement({
   const data = res ? res[type] : [];
   return (
     <div className="min-h-screen bg-white flex flex-col">
-      <PersistentDrawerLeft />
       <StartEditButtonGrid data={data || []} type={type} />
     </div>
   );

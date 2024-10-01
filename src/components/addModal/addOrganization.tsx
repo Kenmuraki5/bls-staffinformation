@@ -6,7 +6,7 @@ import SaveOutlinedIcon from '@mui/icons-material/SaveOutlined';
 import DeleteOutlineOutlinedIcon from '@mui/icons-material/DeleteOutlineOutlined';
 import { getAlldomainClientSide } from '@/app/api/domain';
 
-export default function AddOrganization({ open, handleClose, addRecord, updateRecord, deleteRecord, setRows, setSnackbarOpen, setAlertMessage, setError, selectedRow, role }: any) {
+export default function OrganizationModal({ open, handleClose, addRecord, updateRecord, deleteRecord, setRows, setSnackbarOpen, setAlertMessage, setError, selectedRow, role }: any) {
   const [organizationId, setOrganizationId] = useState('');
   const [domainId, setDomainId] = useState('');
   const [domains, setDomains] = useState([]);
@@ -151,7 +151,7 @@ export default function AddOrganization({ open, handleClose, addRecord, updateRe
             <IconButton onClick={handleClose} className='hover:text-blue-500'>
               <ArrowBackIcon />
             </IconButton>
-            <Typography variant="h6" component="h2" className="ml-12 text-black font-bold">
+            <Typography variant="h6" component="h6" className="ml-12 text-black">
               {selectedRow != null && role == "AdminStaffInformation" ? "Edit Organization" : selectedRow == null && role == "AdminStaffInformation" ? "Add Organization" : "Organization Information"}
             </Typography>
           </Box>
@@ -195,7 +195,7 @@ export default function AddOrganization({ open, handleClose, addRecord, updateRe
               error={!!errors.organizationId}
               helperText={errors.organizationId}
               InputProps={{
-                readOnly: role != "AdminStaffInformation",
+                readOnly: role !== "AdminStaffInformation" || selectedRow && Object.keys(selectedRow).length > 0,
               }}
             />
             <Autocomplete

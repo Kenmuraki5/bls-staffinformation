@@ -5,7 +5,6 @@ import { getAllDepartmentsHeirachy } from '@/app/api/departments';
 import handleSearch from '@/app/api/search';
 
 const MainComponent = dynamic(() => import('@/components/dashboard'));
-const PersistentDrawerLeft = dynamic(() => import('@/components/drawer'));
 
 const Home = async ({
   params,
@@ -30,15 +29,11 @@ const Home = async ({
   }
 
   return (
-    <div className="flex flex-col bg-white">
-      <PersistentDrawerLeft />
+    <div>
       <MainComponent
         organizations={organizations.organizations || []}
         employees={employees.employees || []}
       />
-      <footer className='bg-pink-950 w-full p-2 text-white text-center'>
-        Copyright 2011© Bualuang Securities PCL
-      </footer>
     </div>
   );
 };

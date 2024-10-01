@@ -4,7 +4,7 @@ import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import SaveOutlinedIcon from '@mui/icons-material/SaveOutlined';
 import DeleteOutlineOutlinedIcon from '@mui/icons-material/DeleteOutlineOutlined';
 
-export default function AddBranch({
+export default function BranchModal({
   open,
   handleClose,
   addRecord,
@@ -47,11 +47,26 @@ export default function AddBranch({
     if (!contact) {
       newErrors.contact = 'Contact must not be empty.';
     } else {
-      const contactRegex = /^(?:\+?\d{1,3}[-.\s]?)?(?:\(\d{3}\)|\d{3})[-.\s]?\d{3}[-.\s]?\d{4}$/;
-      if (!contactRegex.test(contact)) {
-        newErrors.contact = 'Contact must be in a valid format (e.g., 123-456-7890, (123) 456-7890, 123 456 7890, 123.456.7890, +91 (123) 456-7890).';
+      // แยกเบอร์โทรที่คั่นด้วยจุลภาคและช่องว่าง
+      const contactsArray = contact.split(',').map(item => item.trim());
+      const contactRegex = /^(?:\(\d{2,3}\)|\d{2,3})[-.\s]?\d{3,4}[-.\s]?\d{3,4}$/;
+    
+      let isValid = true; // ตัวแปรเพื่อเก็บสถานะการตรวจสอบ
+    
+      // ตรวจสอบเบอร์โทรแต่ละหมายเลข
+      for (const item of contactsArray) {
+        if (!contactRegex.test(item)) {
+          isValid = false;
+          break; // หยุดตรวจสอบหากพบหมายเลขที่ไม่ถูกต้อง
+        }
+      }
+    
+      if (!isValid) {
+        newErrors.contact = 'One or more contacts are not in a valid format (e.g., (02) 618-1000, (02) 340 6600).';
       }
     }
+    
+    
 
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
@@ -137,7 +152,7 @@ export default function AddBranch({
             <IconButton onClick={handleClose} className='hover:text-blue-500'>
               <ArrowBackIcon />
             </IconButton>
-            <Typography variant="h6" component="h2" className="ml-12 text-black font-bold">
+            <Typography variant="h6" component="h6" className="ml-12 text-black">
               {selectedRow != null && role == "AdminStaffInformation" ? "Edit Branch" : selectedRow == null && role == "AdminStaffInformation" ? "Add Branch" : "Branch Information"}
             </Typography>
           </Box>

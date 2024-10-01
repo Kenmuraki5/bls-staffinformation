@@ -6,7 +6,7 @@ import { getAllDepartments, getAllDepartmentsClientSide } from '@/app/api/depart
 import SaveOutlinedIcon from '@mui/icons-material/SaveOutlined';
 import DeleteOutlineOutlinedIcon from '@mui/icons-material/DeleteOutlineOutlined';
 
-export default function AddEmployee({
+export default function ManagerModal({
   open,
   handleClose,
   addRecord,
@@ -22,7 +22,7 @@ export default function AddEmployee({
   const [managerId, setManagerId] = useState('');
   const [empId, setEmpId] = useState<string | null>(null);
   const [emp, setEmp] = useState([]);
-  const [name, setName] = useState("");
+  const [empName, setName] = useState<string | null>(null);
   const [organizationId, setOrganizationId] = useState<string | null>(null);
   const [organizations, setOrganizations] = useState([]);
   const [errors, setErrors] = useState<{ [key: string]: string }>({});
@@ -85,6 +85,7 @@ export default function AddEmployee({
       const data = {
         managerId,
         empId,
+        empName,
         organizationId
       };
       if (selectedRow != null) {
@@ -138,7 +139,7 @@ export default function AddEmployee({
             <IconButton onClick={handleClose} className='hover:text-blue-500'>
               <ArrowBackIcon />
             </IconButton>
-            <Typography variant="h6" component="h2" className="ml-12 text-black font-bold">
+            <Typography variant="h6" component="h6" className="ml-12 text-black">
               {selectedRow != null && role == "AdminStaffInformation" ? "Edit Manager" : selectedRow == null && role == "AdminStaffInformation" ? "Add Manager" : "Manager Information"}
             </Typography>
           </Box>
@@ -161,7 +162,7 @@ export default function AddEmployee({
               <Button
                 color='error'
                 variant="outlined"
-                onClick={deleteRecord(selectedRow?.empId, selectedRow.organizationId)} // Replace with your delete function
+                onClick={deleteRecord(selectedRow?.managerId)} // Replace with your delete function
                 startIcon={<DeleteOutlineOutlinedIcon />}
               >
                 Delete
@@ -179,8 +180,8 @@ export default function AddEmployee({
               getOptionLabel={(option: any) => `${option.empId} : (${option.thFirstName} ${option.thLastName} ${option.enFirstName} ${option.enLastName})`}
               value={emp?.find((employee: any) => employee.empId === empId) || null}
               onChange={(event, newValue) => {
-                setEmpId(newValue ? newValue.empId : null);
-                setName(`${newValue.thFirstName} ${newValue.thLastName} ${newValue.enFirstName} ${newValue.enLastName}`)
+                setEmpId(newValue ? newValue?.empId : null);
+                setName(`${newValue?.thFirstName} ${newValue?.thLastName} ${newValue?.enFirstName} ${newValue?.enLastName}`)
               }}
               renderInput={(params) => <TextField {...params} label="Staff ID" error={!!errors.empId} helperText={errors.empId} />}
               readOnly={role != "AdminStaffInformation"}

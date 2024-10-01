@@ -236,9 +236,16 @@ export const StartEditButtonGrid: React.FC<AdminEmployeemanagementProps & { type
       setSnackbarOpen(true);
       setError(false);
       setAlertMessage('Successfully Updated');
+      if (params.manage == "manager"){
+        setRows((oldRows: any) => [
+          ...oldRows,
+          {...data, managerId : responseData.managerId}
+        ])
+        return responseData
+      }
       setRows((oldRows: any) => [
-        data,
-        ...oldRows
+        ...oldRows,
+        responseData
       ])
       return responseData;
     } catch (error: any) {

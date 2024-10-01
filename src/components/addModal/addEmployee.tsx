@@ -10,11 +10,14 @@ import { getAllJobClientSide } from '@/app/api/job';
 import { getAlldomainClientSide } from '@/app/api/domain';
 import { getToken } from '@/app/utils/auth';
 import fetchWithAuthClient from '@/app/utils/fetchWithAuthClientSide';
+import { getAllBranch } from '@/app/api/branch';
+import { start } from 'repl';
 
 const EmployeeModal = ({ open, handleClose, addRecord, updateRecord, deleteRecord, setRows, setSnackbarOpen, setAlertMessage, setError, selectedRow, role }: any) => {
   const [organizations, setOrganizations] = useState([]);
   const [jobs, setJobs] = useState([]);
   const [domains, setDomains] = useState([]);
+  const [branchs, setBranch] = useState([]);
 
   const [empId, setStaffId] = useState('');
   const [startWorkingDate, setHireDate] = useState('');
@@ -85,9 +88,11 @@ const EmployeeModal = ({ open, handleClose, addRecord, updateRecord, deleteRecor
       const departments = await getAllDepartmentsClientSide();
       const jobs = await getAllJobClientSide();
       const domains = await getAlldomainClientSide();
+      const branchs = await getAllBranch();
       setOrganizations(departments.organizations || []);
       setJobs(jobs.jobs || []);
       setDomains(domains.domains || []);
+      setBranch(branchs.branchs || []);
     } catch (error) {
       console.error('Error fetching data:', error);
       setOrganizations([]);
@@ -202,12 +207,25 @@ const EmployeeModal = ({ open, handleClose, addRecord, updateRecord, deleteRecor
     const newErrors: any = {};
 
     // Validation checks
-    if (!isValidEnglishName(enFirstName) || !isValidEnglishName(enLastName)) {
+    if (title == ''){
+      newErrors.title = 'Title is required.';
+    }
+    if (!isValidEnglishName(enFirstName)) {
       newErrors.enFirstName = 'English names must contain only English letters.';
     }
+    if (nickname == '') {
+      newErrors.thNickName = 'Nick name is required.';
+    }
+    if (!isValidEnglishName(enLastName)) {
+      newErrors.enLastName = 'English Last names must contain only English letters.';
+    }
 
-    if (!isValidThaiName(thFirstName) || !isValidThaiName(thLastName)) {
-      newErrors.thFirstName = 'Thai names and Last names must contain only Thai characters.';
+    if (!isValidThaiName(thFirstName)) {
+      newErrors.thFirstName = 'Thai names must contain only Thai characters.';
+    }
+
+    if (!isValidThaiName(thLastName)) {
+      newErrors.thLastName = 'Thai Last names must contain only Thai characters.';
     }
 
     if (!isValidEmail(email)) {
@@ -216,6 +234,25 @@ const EmployeeModal = ({ open, handleClose, addRecord, updateRecord, deleteRecor
 
     if (!isValidExtensionCode(extension)) {
       newErrors.extension = 'Extension code must be a 4-digit number.';
+    }
+    if (branchId == '') {
+      newErrors.branch = 'Branch is required.';
+    }
+    if (!domainId) {
+      newErrors.domainId = 'Domain is required.';
+    }
+    if (!organizationId) {
+      if (domainId) {
+        newErrors.organizationUnit = 'Organization Unit is required.';
+      } else {
+        newErrors.organizationUnit = 'Please select a Domain first.';
+      }
+    }
+    if (startWorkingDate == '') {
+      newErrors.startWorkingDate = 'Start working date is required.';
+    }
+    if (lastWorkingDate != '' && lastWorkingDate < startWorkingDate) {
+      newErrors.lastWorkingDate = 'Last working date not letter than start working date.';
     }
 
     if (Object.keys(newErrors).length > 0) {
@@ -354,7 +391,7 @@ const EmployeeModal = ({ open, handleClose, addRecord, updateRecord, deleteRecor
           <IconButton onClick={handleClose} className='hover:text-blue-500'>
             <ArrowBackIcon />
           </IconButton>
-          <Typography variant="h6" component="h2" className="ml-12 text-black font-bold">
+          <Typography variant="h6" component="h6" className="ml-12 text-black">
             {selectedRow && Object.keys(selectedRow).length > 0 && role == "AdminStaffInformation"
               ? "Edit Staff Information" : selectedRow == null && role == "AdminStaffInformation" ? "Add Employee" : "Staff Information"}
           </Typography>
@@ -415,7 +452,6 @@ const EmployeeModal = ({ open, handleClose, addRecord, updateRecord, deleteRecor
 
             <TextField
               fullWidth
-              required
               label="Employee ID"
               variant="outlined"
               value={empId}
@@ -424,7 +460,7 @@ const EmployeeModal = ({ open, handleClose, addRecord, updateRecord, deleteRecor
               helperText={errors.empId}
               sx={{ mt: 2 }}
               InputProps={{
-                readOnly: selectedRow && Object.keys(selectedRow).length > 0,
+                readOnly: role != "AdminStaffInformation" && selectedRow && Object.keys(selectedRow).length > 0,
               }}
             />
 
@@ -446,7 +482,7 @@ const EmployeeModal = ({ open, handleClose, addRecord, updateRecord, deleteRecor
             <TextField
               fullWidth
               required
-              
+
               label="Extension"
               variant="outlined"
               value={extension}
@@ -470,13 +506,14 @@ const EmployeeModal = ({ open, handleClose, addRecord, updateRecord, deleteRecor
             <Grid container spacing={2}>
               {/* First Row */}
               <Grid item xs={12} sm={6}>
-                <InputLabel>Title</InputLabel>
+                <InputLabel>Title*</InputLabel>
                 <Select
                   fullWidth
                   value={title}
                   onChange={(e) => setTitle(e.target.value)}
                   label="Title"
                   readOnly={role != "AdminStaffInformation"}
+                  error={!!errors.title}
                 >
                   <MenuItem value="นาย/Mr.">นาย / Mr.</MenuItem>
                   <MenuItem value="นาง/Ms.">นาง / Ms.</MenuItem>
@@ -486,12 +523,12 @@ const EmployeeModal = ({ open, handleClose, addRecord, updateRecord, deleteRecor
               <Grid item xs={12} sm={6} mt={3}>
                 <TextField
                   fullWidth
-                  label="Nick Name"
+                  label="Nick Name*"
                   variant="outlined"
                   value={nickname}
                   onChange={(e) => setNickName(e.target.value)}
-                  error={!!errors.thFirstName}
-                  helperText={errors.thFirstName}
+                  error={!!errors.thNickName}
+                  helperText={errors.thNickName}
                   InputProps={{
                     readOnly: role != "AdminStaffInformation",
                   }}
@@ -502,7 +539,7 @@ const EmployeeModal = ({ open, handleClose, addRecord, updateRecord, deleteRecor
               <Grid item xs={12} sm={6}>
                 <TextField
                   fullWidth
-                  label="Thai First Name"
+                  label="Thai First Name*"
                   variant="outlined"
                   value={thFirstName}
                   onChange={(e) => setThFirstName(e.target.value)}
@@ -513,11 +550,11 @@ const EmployeeModal = ({ open, handleClose, addRecord, updateRecord, deleteRecor
                   }}
                 />
               </Grid>
-              
+
               <Grid item xs={12} sm={6}>
                 <TextField
                   fullWidth
-                  label="Thai Last Name"
+                  label="Thai Last Name*"
                   variant="outlined"
                   value={thLastName}
                   onChange={(e) => setThLastName(e.target.value)}
@@ -533,7 +570,7 @@ const EmployeeModal = ({ open, handleClose, addRecord, updateRecord, deleteRecor
               <Grid item xs={12} sm={6}>
                 <TextField
                   fullWidth
-                  label="English First Name"
+                  label="English First Name*"
                   variant="outlined"
                   value={enFirstName}
                   onChange={(e) => setEnFirstName(e.target.value)}
@@ -547,7 +584,7 @@ const EmployeeModal = ({ open, handleClose, addRecord, updateRecord, deleteRecor
               <Grid item xs={12} sm={6}>
                 <TextField
                   fullWidth
-                  label="English Last Name"
+                  label="English Last Name*"
                   variant="outlined"
                   value={enLastName}
                   onChange={(e) => setEnLastName(e.target.value)}
@@ -599,7 +636,8 @@ const EmployeeModal = ({ open, handleClose, addRecord, updateRecord, deleteRecor
                     setDomainId(newValue ? newValue.domainId : null);
                     setOrganizationId(null);
                   }}
-                  renderInput={(params) => <TextField {...params} label="Domain" />}
+                  renderInput={(params) => <TextField {...params} required label="Domain" error={!!errors.domainId}
+                    helperText={errors.domainId} />}
                   readOnly={role !== "AdminStaffInformation"}
                 />
               </Grid>
@@ -612,7 +650,8 @@ const EmployeeModal = ({ open, handleClose, addRecord, updateRecord, deleteRecor
                   onChange={(event, newValue) => {
                     setOrganizationId(newValue ? newValue.organizationId : null);
                   }}
-                  renderInput={(params) => <TextField {...params} label="Organization Unit" />}
+                  renderInput={(params) => <TextField {...params} required label="Organization Unit" error={!!errors.organizationUnit}
+                    helperText={errors.organizationUnit} />}
                   readOnly={role != "AdminStaffInformation"}
                 />
               </Grid>
@@ -632,17 +671,17 @@ const EmployeeModal = ({ open, handleClose, addRecord, updateRecord, deleteRecor
                 />
               </Grid>
               <Grid item xs={12} sm={6}>
-                <TextField
-                  fullWidth
-                  label="Branch"
-                  variant="outlined"
-                  value={branchId}
-                  onChange={(e) => setBranchId(e.target.value)}
-                  error={!!errors.branchId}
-                  helperText={errors.branchId}
-                  InputProps={{
-                    readOnly: role != "AdminStaffInformation",
+                <Autocomplete
+                  id="branchs-autocomplete"
+                  options={branchs}
+                  getOptionLabel={(option: any) => option.branchId}
+                  value={branchs?.find((branch: any) => branch.branchId === branchId) || null}
+                  onChange={(event, newValue) => {
+                    setBranchId(newValue ? newValue.branchId : null);
                   }}
+                  renderInput={(params) => <TextField {...params} required label="Branch" error={!!errors.branch}
+                    helperText={errors.branch}/>}
+                  readOnly={role != "AdminStaffInformation"}
                 />
               </Grid>
 
@@ -710,8 +749,6 @@ const EmployeeModal = ({ open, handleClose, addRecord, updateRecord, deleteRecor
                   variant="outlined"
                   value={derivativeTrader}
                   onChange={(e) => setDerivativeTrader(e.target.value)}
-                  error={!!errors.branchId}
-                  helperText={errors.branchId}
                   InputProps={{
                     readOnly: role != "AdminStaffInformation",
                   }}
@@ -724,8 +761,6 @@ const EmployeeModal = ({ open, handleClose, addRecord, updateRecord, deleteRecor
                   variant="outlined"
                   value={derivativeLicense}
                   onChange={(e) => setDerivativeLicense(e.target.value)}
-                  error={!!errors.branchId}
-                  helperText={errors.branchId}
                   InputProps={{
                     readOnly: role != "AdminStaffInformation",
                   }}
@@ -738,8 +773,6 @@ const EmployeeModal = ({ open, handleClose, addRecord, updateRecord, deleteRecor
                   variant="outlined"
                   value={singleTrader}
                   onChange={(e) => setSingleTrader(e.target.value)}
-                  error={!!errors.branchId}
-                  helperText={errors.branchId}
                   InputProps={{
                     readOnly: role != "AdminStaffInformation",
                   }}
@@ -752,8 +785,6 @@ const EmployeeModal = ({ open, handleClose, addRecord, updateRecord, deleteRecor
                   variant="outlined"
                   value={singleLicense}
                   onChange={(e) => setSingleLicense(e.target.value)}
-                  error={!!errors.branchId}
-                  helperText={errors.branchId}
                   InputProps={{
                     readOnly: role != "AdminStaffInformation",
                   }}
@@ -766,8 +797,6 @@ const EmployeeModal = ({ open, handleClose, addRecord, updateRecord, deleteRecor
                   variant="outlined"
                   value={otherLicense}
                   onChange={(e) => setOtherLicense(e.target.value)}
-                  error={!!errors.branchId}
-                  helperText={errors.branchId}
                   InputProps={{
                     readOnly: role != "AdminStaffInformation",
                   }}

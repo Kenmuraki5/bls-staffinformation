@@ -1,11 +1,18 @@
 'use client'
 import * as React from 'react';
 import { DataGrid, GridColDef } from '@mui/x-data-grid';
-import { Box, styled, ToggleButton, ToggleButtonGroup } from '@mui/material';
+import { Box, Breadcrumbs, Link, styled, ToggleButton, ToggleButtonGroup } from '@mui/material';
 import { useParams, useRouter, useSearchParams } from 'next/navigation';
+import FilterListIcon from '@mui/icons-material/FilterList';
+import ListIcon from '@mui/icons-material/List';
+import Image from 'next/image';
 
 type PropsType = {
   dataEmployees: any;
+  breadcrumbPath: {
+    path: string[];
+    ids: string[];
+  };
 };
 
 const StyledGridOverlay = styled('div')(({ theme }) => ({
@@ -56,7 +63,7 @@ function CustomNoRowsOverlay() {
   );
 }
 
-const EmployeeTable: React.FC<PropsType> = ({ dataEmployees }) => {
+const EmployeeTable: React.FC<PropsType> = ({ dataEmployees, breadcrumbPath }: any) => {
   const [alignment, setAlignment] = React.useState('managers');
   const router = useRouter();
   const params = useParams();
@@ -90,7 +97,7 @@ const EmployeeTable: React.FC<PropsType> = ({ dataEmployees }) => {
           href={`/bualuang/${params.domain}/StaffInformation/${data.row.empId}`}
           style={{ color: 'blue', cursor: 'pointer', textDecoration: 'underline' }}
         >
-          {data.value}
+          {data.value}{data.row.managerId ? "*": ''}
         </a>
       ),
       headerClassName: 'super-app-theme--header', headerAlign: 'center', align: 'center'
@@ -98,7 +105,8 @@ const EmployeeTable: React.FC<PropsType> = ({ dataEmployees }) => {
     { field: 'thFirstName', headerName: 'Thai Name', minWidth: 100, flex: 1, headerClassName: 'super-app-theme--header', headerAlign: 'center' },
     { field: 'enFirstName', headerName: 'English Name', minWidth: 100, flex: 1, headerClassName: 'super-app-theme--header', headerAlign: 'center' },
     { field: 'email', headerName: 'Email', minWidth: 100, flex: 1, headerClassName: 'super-app-theme--header', headerAlign: 'center' },
-    { field: 'organizationUnit', headerName: 'Department', minWidth: 100, maxWidth: 450, flex: 1,
+    {
+      field: 'organizationUnit', headerName: 'Department', minWidth: 100, maxWidth: 450, flex: 1,
       renderCell: (params) => (
         <a
           href={`/StaffInformation/${params.row.empId}`}
@@ -112,10 +120,12 @@ const EmployeeTable: React.FC<PropsType> = ({ dataEmployees }) => {
         </a>
       ),
       headerClassName: 'super-app-theme--header', headerAlign: 'center'
-     },
-    { field: 'corporationTitle', headerName: 'CorporationTitle', minWidth: 140, maxWidth: 140, flex: 1,
+    },
+    {
+      field: 'corporationTitle', headerName: 'CorporationTitle', minWidth: 140, maxWidth: 140, flex: 1,
       renderCell: (params) => params.row.corporationTitle != "" ? <div>{abbreviateTitle(params.row.corporationTitle)}</div> : "",
-      headerClassName: 'super-app-theme--header', headerAlign: 'center', align: 'center' },
+      headerClassName: 'super-app-theme--header', headerAlign: 'center', align: 'center'
+    },
     { field: 'branchId', headerName: 'Branch', minWidth: 70, maxWidth: 70, flex: 1, headerClassName: 'super-app-theme--header', headerAlign: 'center', align: 'center' },
     { field: 'extensionCode', headerName: 'Ext', minWidth: 70, maxWidth: 70, flex: 1, headerClassName: 'super-app-theme--header', headerAlign: 'center', align: 'center' },
   ];
@@ -126,25 +136,49 @@ const EmployeeTable: React.FC<PropsType> = ({ dataEmployees }) => {
     const abbreviation = words.map(word => word[0]).join("");
     return abbreviation;
   }
+  const breadcrumbClickHandler = (id: string) => {
+    router.push(`?organizationId=${id}`);
+  };
 
-  const filteredEmployees = alignment === 'all' ? dataEmployees : dataEmployees.filter((employee: any) =>  employee.managerId !== "" || employee.organizationId === search);
+  const filteredEmployees = alignment === 'all' ? dataEmployees : dataEmployees.filter((employee: any) => employee.managerId !== "" || employee.organizationId === search);
 
   return (
     <div style={{ width: '100%' }}>
-      <div className='bg-rose-700 rounded my-5'>
+      <div className='bg-rose-700 rounded mt-3 flex items-center'>
         <p className='text-white font-bold rounded px-5'>STAFF INFORMATION</p>
+        <ToggleButtonGroup
+          color="info"
+          value={alignment}
+          exclusive
+          onChange={handleChange}
+          aria-label="View Filter"
+          className='ml-auto'
+          sx={{ height: '40px' }}
+        >
+          <ToggleButton value="managers" aria-label="Filter" className='text-white'>
+            <FilterListIcon />
+          </ToggleButton>
+          <ToggleButton value="all" aria-label="List" className='text-white'>
+            <ListIcon />
+          </ToggleButton>
+        </ToggleButtonGroup>
       </div>
-      <ToggleButtonGroup
-        color="primary"
-        value={alignment}
-        exclusive
-        onChange={handleChange}
-        aria-label="Employee Filter"
-        className='mb-3'
-      >
-        <ToggleButton value="managers">Only IN Department</ToggleButton>
-        <ToggleButton value="all">Show All Employees</ToggleButton>
-      </ToggleButtonGroup>
+      <Breadcrumbs separator="›" aria-label="breadcrumb" maxItems={4} className='my-2'>
+        {breadcrumbPath?.path.length && params.domain == "BLS" && <Image src={`/bls.png`} alt="" width={50} height={50} style={{ width: '50px', height: 'auto' }} priority />}
+        {breadcrumbPath?.path.length && params.domain == "BCAP" && <Image src={`/bcap.png`} alt="" width={50} height={50} style={{ width: '50px', height: 'auto' }} priority />}
+        {breadcrumbPath.path.map((label: any, index: any)  => (
+          <Link
+            className="hover:text-blue-700"
+            style={{ cursor: 'pointer' }}
+            key={breadcrumbPath.ids[index]}
+            color="inherit"
+            onClick={() => breadcrumbClickHandler(breadcrumbPath.ids[index])}
+          >
+            {label}
+          </Link>
+        ))}
+      </Breadcrumbs>
+
       <DataGrid
         sx={{
           '.MuiDataGrid-columnHeaderTitle': {

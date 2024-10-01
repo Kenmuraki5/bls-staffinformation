@@ -45,7 +45,8 @@ export async function getAllDepartmentsHeirachy(domainID: string | string[] | un
 
   try {
     const res = await fetchWithAuth(`${process.env.NEXT_PUBLIC_BASEURL}/staffinformation/organizations/hierachy/${domainID}`, {
-      next: { revalidate: 3600 },
+      // next: { revalidate: 3600 },
+      cache: 'no-store',
     });
 
     if (!res.ok) {
