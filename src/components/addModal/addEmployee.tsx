@@ -57,30 +57,10 @@ const EmployeeModal = ({ open, handleClose, addRecord, updateRecord, deleteRecor
   });
 
   const corporationAutocomplete = [
-    'Chief Executive Officer',
-    'Chief Financial Officer',
-    'Chief Operating Officer',
-    'President',
-    'Chief Marketing Officer',
-    'Vice President',
-    'Chief Information Officer',
-    'Chief Technology Officer',
-    'Director',
-    'Director of Operations',
-    'Chairperson',
-    'Director General',
-    'Human Resources Manager',
-    'Administrative Assistant',
-    'Finance Manager',
-    'Founder',
-    'Manager',
-    'Managing Director',
-    'Partner',
-    'Marketing Manager',
-    'Accountant',
-    'Chief Talent Officer',
-    'Chief Compliance Officer',
-    'Creative Director'
+    'EVP (Executive Vice President)',
+    'SVP (Senior Vice President)',
+    'VP (Vice President)',
+    'AVP (Assistant Vice President)',
   ];
 
   async function fetchData() {

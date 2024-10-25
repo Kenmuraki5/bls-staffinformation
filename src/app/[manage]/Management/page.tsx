@@ -6,6 +6,7 @@ import { getAlldomain } from '@/app/api/domain';
 import { getAllBranch } from '@/app/api/branch';
 import { getAllManager } from '@/app/api/manager';
 import { getAllJob } from '@/app/api/job';
+import PageNotAvailable from '@/components/notavailable';
 
 export default async function AdminEmployeeManagement({
   params,
@@ -28,7 +29,7 @@ export default async function AdminEmployeeManagement({
   const data = res ? res[type] : [];
   return (
     <div className="min-h-screen bg-white flex flex-col">
-      <StartEditButtonGrid data={data || []} type={type} />
+      {data ? (<StartEditButtonGrid data={data || []} type={type} />) : <PageNotAvailable/> }
     </div>
   );
 }

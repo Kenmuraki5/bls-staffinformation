@@ -35,7 +35,7 @@ const Search = ({ search, organizationUnits }: any) => {
                 <p className='text-white font-bold rounded px-5'>SEARCH</p>
             </div>
             <div className="flex items-center mt-3">
-                <FormControl sx={{ pr: 2, minWidth: 150, width: 250, m:1 }} size='small'>
+                <FormControl sx={{ minWidth: 150, width: 250, m:1 }} size='small'>
                     <InputLabel id="demo-simple-select-label">Search By</InputLabel>
                     <Select
                         labelId="demo-simple-select-label"
@@ -59,6 +59,7 @@ const Search = ({ search, organizationUnits }: any) => {
                             size="small"
                             value={searchInput}
                             onChange={handleSearchInputChange}
+                            sx={{mr:1}}
                             onKeyDown={handleKeyDown}
                             InputProps={{
                                 startAdornment: (
@@ -84,6 +85,7 @@ const Search = ({ search, organizationUnits }: any) => {
                             onChange={(event: any, newValue: string | null) => {
                                 setSearchInput(newValue || '');
                             }}
+                            sx={{mr:1}}
                             onKeyDown={handleKeyDown}
                             renderInput={(params) => (
                                 <TextField
