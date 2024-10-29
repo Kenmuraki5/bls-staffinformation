@@ -9,10 +9,10 @@ export default async function fetchWithAuth(url: string, options: FetchOptions =
 
   const response = await fetch(url, {
     ...options,
-    headers: {
-      Authorization: `Bearer ${token}`,
-      ...options.headers,
-    },
+    // headers: {
+    //   Authorization: `Bearer ${token}`,
+    //   ...options.headers,
+    // },
   });
 
   if (response.status === 403) {

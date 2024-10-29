@@ -7,10 +7,10 @@ export default async function fetchWithAuthClient(url: string, options: RequestI
 
   let response = await fetch(url, {
     ...options,
-    headers: {
-      'Authorization': `Bearer ${token}`,
-      ...options.headers,
-    },
+    // headers: {
+    //   'Authorization': `Bearer ${token}`,
+    //   ...options.headers,
+    // },
   });
 
   if (response.status === 403) {
