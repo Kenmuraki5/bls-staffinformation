@@ -79,14 +79,14 @@ const EmployeeTable: React.FC<PropsType> = ({ dataEmployees, breadcrumbPath }: a
           href={`/bualuang/${params.domain}/StaffInformation/${data.row.empId}`}
           style={{ color: 'blue', cursor: 'pointer', textDecoration: 'underline' }}
         >
-          {data.value}{data.row.managerId ? "*" : ''}
+          {data.value}
         </a>
       ),
       headerClassName: 'super-app-theme--header', headerAlign: 'center', align: 'center'
     },
     { field: 'thFirstName', headerName: 'Thai Name', minWidth: 100, flex: 1, headerClassName: 'super-app-theme--header', headerAlign: 'center' },
     { field: 'enFirstName', headerName: 'English Name', minWidth: 100, flex: 1, headerClassName: 'super-app-theme--header', headerAlign: 'center' },
-    { field: 'email', headerName: 'Email', minWidth: 100, flex: 1, headerClassName: 'super-app-theme--header', headerAlign: 'center' },
+    // { field: 'email', headerName: 'Email', minWidth: 100, flex: 1, headerClassName: 'super-app-theme--header', headerAlign: 'center' },
     {
       field: 'organizationUnit', headerName: 'Department', minWidth: 100, maxWidth: 450, flex: 1,
       renderCell: (params) => (
@@ -104,7 +104,7 @@ const EmployeeTable: React.FC<PropsType> = ({ dataEmployees, breadcrumbPath }: a
       headerClassName: 'super-app-theme--header', headerAlign: 'center'
     },
     {
-      field: 'corporationTitle', headerName: 'CorporationTitle', minWidth: 140, maxWidth: 140, flex: 1,
+      field: 'corporationTitle', headerName: 'CorporationTitle', minWidth: 80, maxWidth: 80, flex: 1,
       renderCell: (params) => params.row.corporationTitle != "" ? <div>{abbreviateTitle(params.row.corporationTitle)}</div> : "",
       headerClassName: 'super-app-theme--header', headerAlign: 'center', align: 'center'
     },
@@ -115,6 +115,9 @@ const EmployeeTable: React.FC<PropsType> = ({ dataEmployees, breadcrumbPath }: a
   function abbreviateTitle(title: string) {
     const primaryTitle = title.split(" / ")[0];
     const words = primaryTitle.split(" ");
+    if (words.length === 1) {
+      return primaryTitle;
+    }
     const abbreviation = words.map(word => word[0]).join("");
     return abbreviation;
   }
