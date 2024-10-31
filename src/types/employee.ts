@@ -24,6 +24,7 @@ export default interface EmployeeNode {
     effectiveDate: string
     corporationTitle: string
     extensionCode: string
+    directLine: string
     branchName: string
     image: string
 }
