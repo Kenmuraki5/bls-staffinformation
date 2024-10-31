@@ -7,7 +7,7 @@ import LayoutPage from "@/components/admin/Layout";
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
-  title: "404 NOT FOUND",
+  title: "Bualuang Securities Staff Information",
 };
 
 export default function RootLayout({

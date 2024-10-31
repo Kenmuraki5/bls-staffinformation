@@ -13,9 +13,9 @@ const StyledTreeItem = styled(({ isselected, ...other }: StyledTreeItemProps & R
 ))(({ theme, isselected }) => ({
   color: theme.palette.mode === 'light' ? theme.palette.grey[800] : theme.palette.grey[200],
   backgroundColor: isselected ? "primary" : 'inherit',
-  maxHeight: 'calc(100vh)',
-  overflowY: 'auto',
-  overflowX: 'auto',
+  // maxHeight: 'calc(100vh)',
+  // overflowY: 'auto',
+  // overflowX: 'auto',
   [`& .${treeItemClasses.content}`]: {
     borderRadius: theme.spacing(0.5),
     // padding: theme.spacing(0.5, 1),
