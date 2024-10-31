@@ -13,18 +13,13 @@ const StaffInformation: React.FC<StaffInformationProps> = ({employees}) => {
     return `${day}/${month}/${year}`;
   }
 
-  const parseLicenses = (xmlString: string) => {
-    const parser = new DOMParser();
-    const xmlDoc = parser.parseFromString(xmlString, "text/xml");
-    const licenses = xmlDoc.getElementsByTagName("Name");
-    
-    // แปลงผลลัพธ์ออกมาเป็น array ของข้อความชื่อ license
-    const licenseNames = Array.from(licenses).map((nameNode) => nameNode.textContent?.trim() ?? "");
-    
-    // รวม array ของชื่อ license ให้เป็น string ที่มีการเว้นบรรทัด
-    return licenseNames.join("\n");
-  }
-  const licenseText = employees?.otherLicense ? parseLicenses(employees.otherLicense) : "";
+  const parseLicenses = (licenseString: string) => {
+    const regex = /<Name>(.*?)<\/Name>/g;
+    const matches = licenseString.match(regex);
+    return matches ? matches.map(match => match.replace(/<\/?Name>/g, '') + ':') : [];
+  };  
+  
+  const licensesArray = employees?.otherLicense ? parseLicenses(employees.otherLicense) : [];
   return (
     <div className="flex flex-col md:flex-row items-start justify-between p-4 md:p-6 rounded-lg shadow-md bg-white text-black">
       <fieldset className="w-full border-2 p-4 md:p-5 flex flex-col md:flex-row">
@@ -113,7 +108,11 @@ const StaffInformation: React.FC<StaffInformationProps> = ({employees}) => {
           </div>
           <div className="mb-4 flex flex-col md:flex-row md:items-center">
             <label className="text-base font-semibold w-full md:w-48 xl:w-64">Other License:</label>
-            <span className="ml-2 text-base w-full whitespace-pre-line">{licenseText}</span>
+            <span className="ml-2 text-base w-full">
+              {licensesArray.map((license, index) => (
+                <div key={index}>{license}</div> // สร้าง tag element จาก array
+              ))}
+            </span>
           </div>
           <div className="mb-4 mt-10 flex flex-col md:flex-row md:items-center">
             <label className="text-base font-semibold w-full md:w-48 xl:w-64">Start Working Date:</label>
