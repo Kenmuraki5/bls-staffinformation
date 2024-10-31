@@ -35,7 +35,7 @@ const StaffInformation: React.FC<StaffInformationProps> = ({employees}) => {
           </div>
           <div className="mb-4 flex flex-col md:flex-row md:items-center">
             <label className="text-base font-semibold w-full md:w-48 xl:w-64">Direct Line :</label>
-            <span className="ml-2 text-base w-full">02618{employees?.extensionCode}</span>
+            <span className="ml-2 text-base w-full">{employees?.directLine}</span>
           </div>
           <div className="mb-4 flex flex-col md:flex-row md:items-center">
             <label className="text-base font-semibold w-full md:w-48 xl:w-64">Email :</label>
@@ -71,7 +71,7 @@ const StaffInformation: React.FC<StaffInformationProps> = ({employees}) => {
           </div>
           <div className="mb-4 flex flex-col md:flex-row md:items-center">
             <label className="text-base font-semibold w-full md:w-48 xl:w-64">Nickname :</label>
-            <span className="ml-2 text-base w-full"></span>
+            <span className="ml-2 text-base w-full">{employees?.nickname}</span>
           </div>
           <hr className="mt-10 mb-5" />
           <div className="mb-4 flex flex-col md:flex-row md:items-center">

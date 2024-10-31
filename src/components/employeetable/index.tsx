@@ -86,7 +86,6 @@ const EmployeeTable: React.FC<PropsType> = ({ dataEmployees, breadcrumbPath }: a
     },
     { field: 'thFirstName', headerName: 'Thai Name', minWidth: 100, flex: 1, headerClassName: 'super-app-theme--header', headerAlign: 'center' },
     { field: 'enFirstName', headerName: 'English Name', minWidth: 100, flex: 1, headerClassName: 'super-app-theme--header', headerAlign: 'center' },
-    // { field: 'email', headerName: 'Email', minWidth: 100, flex: 1, headerClassName: 'super-app-theme--header', headerAlign: 'center' },
     {
       field: 'organizationUnit', headerName: 'Department', minWidth: 100, maxWidth: 450, flex: 1,
       renderCell: (params) => (
@@ -104,13 +103,33 @@ const EmployeeTable: React.FC<PropsType> = ({ dataEmployees, breadcrumbPath }: a
       headerClassName: 'super-app-theme--header', headerAlign: 'center'
     },
     {
-      field: 'corporationTitle', headerName: 'CorporationTitle', minWidth: 80, maxWidth: 80, flex: 1,
-      renderCell: (params) => params.row.corporationTitle != "" ? <div>{abbreviateTitle(params.row.corporationTitle)}</div> : "",
+      field: 'corporationTitle', headerName: 'Corporation Title', minWidth: 80, maxWidth: 80, flex: 1,
+      renderCell: (params) => params.row.corporationTitle !== "" ? <div>{abbreviateTitle(params.row.corporationTitle)}</div> : "",
       headerClassName: 'super-app-theme--header', headerAlign: 'center', align: 'center'
     },
     { field: 'branchId', headerName: 'Branch', minWidth: 70, maxWidth: 70, flex: 1, headerClassName: 'super-app-theme--header', headerAlign: 'center', align: 'center' },
-    { field: 'extensionCode', headerName: 'Ext', minWidth: 70, maxWidth: 70, flex: 1, headerClassName: 'super-app-theme--header', headerAlign: 'center', align: 'center' },
+    {
+      field: 'extensionCode',
+      headerName: 'Ext',
+      minWidth: 70,
+      maxWidth: 70,
+      flex: 1,
+      headerClassName: 'super-app-theme--header',
+      headerAlign: 'center',
+      align: 'center',
+      renderCell: (params) => {
+        const codes = params.value.split(','); // แบ่งข้อมูลด้วยเครื่องหมายจุลภาค
+        return (
+          <div>
+            {codes.map((code:any, index:any) => (
+              <div key={index}>{code.trim()}</div> // ขึ้นบรรทัดใหม่สำหรับแต่ละรหัส
+            ))}
+          </div>
+        );
+      },
+    },
   ];
+
 
   function abbreviateTitle(title: string) {
     const primaryTitle = title.split(" / ")[0];
