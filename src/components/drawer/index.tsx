@@ -282,7 +282,7 @@ export default function PersistentDrawerLeft() {
                 )}
                 <Divider />
                 <List>
-                    <ListItem disablePadding>
+                    {/* <ListItem disablePadding>
                         <ListItemButtonStyled onClick={handleDrawerClose}>
                             <HelpIcon color="action" className="w-6 h-6 mr-3" />
                             <Typography color="textSecondary">Help</Typography>
@@ -294,7 +294,7 @@ export default function PersistentDrawerLeft() {
                             <LogoutIcon className="w-6 h-6 text-black-600 mr-3" />
                             Logout
                         </ListItemButton>
-                    </ListItem>
+                    </ListItem> */}
                 </List>
             </StyledDrawer>
             <Main open={open}>

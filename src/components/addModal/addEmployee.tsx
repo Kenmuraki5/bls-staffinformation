@@ -57,10 +57,22 @@ const EmployeeModal = ({ open, handleClose, addRecord, updateRecord, deleteRecor
   });
 
   const corporationAutocomplete = [
-    'EVP (Executive Vice President)',
-    'SVP (Senior Vice President)',
-    'VP (Vice President)',
-    'AVP (Assistant Vice President)',
+    'President',
+    'Managing Director',
+    'Deputy Managing Director',
+    'Senior Executve Vice President',
+    'Executve Vice President',
+    'Senior Vice President',
+    'First Vice President',
+    'Vice President',
+    'Deputy Vice President',
+    'Senior Assistant Vice President',
+    'Assistant Vice President',
+    'Supervisor',
+    'Staff',
+    'Temporary',
+    'Advisor',
+    'Senior Managing Director'
   ];
 
   async function fetchData() {
@@ -163,19 +175,27 @@ const EmployeeModal = ({ open, handleClose, addRecord, updateRecord, deleteRecor
 
   const formatDateToISO = (dateString: string) => {
     const date = new Date(dateString);
-    const offset = -date.getTimezoneOffset();
-    const offsetHours = Math.floor(offset / 60);
-    const offsetMinutes = offset % 60;
-    const isoString = date.toISOString().split('T')[0] + `T00:00:00${offsetHours >= 0 ? '+' : '-'}${String(Math.abs(offsetHours)).padStart(2, '0')}:${String(offsetMinutes).padStart(2, '0')}`;
-    return isoString;
+    const year = date.getFullYear();
+    const month = String(date.getMonth() + 1).padStart(2, '0'); // เดือนเริ่มจาก 0 จึงต้อง +1
+    const day = String(date.getDate()).padStart(2, '0');
+    const hours = String(date.getHours()).padStart(2, '0');
+    const minutes = String(date.getMinutes()).padStart(2, '0');
+    const seconds = String(date.getSeconds()).padStart(2, '0');
+    const milliseconds = String(date.getMilliseconds()).padStart(3, '0');
+
+    return `${year}-${month}-${day} ${hours}:${minutes}:${seconds}.${milliseconds}`;
   };
+
 
   const formatDate = (dateString: string) => {
     if (!dateString) return "";
-    const isoDateString = dateString;
-    const date = new Date(isoDateString);
-    const formattedDate = date.toISOString().split('T')[0];
-    return formattedDate;
+    const date = new Date(dateString);
+    const options: Intl.DateTimeFormatOptions = {
+      day: '2-digit',
+      month: 'short',
+      year: 'numeric',
+    };
+    return date.toLocaleString('en-GB', options); // 'en-GB' for dd MMM yyyy format
   }
 
   const isValidEnglishName = (name: string) => /^[a-zA-Z\s]+$/.test(name);
@@ -496,7 +516,8 @@ const EmployeeModal = ({ open, handleClose, addRecord, updateRecord, deleteRecor
                   error={!!errors.title}
                 >
                   <MenuItem value="นาย/Mr.">นาย / Mr.</MenuItem>
-                  <MenuItem value="นาง/Ms.">นาง / Ms.</MenuItem>
+                  <MenuItem value="นาง/Mrs.">นาง / Mrs.</MenuItem>
+                  <MenuItem value="น.ส./Ms.">นาง / Ms.</MenuItem>
                 </Select>
                 {errors.title && <FormHelperText>{errors.title}</FormHelperText>}
               </Grid>

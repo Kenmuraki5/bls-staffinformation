@@ -74,23 +74,28 @@ const EmployeeTable: React.FC<PropsType> = ({ dataEmployees, breadcrumbPath }: a
       minWidth: 70,
       maxWidth: 70,
       flex: 1,
-      renderCell: (data) => (
-        <a
-          href={`/bualuang/${params.domain}/StaffInformation/${data.row.empId}`}
-          style={{ color: 'blue', cursor: 'pointer', textDecoration: 'underline' }}
-        >
-          {data.value}
-        </a>
-      ),
-      headerClassName: 'super-app-theme--header', headerAlign: 'center', align: 'center'
-    },
+      renderCell: (data) => {
+        const formattedEmpId = data.value.toString().padStart(4, '0');
+        return (
+          <a
+            href={`/bualuang/${params.domain}/StaffInformation/${data.row.empId}`}
+            style={{ color: 'blue', cursor: 'pointer', textDecoration: 'underline' }}
+          >
+            {formattedEmpId}
+          </a>
+        );
+      },
+      headerClassName: 'super-app-theme--header',
+      headerAlign: 'center',
+      align: 'center'
+    },    
     { field: 'thFirstName', headerName: 'Thai Name', minWidth: 100, flex: 1, headerClassName: 'super-app-theme--header', headerAlign: 'center' },
     { field: 'enFirstName', headerName: 'English Name', minWidth: 100, flex: 1, headerClassName: 'super-app-theme--header', headerAlign: 'center' },
     {
       field: 'organizationUnit', headerName: 'Department', minWidth: 100, maxWidth: 450, flex: 1,
       renderCell: (params) => (
         <a
-          href={`/StaffInformation/${params.row.empId}`}
+          href={`?organizationID=${params.row.organizationId}`}
           style={{ color: 'blue', cursor: 'pointer', textDecoration: 'underline' }}
           onClick={(e) => {
             e.preventDefault();

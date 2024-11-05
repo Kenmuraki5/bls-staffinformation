@@ -6,12 +6,14 @@ import Image from 'next/image';
 const StaffInformation: React.FC<StaffInformationProps> = ({employees}) => {
   const convertDate = (d: string) => {
     const date = new Date(d);
-    const day = date.getUTCDate();
-    const month = date.getUTCMonth() + 1;
-    const year = date.getUTCFullYear();
-
-    return `${day}/${month}/${year}`;
+    const options: Intl.DateTimeFormatOptions = {
+      day: '2-digit',
+      month: 'short',
+      year: 'numeric',
+    };
+    return date.toLocaleString('en-GB', options); // 'en-GB' for dd MMM yyyy format
   }
+  
 
   const parseLicenses = (licenseString: string) => {
     const regex = /<Name>(.*?)<\/Name>/g;

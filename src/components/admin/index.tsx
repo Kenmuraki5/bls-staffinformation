@@ -302,6 +302,7 @@ export const StartEditButtonGrid: React.FC<AdminEmployeemanagementProps & { type
     { field: 'branchId', headerName: 'Branch ID', minWidth: 100, maxWidth: 80, flex: 1, headerAlign: 'center', headerClassName: 'super-app-theme--header', align: 'center', },
     { field: 'jobId', headerName: 'job ID', minWidth: 100, maxWidth: 80, flex: 1, headerAlign: 'center', headerClassName: 'super-app-theme--header', align: 'center', },
     { field: 'extensionCode', headerName: 'ExtensionCode', minWidth: 120, maxWidth: 120, flex: 1, headerAlign: 'center', headerClassName: 'super-app-theme--header', align: 'center', },
+    { field: 'directLine', headerName: 'directLine', minWidth: 120, maxWidth: 400, flex: 1, headerAlign: 'center', headerClassName: 'super-app-theme--header', align: 'center', },
     { field: 'derivativeTrader', headerName: 'DerivativeTrader', minWidth: 120, maxWidth: 120, flex: 1, headerAlign: 'center', headerClassName: 'super-app-theme--header', align: 'center', },
     { field: 'derivativeLicense', headerName: 'DerivativeLicense', minWidth: 140, maxWidth: 120, flex: 1, headerAlign: 'center', headerClassName: 'super-app-theme--header', align: 'center', },
     { field: 'singleTrader', headerName: 'SingleTrader', minWidth: 100, maxWidth: 120, flex: 1, headerAlign: 'center', headerClassName: 'super-app-theme--header', align: 'center', },
