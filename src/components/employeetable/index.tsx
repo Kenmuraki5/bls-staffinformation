@@ -55,9 +55,7 @@ const EmployeeTable: React.FC<PropsType> = ({ dataEmployees, breadcrumbPath }: a
 
   React.useEffect(() => {
     if (searchBy) {
-      setAlignment("all");
-    } else {
-      setAlignment('managers');
+      setAlignment("managers");
     }
   }, [searchBy])
 
