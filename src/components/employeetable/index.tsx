@@ -119,6 +119,7 @@ const EmployeeTable: React.FC<PropsType> = ({ dataEmployees, breadcrumbPath }: a
                 >
                   {org_unit.name}
                 </a>
+                <hr />
               </div>
             ))}
           </div>
