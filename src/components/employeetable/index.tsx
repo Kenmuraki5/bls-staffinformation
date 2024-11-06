@@ -170,11 +170,18 @@ const EmployeeTable: React.FC<PropsType> = ({ dataEmployees, breadcrumbPath }: a
   };
 
   const filteredEmployees = alignment === 'all' ? dataEmployees : 
-  dataEmployees.filter((employee: any) => employee?.managerId !== "" || 
-  employee?.organizationId == search || employee?.organizationUnit?.toLowerCase().includes.includes(searchInput?.toLowerCase()) || employee?.empId == searchInput ||
-  employee?.enFirstName?.toLowerCase().includes(searchInput?.toLowerCase()) || employee?.thFirstName?.toLowerCase().includes(searchInput?.toLowerCase()) ||
-  employee?.nickname?.toLowerCase().includes(searchInput?.toLowerCase()));
-
+  dataEmployees.filter((employee: any) => {
+    const organizationUnits = employee?.organizationUnit?.split(', ').map((unit: string) => unit.split(':')[1]?.toLowerCase());
+  
+    return employee?.managerId !== "" ||
+      employee?.organizationId == search ||
+      organizationUnits?.some((unitName: any) => unitName.includes(searchInput?.toLowerCase())) ||
+      employee?.empId == searchInput ||
+      employee?.enFirstName?.toLowerCase().includes(searchInput?.toLowerCase()) ||
+      employee?.thFirstName?.toLowerCase().includes(searchInput?.toLowerCase()) ||
+      employee?.nickname?.toLowerCase().includes(searchInput?.toLowerCase());
+  });
+  
   return (
     <div style={{ width: '100%' }}>
       <div className='bg-rose-700 rounded mt-3 flex items-center'>
