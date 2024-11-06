@@ -168,8 +168,8 @@ const EmployeeTable: React.FC<PropsType> = ({ dataEmployees, breadcrumbPath }: a
   const filteredEmployees = alignment === 'all' ? dataEmployees : 
   dataEmployees.filter((employee: any) => employee.managerId !== "" || 
   employee.organizationId === search || employee.organizationUnit === searchInput || employee.empId == searchInput ||
-  employee.enFirstName.toLowerCase().includes(searchInput) || employee.thFirstName.toLowerCase().includes(searchInput) ||
-  employee.nickname.toLowerCase().includes(searchInput));
+  employee.enFirstName?.toLowerCase().includes(searchInput?.toLowerCase()) || employee.thFirstName?.toLowerCase().includes(searchInput?.toLowerCase()) ||
+  employee.nickname?.toLowerCase().includes(searchInput?.toLowerCase()));
 
   return (
     <div style={{ width: '100%' }}>
