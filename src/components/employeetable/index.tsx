@@ -77,7 +77,7 @@ const EmployeeTable: React.FC<PropsType> = ({ dataEmployees, breadcrumbPath }: a
         const formattedEmpId = data.value.toString().padStart(4, '0');
         return (
           <a
-            href={`/bualuang/${params.domain}/StaffInformation/${data.row.empId}`}
+            href={`/bualuang/${params.domain}/StaffInformation/${data?.row?.empId}`}
             style={{ color: 'blue', cursor: 'pointer', textDecoration: 'underline' }}
           >
             {formattedEmpId}
@@ -93,12 +93,16 @@ const EmployeeTable: React.FC<PropsType> = ({ dataEmployees, breadcrumbPath }: a
     {
       field: 'organizationUnit', headerName: 'Department', minWidth: 100, maxWidth: 450, flex: 1,
       renderCell: (params) => {
-        const org_units = params.value.split(', ');
+        const org_units = params.value?.split(', ').map((org_unit:any) => {
+          const [id, name] = org_unit?.split(':');
+          return { id, name };
+        });
+        
         return (
           <div>
-            {org_units.map((org_unit: any, index: any) => (
+            {org_units?.map((org_unit:any, index:any) => (
               <div
-                key={index}
+                key={org_unit.id}
                 style={{
                   backgroundColor: index % 2 === 0 ? '#ffffff' : '#f0f0f0',
                   padding: '5px',
@@ -106,20 +110,20 @@ const EmployeeTable: React.FC<PropsType> = ({ dataEmployees, breadcrumbPath }: a
                 }}
               >
                 <a
-                  href={`?searchBy=organizationUnit&searchInput=${org_unit}`}
+                  href={`?organizationId=${org_unit.id}`}
                   style={{ color: 'blue', cursor: 'pointer', textDecoration: 'underline' }}
                   onClick={(e) => {
                     e.preventDefault();
-                    router.push(`?searchBy=organizationUnit&searchInput=${org_unit}`);
+                    router.push(`?organizationId=${org_unit.id}`);
                   }}
                 >
-                  {org_unit}
+                  {org_unit.name}
                 </a>
               </div>
             ))}
-
           </div>
-        )
+        );
+        
       },
       headerClassName: 'super-app-theme--header', headerAlign: 'center'
     },
@@ -166,10 +170,10 @@ const EmployeeTable: React.FC<PropsType> = ({ dataEmployees, breadcrumbPath }: a
   };
 
   const filteredEmployees = alignment === 'all' ? dataEmployees : 
-  dataEmployees.filter((employee: any) => employee.managerId !== "" || 
-  employee.organizationId === search || employee.organizationUnit === searchInput || employee.empId == searchInput ||
-  employee.enFirstName?.toLowerCase().includes(searchInput?.toLowerCase()) || employee.thFirstName?.toLowerCase().includes(searchInput?.toLowerCase()) ||
-  employee.nickname?.toLowerCase().includes(searchInput?.toLowerCase()));
+  dataEmployees.filter((employee: any) => employee?.managerId !== "" || 
+  employee?.organizationId === search || employee?.organizationUnit === searchInput || employee?.empId == searchInput ||
+  employee?.enFirstName?.toLowerCase().includes(searchInput?.toLowerCase()) || employee?.thFirstName?.toLowerCase().includes(searchInput?.toLowerCase()) ||
+  employee?.nickname?.toLowerCase().includes(searchInput?.toLowerCase()));
 
   return (
     <div style={{ width: '100%' }}>
