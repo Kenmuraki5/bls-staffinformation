@@ -18,55 +18,28 @@ export default function BranchModal({
   role
 }: any) {
   const [branchId, setBranchId] = useState('');
-  const [branchName, setBranchName] = useState('');
-  const [contact, setContact] = useState('');
-  const [location, setLocation] = useState('');
-  const [errors, setErrors] = useState<{ [key: string]: string }>({});
+  const [branchEngName, setBranchEngName] = useState('');
+  const [branchThName, setBranchThName] = useState('');
+  const [engAddr, setEngAddr] = useState('');
+  const [thAddr, setThAddr] = useState('');
+  const [telephone, setTelephone] = useState('');
+  const [fax, setFax] = useState('');
+  const [zoneCode, setZoneCode] = useState('');
+  const [errors, setErrors] = useState<any>({});
 
   const validate = () => {
-    const newErrors: { [key: string]: string } = {};
+    const newErrors: any = {};
 
-    if (!branchId) {
-      newErrors.branchId = 'Branch ID must not be empty.';
-    } else if (!/^[A-Z]+$/.test(branchId)) {
-      newErrors.branchId = 'Branch ID must be uppercase letters only.';
-    }
-
-    if (!branchName) {
-      newErrors.branchName = 'Branch Name must not be empty.';
-    } else if (branchName.length > 255) {
-      newErrors.branchName = 'Branch Name must not exceed 255 characters.';
-    }
-
-    if (!location) {
-      newErrors.location = 'Location must not be empty.';
-    } else if (location.length > 255) {
-      newErrors.location = 'Location must not exceed 255 characters.';
-    }
-
-    if (!contact) {
-      newErrors.contact = 'Contact must not be empty.';
-    } else {
-      // แยกเบอร์โทรที่คั่นด้วยจุลภาคและช่องว่าง
-      const contactsArray = contact.split(',').map(item => item.trim());
-      const contactRegex = /^(?:\(\d{2,3}\)|\d{2,3})[-.\s]?\d{3,4}[-.\s]?\d{3,4}$/;
+    if (!branchId) newErrors.branchId = 'Branch ID must not be empty.';
+    if (!branchEngName) newErrors.branchEngName = 'English Name must not be empty.';
+    if (!branchThName) newErrors.branchThName = 'Thai Name must not be empty.';
+    if (!engAddr) newErrors.engAddr = 'English Address must not be empty.';
+    if (!thAddr) newErrors.thAddr = 'Thai Address must not be empty.';
     
-      let isValid = true; // ตัวแปรเพื่อเก็บสถานะการตรวจสอบ
-    
-      // ตรวจสอบเบอร์โทรแต่ละหมายเลข
-      for (const item of contactsArray) {
-        if (!contactRegex.test(item)) {
-          isValid = false;
-          break; // หยุดตรวจสอบหากพบหมายเลขที่ไม่ถูกต้อง
-        }
-      }
-    
-      if (!isValid) {
-        newErrors.contact = 'One or more contacts are not in a valid format (e.g., (02) 618-1000, (02) 340 6600).';
-      }
-    }
-    
-    
+    const contactRegex = /^(?:\(\d{2,3}\)|\d{2,3})[-.\s]?\d{3,4}[-.\s]?\d{3,4}$/;
+    if (!telephone || !contactRegex.test(telephone)) newErrors.telephone = 'Telephone is not in a valid format.';
+    if (fax && !contactRegex.test(fax)) newErrors.fax = 'Fax is not in a valid format.';
+    if (!zoneCode) newErrors.zoneCode = 'Zone Code must not be empty.';
 
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
@@ -75,9 +48,13 @@ export default function BranchModal({
   useEffect(() => {
     if (selectedRow) {
       setBranchId(selectedRow.branchId || '');
-      setBranchName(selectedRow.branchName || '');
-      setContact(selectedRow.contact || '');
-      setLocation(selectedRow.location || '');
+      setBranchEngName(selectedRow.branchEngName || '');
+      setBranchThName(selectedRow.branchThName || '');
+      setEngAddr(selectedRow.engAddr || '');
+      setThAddr(selectedRow.thAddr || '');
+      setTelephone(selectedRow.telephone || '');
+      setFax(selectedRow.fax || '');
+      setZoneCode(selectedRow.zoneCode || '');
     } else {
       resetState();
     }
@@ -85,34 +62,41 @@ export default function BranchModal({
 
   const resetState = () => {
     setBranchId('');
-    setBranchName('');
-    setContact('');
-    setLocation('');
+    setBranchEngName('');
+    setBranchThName('');
+    setEngAddr('');
+    setThAddr('');
+    setTelephone('');
+    setFax('');
+    setZoneCode('');
     setErrors({});
   };
 
   const handleSave = async () => {
     if (!validate()) return;
 
+    const data = {
+      branchId,
+      branchEngName,
+      branchThName,
+      engAddr,
+      thAddr,
+      telephone,
+      fax,
+      zoneCode
+    };
+
     try {
-      const data = {
-        branchId,
-        branchName,
-        contact,
-        location
-      };
       if (selectedRow) {
         await updateRecord(data);
         setRows((oldRows: any) =>
-          oldRows.map((row: any) =>
-            row.branchId === selectedRow.branchId ? { ...row, ...data } : row
-          )
+          oldRows.map((row: any) => (row.branchId === selectedRow.branchId ? { ...row, ...data } : row))
         );
       } else {
         await addRecord(data);
       }
       resetState();
-      handleClose(true);
+      handleClose();
       setSnackbarOpen(true);
       setError(false);
       setAlertMessage('Successfully Updated');
@@ -129,9 +113,7 @@ export default function BranchModal({
       onClose={handleClose}
       aria-labelledby="modal-modal-title"
       aria-describedby="modal-modal-description"
-      BackdropProps={{
-        invisible: true,
-      }}
+      BackdropProps={{ invisible: true }}
       style={{ display: 'flex', alignItems: 'center', justifyContent: 'flex-end', zIndex: 1 }}
     >
       <Box
@@ -148,41 +130,20 @@ export default function BranchModal({
         }}
       >
         <Box className="flex items-center justify-between mb-4">
-          <Box className="flex items-center">
-            <IconButton onClick={handleClose} className='hover:text-blue-500'>
-              <ArrowBackIcon />
-            </IconButton>
-            <Typography variant="h6" component="h6" className="ml-12 text-black">
-              {selectedRow != null && role == "AdminStaffInformation" ? "Edit Branch" : selectedRow == null && role == "AdminStaffInformation" ? "Add Branch" : "Branch Information"}
-            </Typography>
-          </Box>
-          <Box sx={{ ml: 'auto', display: 'flex', alignItems: 'center' }}>
-            {role === "AdminStaffInformation" && (
-              <>
-                <Button
-                  variant="outlined"
-                  onClick={handleSave}
-                  startIcon={<SaveOutlinedIcon />}
-                  sx={{ mr: 1 }} // Add some space between the buttons
-                >
-                  Save
-                </Button>
-              </>
-            )}
-          </Box>
-          {role === "AdminStaffInformation" && selectedRow != null && (
-            <Box>
-              <Button
-                color='error'
-                variant="outlined"
-                onClick={deleteRecord(selectedRow?.branchId)} // Replace with your delete function
-                startIcon={<DeleteOutlineOutlinedIcon />}
-              >
-                Delete
-              </Button>
-            </Box>
+          <IconButton onClick={handleClose}>
+            <ArrowBackIcon />
+          </IconButton>
+          <Typography variant="h6">{selectedRow ? 'Edit Branch' : 'Add Branch'}</Typography>
+          {role === 'AdminStaffInformation' && selectedRow && (
+            <Button
+              color="error"
+              variant="outlined"
+              onClick={() => deleteRecord(selectedRow.branchId)}
+              startIcon={<DeleteOutlineOutlinedIcon />}
+            >
+              Delete
+            </Button>
           )}
-
         </Box>
         <Divider className="mb-4" />
         <Grid container spacing={2}>
@@ -191,55 +152,76 @@ export default function BranchModal({
               label="Branch ID"
               variant="standard"
               fullWidth
-              className="mb-4"
               value={branchId}
-              onChange={(e) => setBranchId(e.target.value)}
+              onChange={(e:any) => setBranchId(e.target.value)}
               error={!!errors.branchId}
               helperText={errors.branchId}
-              InputProps={{
-                readOnly: role != "AdminStaffInformation",
-              }}
+              InputProps={{ readOnly: role !== 'AdminStaffInformation' }}
             />
             <TextField
-              label="Branch Name"
+              label="Branch English Name"
               variant="standard"
               fullWidth
-              className="mb-4"
-              value={branchName}
-              onChange={(e) => setBranchName(e.target.value)}
-              error={!!errors.branchName}
-              helperText={errors.branchName}
-              InputProps={{
-                readOnly: role != "AdminStaffInformation",
-              }}
+              value={branchEngName}
+              onChange={(e) => setBranchEngName(e.target.value)}
+              error={!!errors.branchEngName}
+              helperText={errors.branchEngName}
             />
             <TextField
-              label="Contact"
+              label="Branch Thai Name"
               variant="standard"
               fullWidth
-              className="mb-4"
-              value={contact}
-              onChange={(e) => setContact(e.target.value)}
-              error={!!errors.contact}
-              helperText={errors.contact}
-              InputProps={{
-                readOnly: role != "AdminStaffInformation",
-              }}
+              value={branchThName}
+              onChange={(e) => setBranchThName(e.target.value)}
+              error={!!errors.branchThName}
+              helperText={errors.branchThName}
             />
             <TextField
-              label="Location"
+              label="English Address"
               variant="standard"
               fullWidth
-              className="mb-4"
-              value={location}
-              onChange={(e) => setLocation(e.target.value)}
-              error={!!errors.location}
-              helperText={errors.location}
+              value={engAddr}
+              onChange={(e) => setEngAddr(e.target.value)}
+              error={!!errors.engAddr}
+              helperText={errors.engAddr}
               multiline
-              minRows={4}
-              InputProps={{
-                readOnly: role != "AdminStaffInformation",
-              }}
+            />
+            <TextField
+              label="Thai Address"
+              variant="standard"
+              fullWidth
+              value={thAddr}
+              onChange={(e) => setThAddr(e.target.value)}
+              error={!!errors.thAddr}
+              helperText={errors.thAddr}
+              multiline
+            />
+            <TextField
+              label="Telephone"
+              variant="standard"
+              fullWidth
+              value={telephone}
+              onChange={(e) => setTelephone(e.target.value)}
+              error={!!errors.telephone}
+              helperText={errors.telephone}
+            />
+            <TextField
+              label="Fax"
+              variant="standard"
+              fullWidth
+              value={fax}
+              onChange={(e) => setFax(e.target.value)}
+              error={!!errors.fax}
+              helperText={errors.fax}
+            />
+            <TextField
+              label="Zone Code"
+              variant="standard"
+              fullWidth
+              value={zoneCode}
+              onChange={(e) => setZoneCode(e.target.value)}
+              error={!!errors.zoneCode}
+              helperText={errors.zoneCode}
             />
           </Grid>
         </Grid>

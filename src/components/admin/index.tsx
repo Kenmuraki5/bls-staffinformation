@@ -131,11 +131,11 @@ export const StartEditButtonGrid: React.FC<AdminEmployeemanagementProps & { type
 
   const handleDeleteClick = (id: GridRowId) => async () => {
     const isConfirmed = window.confirm('Are you sure you want to delete this record?');
-  
+
     if (!isConfirmed) {
       return;
     }
-  
+
     try {
       await deleteRecord(id);
       setRows(rows.filter((row: any) => {
@@ -236,10 +236,10 @@ export const StartEditButtonGrid: React.FC<AdminEmployeemanagementProps & { type
       setSnackbarOpen(true);
       setError(false);
       setAlertMessage('Successfully Updated');
-      if (params.manage == "manager"){
+      if (params.manage == "manager") {
         setRows((oldRows: any) => [
           ...oldRows,
-          {...data, managerId : responseData.managerId}
+          { ...data, managerId: responseData.managerId }
         ])
         return responseData
       }
@@ -359,7 +359,13 @@ export const StartEditButtonGrid: React.FC<AdminEmployeemanagementProps & { type
 
   const columns_branch: GridColDef[] = [
     {
-      field: 'branchId', headerName: 'Branch ID', minWidth: 100, flex: 1, headerAlign: 'center', headerClassName: 'super-app-theme--header', align: 'center',
+      field: 'branchId',
+      headerName: 'Branch ID',
+      minWidth: 100,
+      flex: 1,
+      headerAlign: 'center',
+      headerClassName: 'super-app-theme--header',
+      align: 'center',
       renderCell: (params) => (
         <div
           onClick={() => handleOpenAddModal(type, params.row)}
@@ -369,10 +375,15 @@ export const StartEditButtonGrid: React.FC<AdminEmployeemanagementProps & { type
         </div>
       ),
     },
-    { field: 'branchName', headerName: 'Branch Name', minWidth: 100, flex: 1, headerAlign: 'center', headerClassName: 'super-app-theme--header', align: 'center' },
-    { field: 'location', headerName: 'location', minWidth: 100, flex: 1, headerAlign: 'center', headerClassName: 'super-app-theme--header' },
-    { field: 'contact', headerName: 'Contact', minWidth: 100, flex: 1, headerAlign: 'center', headerClassName: 'super-app-theme--header' },
-  ]
+    { field: 'branchEngName', headerName: 'Branch English Name', minWidth: 150, flex: 1, headerAlign: 'center', headerClassName: 'super-app-theme--header', align: 'center' },
+    { field: 'branchThName', headerName: 'Branch Thai Name', minWidth: 150, flex: 1, headerAlign: 'center', headerClassName: 'super-app-theme--header', align: 'center' },
+    { field: 'engAddr', headerName: 'English Address', minWidth: 150, flex: 1, headerAlign: 'center', headerClassName: 'super-app-theme--header', align: 'center' },
+    { field: 'thAddr', headerName: 'Thai Address', minWidth: 150, flex: 1, headerAlign: 'center', headerClassName: 'super-app-theme--header', align: 'center' },
+    { field: 'telephone', headerName: 'Telephone', minWidth: 120, flex: 1, headerAlign: 'center', headerClassName: 'super-app-theme--header', align: 'center' },
+    { field: 'fax', headerName: 'Fax', minWidth: 120, flex: 1, headerAlign: 'center', headerClassName: 'super-app-theme--header', align: 'center' },
+    { field: 'zoneCode', headerName: 'Zone Code', minWidth: 100, flex: 1, headerAlign: 'center', headerClassName: 'super-app-theme--header', align: 'center' },
+  ];
+
 
   const columns_job: GridColDef[] = [
     {
@@ -390,7 +401,8 @@ export const StartEditButtonGrid: React.FC<AdminEmployeemanagementProps & { type
   ]
 
   const columns_manager: GridColDef[] = [
-    { field: 'empId', headerName: 'Staff ID', minWidth: 150, maxWidth:150, flex: 1, headerAlign: 'center', headerClassName: 'super-app-theme--header', align: 'center',
+    {
+      field: 'empId', headerName: 'Staff ID', minWidth: 150, maxWidth: 150, flex: 1, headerAlign: 'center', headerClassName: 'super-app-theme--header', align: 'center',
       renderCell: (params) => (
         <div
           onClick={() => handleOpenAddModal(type, params.row)}
@@ -399,7 +411,7 @@ export const StartEditButtonGrid: React.FC<AdminEmployeemanagementProps & { type
           {params.value}
         </div>
       ),
-     },
+    },
     { field: 'empName', headerName: 'Name', minWidth: 200, flex: 1, headerAlign: 'center', headerClassName: 'super-app-theme--header', align: 'center' },
     { field: 'organizationId', headerName: 'Head of Department', minWidth: 100, flex: 1, headerAlign: 'center', headerClassName: 'super-app-theme--header', align: 'center' },
   ]

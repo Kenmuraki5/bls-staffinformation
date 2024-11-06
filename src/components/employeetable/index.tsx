@@ -51,6 +51,7 @@ const EmployeeTable: React.FC<PropsType> = ({ dataEmployees, breadcrumbPath }: a
   const params = useParams();
   const searchParams = useSearchParams();
   const search = searchParams.get('organizationId');
+  const searchInput = searchParams.get('searchInput');
   const searchBy = searchParams.get('searchBy');
 
   React.useEffect(() => {
@@ -70,7 +71,7 @@ const EmployeeTable: React.FC<PropsType> = ({ dataEmployees, breadcrumbPath }: a
       field: 'empId',
       headerName: 'Staff ID',
       minWidth: 70,
-      maxWidth: 70,
+      maxWidth: 95,
       flex: 1,
       renderCell: (data) => {
         const formattedEmpId = data.value.toString().padStart(4, '0');
@@ -86,23 +87,40 @@ const EmployeeTable: React.FC<PropsType> = ({ dataEmployees, breadcrumbPath }: a
       headerClassName: 'super-app-theme--header',
       headerAlign: 'center',
       align: 'center'
-    },    
+    },
     { field: 'thFirstName', headerName: 'Thai Name', minWidth: 100, flex: 1, headerClassName: 'super-app-theme--header', headerAlign: 'center' },
     { field: 'enFirstName', headerName: 'English Name', minWidth: 100, flex: 1, headerClassName: 'super-app-theme--header', headerAlign: 'center' },
     {
       field: 'organizationUnit', headerName: 'Department', minWidth: 100, maxWidth: 450, flex: 1,
-      renderCell: (params) => (
-        <a
-          href={`?organizationID=${params.row.organizationId}`}
-          style={{ color: 'blue', cursor: 'pointer', textDecoration: 'underline' }}
-          onClick={(e) => {
-            e.preventDefault();
-            router.push(`?organizationId=${params.row.organizationId}`);
-          }}
-        >
-          {params.value}
-        </a>
-      ),
+      renderCell: (params) => {
+        const org_units = params.value.split(', ');
+        return (
+          <div>
+            {org_units.map((org_unit: any, index: any) => (
+              <div
+                key={index}
+                style={{
+                  backgroundColor: index % 2 === 0 ? '#ffffff' : '#f0f0f0',
+                  padding: '5px',
+                  marginBottom: '5px',
+                }}
+              >
+                <a
+                  href={`?organizationId=${org_unit}`}
+                  style={{ color: 'blue', cursor: 'pointer', textDecoration: 'underline' }}
+                  onClick={(e) => {
+                    e.preventDefault();
+                    router.push(`?organizationId=${org_unit}`);
+                  }}
+                >
+                  {params.value}
+                </a>
+              </div>
+            ))}
+
+          </div>
+        )
+      },
       headerClassName: 'super-app-theme--header', headerAlign: 'center'
     },
     {
@@ -121,10 +139,10 @@ const EmployeeTable: React.FC<PropsType> = ({ dataEmployees, breadcrumbPath }: a
       headerAlign: 'center',
       align: 'center',
       renderCell: (params) => {
-        const codes = params.value.split(','); // แบ่งข้อมูลด้วยเครื่องหมายจุลภาค
+        const codes = params.value.split(', '); // แบ่งข้อมูลด้วยเครื่องหมายจุลภาค
         return (
           <div>
-            {codes.map((code:any, index:any) => (
+            {codes.map((code: any, index: any) => (
               <div key={index}>{code.trim()}</div> // ขึ้นบรรทัดใหม่สำหรับแต่ละรหัส
             ))}
           </div>
@@ -147,7 +165,9 @@ const EmployeeTable: React.FC<PropsType> = ({ dataEmployees, breadcrumbPath }: a
     router.push(`?organizationId=${id}`);
   };
 
-  const filteredEmployees = alignment === 'all' ? dataEmployees : dataEmployees.filter((employee: any) => employee.managerId !== "" || employee.organizationId === search);
+  const filteredEmployees = alignment === 'all' ? dataEmployees : 
+  dataEmployees.filter((employee: any) => employee.managerId !== "" || 
+  employee.organizationId === search || employee.organizationUnit === searchInput || employee.empId == searchInput);
 
   return (
     <div style={{ width: '100%' }}>
