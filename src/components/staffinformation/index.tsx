@@ -3,7 +3,7 @@ import { StaffInformationProps } from './type';
 import Image from 'next/image';
 
 
-const StaffInformation: React.FC<StaffInformationProps> = ({employees}) => {
+const StaffInformation: React.FC<StaffInformationProps> = ({ employees }) => {
   const convertDate = (d: string) => {
     const date = new Date(d);
     const options: Intl.DateTimeFormatOptions = {
@@ -13,14 +13,14 @@ const StaffInformation: React.FC<StaffInformationProps> = ({employees}) => {
     };
     return date.toLocaleString('en-GB', options); // 'en-GB' for dd MMM yyyy format
   }
-  
+
 
   const parseLicenses = (licenseString: string) => {
     const regex = /<Name>(.*?)<\/Name>/g;
     const matches = licenseString.match(regex);
     return matches ? matches.map(match => match.replace(/<\/?Name>/g, '') + ':') : [];
-  };  
-  
+  };
+
   const licensesArray = employees?.otherLicense ? parseLicenses(employees.otherLicense) : [];
   return (
     <div className="flex flex-col md:flex-row items-start justify-between p-4 md:p-6 rounded-lg shadow-md bg-white text-black">
@@ -126,11 +126,19 @@ const StaffInformation: React.FC<StaffInformationProps> = ({employees}) => {
           </div>
           <div className="mb-4 flex flex-col md:flex-row md:items-center">
             <label className="text-base font-semibold w-full md:w-48 xl:w-64">Effective Date:</label>
-            <span className="ml-2 text-base w-full">{employees?.effectiveDate == '' ? "N/A": convertDate(employees?.effectiveDate)}</span>
+            <span className="ml-2 text-base w-full">{employees?.effectiveDate == '' ? "N/A" : convertDate(employees?.effectiveDate)}</span>
           </div>
         </div>
         <div className="flex-shrink-0 mb-4 md:mb-0 md:mr-4">
-          <Image src={`${process.env.NEXT_PUBLIC_BASEURL}/uploads/${employees?.empId}.png`} alt="Staff Image" width={200} height={200} className="rounded-full" />
+          {/* <Image src={`${process.env.NEXT_PUBLIC_BASEURL}/uploads/${employees?.empId}.png`} alt="Staff Image" width={200} height={200} className="rounded-full" /> */}
+          <Image
+            src={`http://bualuangintranet.sawasdee.brk1/employee/img/staff/${employees?.empId.toString().padStart(4, '0')}.jpg`}
+            alt="Staff Image"
+            width={200}
+            height={200}
+            className="rounded-full"
+          />
+
         </div>
       </fieldset>
     </div>
