@@ -171,7 +171,7 @@ const EmployeeTable: React.FC<PropsType> = ({ dataEmployees, breadcrumbPath }: a
 
   const filteredEmployees = alignment === 'all' ? dataEmployees : 
   dataEmployees.filter((employee: any) => employee?.managerId !== "" || 
-  employee?.organizationId == search || employee?.organizationUnit == searchInput || employee?.empId == searchInput ||
+  employee?.organizationId == search || employee?.organizationUnit?.toLowerCase().includes.includes(searchInput?.toLowerCase()) || employee?.empId == searchInput ||
   employee?.enFirstName?.toLowerCase().includes(searchInput?.toLowerCase()) || employee?.thFirstName?.toLowerCase().includes(searchInput?.toLowerCase()) ||
   employee?.nickname?.toLowerCase().includes(searchInput?.toLowerCase()));
 
