@@ -104,7 +104,8 @@ const Search = ({ search, organizationUnits }: any) => {
                         />
 
                         <Button onClick={() => {
-                            search(searchBy, searchInput);
+                            const encodedSearchInput = encodeURIComponent(searchInput); 
+                            search(searchBy, encodedSearchInput);
                         }}>Search</Button>
                     </>
                 )}
