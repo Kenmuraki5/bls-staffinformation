@@ -78,13 +78,12 @@ const Search = ({ search, organizationUnits }: any) => {
                     <>
                         <Autocomplete
                             disablePortal
-                            options={organizationUnits}
-                            getOptionLabel={(option) => option.organizationUnit}
+                            options={organizationUnits.map((org: any) => org.organizationUnit)}
                             fullWidth
                             size="small"
                             value={searchInput}
-                            onChange={(event: any, newValue: any | null) => {
-                                setSearchInput(newValue ? newValue.id : '');
+                            onChange={(event: any, newValue: string | null) => {
+                                setSearchInput(newValue || '');
                             }}
                             sx={{ mr: 1 }}
                             onKeyDown={handleKeyDown}
@@ -105,11 +104,10 @@ const Search = ({ search, organizationUnits }: any) => {
                         />
 
                         <Button onClick={() => {
-                            search(searchBy, searchInput); {/* ใช้ id ในการค้นหา */ }
+                            search(searchBy, searchInput);
                         }}>Search</Button>
                     </>
                 )}
-
             </div>
         </div>
     );
