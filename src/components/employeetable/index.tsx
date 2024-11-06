@@ -215,6 +215,7 @@ const EmployeeTable: React.FC<PropsType> = ({ dataEmployees, breadcrumbPath }: a
           },
           height: '60vh'
         }}
+        getRowHeight={() => 'auto'}
         getRowId={(row) => row.empId}
         rows={filteredEmployees || []}
         columns={columns}
