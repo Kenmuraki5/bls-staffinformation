@@ -29,7 +29,9 @@ const StaffInformation: React.FC<StaffInformationProps> = ({ employees }) => {
         <div className="flex-1">
           <div className="mb-4 flex flex-col md:flex-row md:items-center">
             <label className="text-base font-semibold w-full md:w-48 xl:w-64">Staff ID :</label>
-            <span className="ml-2 text-base w-full">{employees?.empId}</span>
+            <span className="ml-2 text-base w-full">
+              {employees?.empId?.toString().padStart(4, '0')}
+            </span>
           </div>
           <div className="mb-4 flex flex-col md:flex-row md:items-center">
             <label className="text-base font-semibold w-full md:w-48 xl:w-64">Extension Code :</label>

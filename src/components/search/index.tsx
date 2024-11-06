@@ -1,6 +1,5 @@
 'use client'
 import { Button, FormControl, InputLabel, MenuItem, Select, SelectChangeEvent, TextField, Autocomplete } from '@mui/material';
-import { useRouter } from 'next/navigation';
 import React, { useState } from 'react';
 import InputAdornment from '@mui/material/InputAdornment';
 import SearchIcon from '@mui/icons-material/Search';
@@ -8,7 +7,6 @@ import SearchIcon from '@mui/icons-material/Search';
 const Search = ({ search, organizationUnits }: any) => {
     const [searchBy, setSearchBy] = useState('');
     const [searchInput, setSearchInput] = useState('');
-    const router = useRouter();
 
     const handleChange = (event: SelectChangeEvent) => {
         setSearchBy(event.target.value as string);
@@ -35,7 +33,7 @@ const Search = ({ search, organizationUnits }: any) => {
                 <p className='text-white font-bold rounded px-5'>SEARCH</p>
             </div>
             <div className="flex items-center mt-3">
-                <FormControl sx={{ minWidth: 150, width: 250, m:1 }} size='small'>
+                <FormControl sx={{ minWidth: 150, width: 250, m: 1 }} size='small'>
                     <InputLabel id="demo-simple-select-label">Search By</InputLabel>
                     <Select
                         labelId="demo-simple-select-label"
@@ -59,7 +57,7 @@ const Search = ({ search, organizationUnits }: any) => {
                             size="small"
                             value={searchInput}
                             onChange={handleSearchInputChange}
-                            sx={{mr:1}}
+                            sx={{ mr: 1 }}
                             onKeyDown={handleKeyDown}
                             InputProps={{
                                 startAdornment: (
@@ -70,7 +68,8 @@ const Search = ({ search, organizationUnits }: any) => {
                             }}
                         />
                         <Button onClick={() => {
-                            search(searchBy, searchInput);
+                            const query = searchBy === 'employeeId' ? searchInput.replace(/^0+/, '') : searchInput;
+                            search(searchBy, query);
                         }}>Search</Button>
                     </>
                 )}
@@ -85,7 +84,7 @@ const Search = ({ search, organizationUnits }: any) => {
                             onChange={(event: any, newValue: string | null) => {
                                 setSearchInput(newValue || '');
                             }}
-                            sx={{mr:1}}
+                            sx={{ mr: 1 }}
                             onKeyDown={handleKeyDown}
                             renderInput={(params) => (
                                 <TextField
