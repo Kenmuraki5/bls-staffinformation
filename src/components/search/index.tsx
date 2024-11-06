@@ -14,8 +14,15 @@ const Search = ({ search, organizationUnits }: any) => {
     };
 
     const handleSearchInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-        setSearchInput(event.target.value);
+        let value = event.target.value;
+
+        if (searchBy === 'employeeId') {
+            value = value.replace(/^0+/, '');
+        }
+    
+        setSearchInput(value);
     };
+    
 
     const handleKeyDown = async (event: React.KeyboardEvent) => {
         if (event.key === 'Enter') {
