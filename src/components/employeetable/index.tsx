@@ -106,14 +106,14 @@ const EmployeeTable: React.FC<PropsType> = ({ dataEmployees, breadcrumbPath }: a
                 }}
               >
                 <a
-                  href={`?organizationId=${org_unit}`}
+                  href={`?searchBy=organizationUnit&searchInput=${org_unit}`}
                   style={{ color: 'blue', cursor: 'pointer', textDecoration: 'underline' }}
                   onClick={(e) => {
                     e.preventDefault();
-                    router.push(`?organizationId=${org_unit}`);
+                    router.push(`?searchBy=organizationUnit&searchInput=${org_unit}`);
                   }}
                 >
-                  {params.value}
+                  {org_unit}
                 </a>
               </div>
             ))}
@@ -143,7 +143,7 @@ const EmployeeTable: React.FC<PropsType> = ({ dataEmployees, breadcrumbPath }: a
         return (
           <div>
             {codes.map((code: any, index: any) => (
-              <div key={index}>{code.trim()}</div> // ขึ้นบรรทัดใหม่สำหรับแต่ละรหัส
+              <div key={index}>{code}</div> // ขึ้นบรรทัดใหม่สำหรับแต่ละรหัส
             ))}
           </div>
         );
@@ -167,7 +167,9 @@ const EmployeeTable: React.FC<PropsType> = ({ dataEmployees, breadcrumbPath }: a
 
   const filteredEmployees = alignment === 'all' ? dataEmployees : 
   dataEmployees.filter((employee: any) => employee.managerId !== "" || 
-  employee.organizationId === search || employee.organizationUnit === searchInput || employee.empId == searchInput);
+  employee.organizationId === search || employee.organizationUnit === searchInput || employee.empId == searchInput ||
+  employee.enFirstName.toLowerCase().includes(searchInput) || employee.thFirstName.toLowerCase().includes(searchInput) ||
+  employee.nickname.toLowerCase().includes(searchInput));
 
   return (
     <div style={{ width: '100%' }}>
