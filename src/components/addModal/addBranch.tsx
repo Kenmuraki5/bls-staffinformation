@@ -35,7 +35,7 @@ export default function BranchModal({
     if (!branchThName) newErrors.branchThName = 'Thai Name must not be empty.';
     if (!engAddr) newErrors.engAddr = 'English Address must not be empty.';
     if (!thAddr) newErrors.thAddr = 'Thai Address must not be empty.';
-    
+
     const contactRegex = /^(?:\(\d{2,3}\)|\d{2,3})[-.\s]?\d{3,4}[-.\s]?\d{3,4}$/;
     if (!telephone || !contactRegex.test(telephone)) newErrors.telephone = 'Telephone is not in a valid format.';
     if (fax && !contactRegex.test(fax)) newErrors.fax = 'Fax is not in a valid format.';
@@ -130,19 +130,39 @@ export default function BranchModal({
         }}
       >
         <Box className="flex items-center justify-between mb-4">
-          <IconButton onClick={handleClose}>
-            <ArrowBackIcon />
-          </IconButton>
-          <Typography variant="h6">{selectedRow ? 'Edit Branch' : 'Add Branch'}</Typography>
-          {role === 'AdminStaffInformation' && selectedRow && (
-            <Button
-              color="error"
-              variant="outlined"
-              onClick={() => deleteRecord(selectedRow.branchId)}
-              startIcon={<DeleteOutlineOutlinedIcon />}
-            >
-              Delete
-            </Button>
+          <Box className="flex items-center">
+            <IconButton onClick={handleClose} className='hover:text-blue-500'>
+              <ArrowBackIcon />
+            </IconButton>
+            <Typography variant="h6" component="h6" className="ml-12 text-black">
+              {selectedRow != null && role == "AdminStaffInformation" ? "Edit Branch" : selectedRow == null && role == "AdminStaffInformation" ? "Add Branch" : "Domain Information"}
+            </Typography>
+          </Box>
+          <Box sx={{ ml: 'auto', display: 'flex', alignItems: 'center' }}>
+            {role === "AdminStaffInformation" && (
+              <>
+                <Button
+                  variant="outlined"
+                  onClick={handleSave}
+                  startIcon={<SaveOutlinedIcon />}
+                  sx={{ mr: 1 }} // Add some space between the buttons
+                >
+                  Save
+                </Button>
+              </>
+            )}
+          </Box>
+          {role === "AdminStaffInformation" && selectedRow != null && (
+            <Box>
+              <Button
+                color='error'
+                variant="outlined"
+                onClick={deleteRecord(selectedRow?.branchId)} // Replace with your delete function
+                startIcon={<DeleteOutlineOutlinedIcon />}
+              >
+                Delete
+              </Button>
+            </Box>
           )}
         </Box>
         <Divider className="mb-4" />
@@ -153,7 +173,7 @@ export default function BranchModal({
               variant="standard"
               fullWidth
               value={branchId}
-              onChange={(e:any) => setBranchId(e.target.value)}
+              onChange={(e: any) => setBranchId(e.target.value)}
               error={!!errors.branchId}
               helperText={errors.branchId}
               InputProps={{ readOnly: role !== 'AdminStaffInformation' }}

@@ -412,7 +412,14 @@ export const StartEditButtonGrid: React.FC<AdminEmployeemanagementProps & { type
         </div>
       ),
     },
-    { field: 'empName', headerName: 'Name', minWidth: 200, flex: 1, headerAlign: 'center', headerClassName: 'super-app-theme--header', align: 'center' },
+    {
+      field: 'empName', headerName: 'Name', minWidth: 200, flex: 1, headerAlign: 'center', headerClassName: 'super-app-theme--header', align: 'center', 
+      renderCell: (params) => (
+        <div>
+          {params.row.empName}
+        </div>
+      )
+    },
     { field: 'organizationId', headerName: 'Head of Department', minWidth: 100, flex: 1, headerAlign: 'center', headerClassName: 'super-app-theme--header', align: 'center' },
   ]
 

@@ -30,6 +30,7 @@ const EmployeeModal = ({ open, handleClose, addRecord, updateRecord, deleteRecor
   const [enLastName, setEnLastName] = useState('');
   const [nickname, setNickName] = useState('');
   const [extension, setExtension] = useState('');
+  const [directLine, setDirectLine] = useState('');
   const [corporationTitle, setCorporationTitle] = useState('');
   const [email, setEmail] = useState('');
   const [organizationId, setOrganizationId] = useState(null);
@@ -111,6 +112,7 @@ const EmployeeModal = ({ open, handleClose, addRecord, updateRecord, deleteRecor
       setEnLastName(selectedRow.enLastName || '');
       setNickName(selectedRow.nickname || '');
       setExtension(selectedRow.extensionCode || '');
+      setDirectLine(selectedRow.directLine || '');
       setCorporationTitle(selectedRow.corporationTitle || '');
       setEmail(selectedRow.email || '');
       setOrganizationId(selectedRow.organizationId || null);
@@ -159,6 +161,7 @@ const EmployeeModal = ({ open, handleClose, addRecord, updateRecord, deleteRecor
     setBranchId('');
     setDomainId(null);
     setAvatarImage(null);
+    setDirectLine('');
   };
 
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -175,28 +178,34 @@ const EmployeeModal = ({ open, handleClose, addRecord, updateRecord, deleteRecor
 
   const formatDateToISO = (dateString: string) => {
     const date = new Date(dateString);
+  
+    // ตรวจสอบว่าเป็นวันที่ที่ถูกต้องหรือไม่
+    if (isNaN(date.getTime())) {
+      return ''; // คืนค่าว่างหากไม่สามารถแปลงเป็นวันที่ได้
+    }
+  
+    // รับปี, เดือน, วัน, ชั่วโมง, นาที, วินาทีจาก Date object
     const year = date.getFullYear();
-    const month = String(date.getMonth() + 1).padStart(2, '0'); // เดือนเริ่มจาก 0 จึงต้อง +1
+    const month = String(date.getMonth() + 1).padStart(2, '0');
     const day = String(date.getDate()).padStart(2, '0');
     const hours = String(date.getHours()).padStart(2, '0');
     const minutes = String(date.getMinutes()).padStart(2, '0');
     const seconds = String(date.getSeconds()).padStart(2, '0');
-    const milliseconds = String(date.getMilliseconds()).padStart(3, '0');
-
-    return `${year}-${month}-${day} ${hours}:${minutes}:${seconds}.${milliseconds}`;
+  
+    // สร้างวันที่ในรูปแบบ ISO 8601
+    return `${year}-${month}-${day}T${hours}:${minutes}:${seconds}Z`;
   };
-
+  
 
   const formatDate = (dateString: string) => {
     if (!dateString) return "";
     const date = new Date(dateString);
-    const options: Intl.DateTimeFormatOptions = {
-      day: '2-digit',
-      month: 'short',
-      year: 'numeric',
-    };
-    return date.toLocaleString('en-GB', options); // 'en-GB' for dd MMM yyyy format
-  }
+    // แปลงเป็นรูปแบบ yyyy-mm-dd
+    const year = date.getFullYear();
+    const month = (date.getMonth() + 1).toString().padStart(2, "0"); // เติมศูนย์หน้าเดือน
+    const day = date.getDate().toString().padStart(2, "0"); // เติมศูนย์หน้าวัน
+    return `${year}-${month}-${day}`;
+  };
 
   const isValidEnglishName = (name: string) => /^[a-zA-Z\s]+$/.test(name);
   const isValidThaiName = (name: string) => /^[\u0E00-\u0E7F\s]+$/.test(name);
@@ -262,10 +271,13 @@ const EmployeeModal = ({ open, handleClose, addRecord, updateRecord, deleteRecor
 
     try {
       const formattedStartDate = formatDateToISO(startWorkingDate);
+      const formattedlasttDate = formatDateToISO(lastWorkingDate);
+      const formattedeffectiveDate = formatDateToISO(effectiveDate);
       const data = {
         empId,
         organizationId,
         branchId,
+        directLine,
         jobId,
         enTitle: title.split("/")[1],
         enFirstName,
@@ -281,8 +293,8 @@ const EmployeeModal = ({ open, handleClose, addRecord, updateRecord, deleteRecor
         singleLicense,
         otherLicense,
         startWorkingDate: formattedStartDate,
-        lastWorkingDate: "",
-        effectiveDate: "",
+        lastWorkingDate: formattedlasttDate,
+        effectiveDate: formattedeffectiveDate,
         corporationTitle: corporationTitle,
         extensionCode: extension,
       };
@@ -494,6 +506,21 @@ const EmployeeModal = ({ open, handleClose, addRecord, updateRecord, deleteRecor
                 readOnly: role != "AdminStaffInformation",
               }}
             />
+            <TextField
+              fullWidth
+              required
+
+              label="DirectLine"
+              variant="outlined"
+              value={directLine}
+              onChange={(e) => setDirectLine(e.target.value)}
+              error={!!errors.extension}
+              helperText={errors.extension}
+              sx={{ mt: 2 }}
+              InputProps={{
+                readOnly: role != "AdminStaffInformation",
+              }}
+            />
           </Grid>
 
           {/* Vertical Divider */}
@@ -675,7 +702,7 @@ const EmployeeModal = ({ open, handleClose, addRecord, updateRecord, deleteRecor
                 <Autocomplete
                   id="branchs-autocomplete"
                   options={branchs}
-                  getOptionLabel={(option: any) => option.branchId}
+                  getOptionLabel={(option: any) => option.branchId + ": " + option.branchEngName}
                   value={branchs?.find((branch: any) => branch.branchId === branchId) || null}
                   onChange={(event, newValue) => {
                     setBranchId(newValue ? newValue.branchId : null);
