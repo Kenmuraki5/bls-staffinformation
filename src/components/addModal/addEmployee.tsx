@@ -12,12 +12,14 @@ import { getToken } from '@/app/utils/auth';
 import fetchWithAuthClient from '@/app/utils/fetchWithAuthClientSide';
 import { getAllBranch } from '@/app/api/branch';
 import { start } from 'repl';
+import { getAllCorporations } from '@/app/api/corporations';
 
 const EmployeeModal = ({ open, handleClose, addRecord, updateRecord, deleteRecord, setRows, setSnackbarOpen, setAlertMessage, setError, selectedRow, role }: any) => {
   const [organizations, setOrganizations] = useState([]);
   const [jobs, setJobs] = useState([]);
   const [domains, setDomains] = useState([]);
   const [branchs, setBranch] = useState([]);
+  const [corporations, setCorporations] = useState([]);
 
   const [empId, setStaffId] = useState('');
   const [startWorkingDate, setHireDate] = useState('');
@@ -82,10 +84,12 @@ const EmployeeModal = ({ open, handleClose, addRecord, updateRecord, deleteRecor
       const jobs = await getAllJobClientSide();
       const domains = await getAlldomainClientSide();
       const branchs = await getAllBranch();
-      setOrganizations(departments.organizations || []);
-      setJobs(jobs.jobs || []);
-      setDomains(domains.domains || []);
-      setBranch(branchs.branchs || []);
+      const corporations = await getAllCorporations();
+      setOrganizations(departments?.organizations || []);
+      setJobs(jobs?.jobs || []);
+      setDomains(domains?.domains || []);
+      setBranch(branchs?.branchs || []);
+      setCorporations(corporations?.corporationTitles || []);
     } catch (error) {
       console.error('Error fetching data:', error);
       setOrganizations([]);
@@ -178,12 +182,12 @@ const EmployeeModal = ({ open, handleClose, addRecord, updateRecord, deleteRecor
 
   const formatDateToISO = (dateString: string) => {
     const date = new Date(dateString);
-  
+
     // ตรวจสอบว่าเป็นวันที่ที่ถูกต้องหรือไม่
     if (isNaN(date.getTime())) {
       return ''; // คืนค่าว่างหากไม่สามารถแปลงเป็นวันที่ได้
     }
-  
+
     // รับปี, เดือน, วัน, ชั่วโมง, นาที, วินาทีจาก Date object
     const year = date.getFullYear();
     const month = String(date.getMonth() + 1).padStart(2, '0');
@@ -191,11 +195,11 @@ const EmployeeModal = ({ open, handleClose, addRecord, updateRecord, deleteRecor
     const hours = String(date.getHours()).padStart(2, '0');
     const minutes = String(date.getMinutes()).padStart(2, '0');
     const seconds = String(date.getSeconds()).padStart(2, '0');
-  
+
     // สร้างวันที่ในรูปแบบ ISO 8601
     return `${year}-${month}-${day}T${hours}:${minutes}:${seconds}Z`;
   };
-  
+
 
   const formatDate = (dateString: string) => {
     if (!dateString) return "";
@@ -216,7 +220,7 @@ const EmployeeModal = ({ open, handleClose, addRecord, updateRecord, deleteRecor
     const newErrors: any = {};
 
     // Validation checks
-    if (title == ''){
+    if (title == '') {
       newErrors.title = 'Title is required.';
     }
     if (!isValidEnglishName(enFirstName)) {
@@ -631,22 +635,24 @@ const EmployeeModal = ({ open, handleClose, addRecord, updateRecord, deleteRecor
               {/* Fourth Row */}
               <Grid item xs={12} sm={6}>
                 <Autocomplete
-                  freeSolo
-                  options={corporationAutocomplete}
-                  value={corporationTitle}
-                  onChange={(e, newValue) => setCorporationTitle(newValue || '')}
-                  isOptionEqualToValue={(option: any, value: any) =>
-                    option.organizationId === value.organizationId &&
-                    option.domainId === value.domainId
+                  id="domain-autocomplete"
+                  options={corporations}
+                  getOptionLabel={(option: any) =>
+                    `${option.titleShortName} : ${option.titleEngName} / ${option.titleThName}`
                   }
-                  getOptionLabel={(option: any) => typeof option === 'string' ? option : option.organizationUnit}
-                  renderInput={(params) => (
-                    <TextField
-                      {...params}
-                      label="Corporation Title"
-                      variant="outlined"
-                    />
-                  )}
+                  value={corporations.find((cor: any) => cor.titleShortName === corporationTitle) || null}
+                  onChange={(event: any, newValue:any) => {
+                    setCorporationTitle(newValue ? newValue.titleShortName : null);
+                  }}
+                  renderInput={(params) => <TextField {...params} required label="Corporations" />}
+                  filterOptions={(options, state) => {
+                    const query = state.inputValue.toLowerCase();
+                    return options.filter((option) =>
+                      `${option.titleShortName} ${option.titleEngName} ${option.titleThName}`
+                        .toLowerCase()
+                        .includes(query)
+                    );
+                  }}
                   readOnly={role !== "AdminStaffInformation"}
                 />
               </Grid>
@@ -708,7 +714,7 @@ const EmployeeModal = ({ open, handleClose, addRecord, updateRecord, deleteRecor
                     setBranchId(newValue ? newValue.branchId : null);
                   }}
                   renderInput={(params) => <TextField {...params} required label="Branch" error={!!errors.branch}
-                    helperText={errors.branch}/>}
+                    helperText={errors.branch} />}
                   readOnly={role != "AdminStaffInformation"}
                 />
               </Grid>
