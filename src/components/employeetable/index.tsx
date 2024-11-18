@@ -93,18 +93,17 @@ const EmployeeTable: React.FC<PropsType> = ({ dataEmployees, breadcrumbPath }: a
     {
       field: 'organizationUnit', headerName: 'Department', minWidth: 100, maxWidth: 450, flex: 1,
       renderCell: (params) => {
-        const org_units = params.value?.split(', ').map((org_unit:any) => {
+        const org_units = params.value?.split(', ').map((org_unit: any) => {
           const [id, name] = org_unit?.split(':');
           return { id, name };
         });
-        
+
         return (
           <div>
-            {org_units?.map((org_unit:any, index:any) => (
+            {org_units?.map((org_unit: any, index: any) => (
               <div
                 key={org_unit.id}
                 style={{
-                  backgroundColor: index % 2 === 0 ? '#ffffff' : '#f0f0f0',
                   padding: '5px',
                   marginBottom: '5px',
                 }}
@@ -124,7 +123,7 @@ const EmployeeTable: React.FC<PropsType> = ({ dataEmployees, breadcrumbPath }: a
             ))}
           </div>
         );
-        
+
       },
       headerClassName: 'super-app-theme--header', headerAlign: 'center'
     },
@@ -170,19 +169,19 @@ const EmployeeTable: React.FC<PropsType> = ({ dataEmployees, breadcrumbPath }: a
     router.push(`?organizationId=${id}`);
   };
 
-  const filteredEmployees = alignment === 'all' ? dataEmployees : 
-  dataEmployees.filter((employee: any) => {
-    const organizationUnits = employee?.organizationUnit?.split(', ').map((unit: string) => unit.split(':')[1]?.toLowerCase());
-  
-    return employee?.managerId !== "" ||
-      employee?.organizationId == search ||
-      organizationUnits?.some((unitName: any) => unitName.includes(searchInput?.toLowerCase())) ||
-      employee?.empId == searchInput ||
-      employee?.enFirstName?.toLowerCase().includes(searchInput?.toLowerCase()) ||
-      employee?.thFirstName?.toLowerCase().includes(searchInput?.toLowerCase()) ||
-      employee?.nickname?.toLowerCase().includes(searchInput?.toLowerCase());
-  });
-  
+  const filteredEmployees = alignment === 'all' ? dataEmployees :
+    dataEmployees.filter((employee: any) => {
+      const organizationUnits = employee?.organizationUnit?.split(', ').map((unit: string) => unit.split(':')[1]?.toLowerCase());
+
+      return employee?.managerId !== "" ||
+        employee?.organizationId == search ||
+        organizationUnits?.some((unitName: any) => unitName.includes(searchInput?.toLowerCase())) ||
+        employee?.empId == searchInput ||
+        employee?.enFirstName?.toLowerCase().includes(searchInput?.toLowerCase()) ||
+        employee?.thFirstName?.toLowerCase().includes(searchInput?.toLowerCase()) ||
+        employee?.nickname?.toLowerCase().includes(searchInput?.toLowerCase());
+    });
+
   return (
     <div style={{ width: '100%' }}>
       <div className='bg-rose-700 rounded mt-3 flex items-center'>
@@ -225,7 +224,13 @@ const EmployeeTable: React.FC<PropsType> = ({ dataEmployees, breadcrumbPath }: a
           '.MuiDataGrid-columnHeaderTitle': {
             fontWeight: 'bold !important',
           },
-          height: '60vh'
+          height: '60vh',
+          '.MuiDataGrid-row:nth-of-type(odd)': {
+            backgroundColor: '#f9f9f9', // Color for odd rows
+          },
+          '.MuiDataGrid-row:nth-of-type(even)': {
+            backgroundColor: '#ffffff', // Color for even rows
+          },
         }}
         getRowHeight={() => 'auto'}
         getRowId={(row) => row.empId}
@@ -237,6 +242,7 @@ const EmployeeTable: React.FC<PropsType> = ({ dataEmployees, breadcrumbPath }: a
           noRowsOverlay: CustomNoRowsOverlay,
         }}
       />
+
     </div>
   );
 };
