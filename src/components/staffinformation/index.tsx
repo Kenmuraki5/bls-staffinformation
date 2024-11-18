@@ -1,5 +1,5 @@
 'use client'
-import React from "react";
+import React, { useState } from "react";
 import {
   Person as PersonIcon,
   Mail as MailIcon,
@@ -18,8 +18,11 @@ import ContactPhoneIcon from '@mui/icons-material/ContactPhone';
 import AssignmentIndIcon from '@mui/icons-material/AssignmentInd';
 import BadgeIcon from '@mui/icons-material/Badge';
 import { StaffInformationProps } from "./type";
+import { Alert, Snackbar } from '@mui/material';
 
 const StaffProfile: React.FC<StaffInformationProps> = ({ staffData }: any) => {
+
+  const [openSnackbar, setOpenSnackbar] = useState(false);
 
   const convertDate = (d: string) => {
     const date = new Date(d);
@@ -40,6 +43,14 @@ const StaffProfile: React.FC<StaffInformationProps> = ({ staffData }: any) => {
 
   const licensesArray = staffData?.otherLicense ? parseLicenses(staffData.otherLicense) : [];
 
+  const handleCopyToClipboard = (text: string) => {
+    navigator.clipboard.writeText(text).then(() => {
+      setOpenSnackbar(true);  // Show Snackbar with alert message
+    }).catch((err) => {
+      console.error('Failed to copy text: ', err);
+    });
+  };
+
   return (
     <div className="min-h-screen bg-gray-50 text-black">
       <div className="mx-auto bg-white rounded-2xl shadow-lg overflow-hidden">
@@ -58,6 +69,7 @@ const StaffProfile: React.FC<StaffInformationProps> = ({ staffData }: any) => {
             </div>
           </div>
         </div>
+
         {/* Main Content */}
         <div className="pt-20 px-10 pb-10">
           {/* Basic Information */}
@@ -68,43 +80,57 @@ const StaffProfile: React.FC<StaffInformationProps> = ({ staffData }: any) => {
                 <h3 className="flex items-center text-gray-600 mb-2">
                   <ContactEmergencyIcon className="mr-2" /> Staff ID
                 </h3>
-                <p className="text-lg font-normal">{staffData?.empId?.toString().padStart(4, '0')}</p>
+                <p className="text-lg font-normal" onDoubleClick={(e) => handleCopyToClipboard(staffData?.empId?.toString().padStart(4, '0') || '')}>
+                  {staffData?.empId?.toString().padStart(4, '0')}
+                </p>
               </div>
               <div>
                 <h3 className="flex items-center text-gray-600 mb-2">
                   <ContactPhoneIcon className="mr-2" /> Extension
                 </h3>
-                <p className="text-lg font-normal">{staffData?.extensionCode}</p>
+                <p className="text-lg font-normal" onDoubleClick={(e) => handleCopyToClipboard(staffData?.extensionCode || '')}>
+                  {staffData?.extensionCode}
+                </p>
               </div>
               <div>
                 <h3 className="flex items-center text-gray-600 mb-2">
                   <PhoneIcon className="mr-2" /> DirectLine
                 </h3>
-                <p className="text-lg font-normal">{staffData?.directLine}</p>
+                <p className="text-lg font-normal" onDoubleClick={(e) => handleCopyToClipboard(staffData?.directLine || '')}>
+                  {staffData?.directLine}
+                </p>
               </div>
               <div>
                 <h3 className="flex items-center text-gray-600 mb-2">
                   <MailIcon className="mr-2" /> Email
                 </h3>
-                <p className="text-lg font-normal">{staffData.email}</p>
+                <p className="text-lg font-normal" onDoubleClick={(e) => handleCopyToClipboard(staffData.email)}>
+                  {staffData.email}
+                </p>
               </div>
               <div>
                 <h3 className="flex items-center text-gray-600 mb-2">
                   <PersonIcon className="mr-2" /> English Name
                 </h3>
-                <p className="text-lg font-normal">{`${staffData.enTitle}${staffData.enFirstName} ${staffData.enLastName}`}</p>
+                <p className="text-lg font-normal" onDoubleClick={(e) => handleCopyToClipboard(`${staffData.enTitle}${staffData.enFirstName} ${staffData.enLastName}`)}>
+                  {`${staffData.enTitle}${staffData.enFirstName} ${staffData.enLastName}`}
+                </p>
               </div>
               <div>
                 <h3 className="flex items-center text-gray-600 mb-2">
                   <PersonIcon className="mr-2" /> Thai Name
                 </h3>
-                <p className="text-lg font-normal">{`${staffData.thTitle}${staffData.thFirstName} ${staffData.thLastName}`}</p>
+                <p className="text-lg font-normal" onDoubleClick={(e) => handleCopyToClipboard(`${staffData.thTitle}${staffData.thFirstName} ${staffData.thLastName}`)}>
+                  {`${staffData.thTitle}${staffData.thFirstName} ${staffData.thLastName}`}
+                </p>
               </div>
               <div>
                 <h3 className="flex items-center text-gray-600 mb-2">
                   <BookmarkIcon className="mr-2" /> Nickname
                 </h3>
-                <p className="text-lg font-normal">{staffData.nickname}</p>
+                <p className="text-lg font-normal" onDoubleClick={(e) => handleCopyToClipboard(staffData.nickname || '')}>
+                  {staffData.nickname}
+                </p>
               </div>
             </div>
           </div>
@@ -117,25 +143,33 @@ const StaffProfile: React.FC<StaffInformationProps> = ({ staffData }: any) => {
                 <h3 className="flex items-center text-gray-600 mb-2">
                   <BusinessIcon className="mr-2" /> Corporation Title
                 </h3>
-                <p className="text-lg font-normal">{staffData?.corporationTitle}</p>
+                <p className="text-lg font-normal" onDoubleClick={(e) => handleCopyToClipboard(staffData?.corporationTitle || '')}>
+                  {staffData?.corporationTitle}
+                </p>
               </div>
               <div>
                 <h3 className="flex items-center text-gray-600 mb-2">
                   <WorkIcon className="mr-2" /> Job Title
                 </h3>
-                <p className="text-lg font-normal">{staffData?.jobTitle}</p>
+                <p className="text-lg font-normal" onDoubleClick={(e) => handleCopyToClipboard(staffData?.jobTitle || '')}>
+                  {staffData?.jobTitle}
+                </p>
               </div>
               <div>
                 <h3 className="flex items-center text-gray-600 mb-2">
                   <WorkIcon className="mr-2" /> Organization Unit
                 </h3>
-                <p className="text-lg font-normal">{staffData?.organizationUnit}</p>
+                <p className="text-lg font-normal" onDoubleClick={(e) => handleCopyToClipboard(staffData?.organizationUnit || '')}>
+                  {staffData?.organizationUnit}
+                </p>
               </div>
               <div>
                 <h3 className="flex items-center text-gray-600 mb-2">
                   <PlaceIcon className="mr-2" /> Branch
                 </h3>
-                <p className="text-lg font-normal">{staffData?.branchName}</p>
+                <p className="text-lg font-normal" onDoubleClick={(e) => handleCopyToClipboard(staffData?.branchName || '')}>
+                  {staffData?.branchName}
+                </p>
               </div>
             </div>
           </div>
@@ -182,6 +216,7 @@ const StaffProfile: React.FC<StaffInformationProps> = ({ staffData }: any) => {
               </div>
             </div>
           </div>
+
           {/* Dates */}
           <div>
             <h2 className="text-xl font-bold text-gray-900 mb-4 border-b">Work Period</h2>
@@ -190,24 +225,37 @@ const StaffProfile: React.FC<StaffInformationProps> = ({ staffData }: any) => {
                 <h3 className="flex items-center text-gray-600 mb-2">
                   <CalendarTodayIcon className="mr-2" /> Start Date
                 </h3>
-                <p className="text-lg font-normal">{staffData?.startWorkingDate == '' ? "N/A" : convertDate(staffData?.startWorkingDate)}</p>
+                <p className="text-lg font-normal" onDoubleClick={(e) => handleCopyToClipboard(convertDate(staffData?.startWorkingDate))}>
+                  {staffData?.startWorkingDate == '' ? "N/A" : convertDate(staffData?.startWorkingDate)}
+                </p>
               </div>
               <div>
                 <h3 className="flex items-center text-gray-600 mb-2">
-                  <CalendarTodayIcon className="mr-2" /> Last Working Date
+                  <CalendarTodayIcon className="mr-2" /> Last Working Day
                 </h3>
-                <p className="text-lg font-normal">{staffData?.lastWorkingDate == '' ? "N/A" : convertDate(staffData?.lastWorkingDate)}</p>
+                <p className="text-lg font-normal" onDoubleClick={(e) => handleCopyToClipboard(convertDate(staffData?.lastWorkingDate))}>
+                  {staffData?.lastWorkingDate == '' ? "N/A" : convertDate(staffData?.lastWorkingDate)}
+                </p>
               </div>
               <div>
                 <h3 className="flex items-center text-gray-600 mb-2">
                   <CalendarTodayIcon className="mr-2" /> Effective Date
                 </h3>
-                <p className="text-lg font-normal">{staffData?.effectiveDate == '' ? "N/A" : convertDate(staffData?.effectiveDate)}</p>
+                <p className="text-lg font-normal" onDoubleClick={(e) => handleCopyToClipboard(convertDate(staffData?.effectiveDate))}>
+                  {staffData?.effectiveDate == '' ? "N/A" : convertDate(staffData?.effectiveDate)}
+                </p>
               </div>
             </div>
           </div>
         </div>
       </div>
+
+      {/* Snackbar for Copy Confirmation */}
+      <Snackbar open={openSnackbar} autoHideDuration={3000} onClose={() => setOpenSnackbar(false)}>
+        <Alert onClose={() => setOpenSnackbar(false)} severity="success" sx={{ width: "100%" }}>
+          Text copied to clipboard!
+        </Alert>
+      </Snackbar>
     </div>
   );
 };
