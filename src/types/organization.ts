@@ -3,6 +3,7 @@ export interface OrganizationNode {
     organizationUnit: string;
     domainId: string;
     children?: OrganizationNode[];
+    level: number;
 }
 
 export interface Organization {

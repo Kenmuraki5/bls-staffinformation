@@ -30,9 +30,9 @@ const Search = ({ search, organizationUnits }: any) => {
 
     return (
         <div className="mx-3 mt-3">
-            <div className='bg-blue-950 rounded'>
+            {/* <div className='bg-blue-950 rounded'>
                 <p className='text-white font-bold rounded px-5'>SEARCH</p>
-            </div>
+            </div> */}
             <div className="flex items-center mt-3">
                 <FormControl sx={{ minWidth: 150, width: 250, m: 1 }} size='small'>
                     <InputLabel id="demo-simple-select-label">Search By</InputLabel>

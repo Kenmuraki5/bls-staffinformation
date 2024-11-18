@@ -1,64 +1,16 @@
 'use client'
-import { useParams, useRouter, useSearchParams } from 'next/navigation';
+import { useRouter, useSearchParams } from 'next/navigation';
 import { useState, useEffect, useCallback } from 'react';
-import { SimpleTreeView, TreeItem, treeItemClasses } from '@mui/x-tree-view';
-import { styled, alpha } from '@mui/material/styles';
-import dynamic from 'next/dynamic';
-import { Box, Button } from '@mui/material';
+import { RichTreeView } from '@mui/x-tree-view/RichTreeView';
+import { TreeItem, treeItemClasses } from '@mui/x-tree-view/TreeItem';
+import { TreeViewBaseItem } from '@mui/x-tree-view/models';
+import { alpha, Box, Button, styled } from '@mui/material';
 import { OrganizationNode } from '@/types/organization';
-import { DashboardProps, StyledTreeItemProps } from './type';
+import { DashboardProps } from './type';
+import dynamic from 'next/dynamic';
 
-const StyledTreeItem = styled(({ isselected, ...other }: StyledTreeItemProps & React.ComponentProps<typeof TreeItem>) => (
-  <TreeItem {...other} />
-))(({ theme, isselected }) => ({
-  color: theme.palette.mode === 'light' ? theme.palette.grey[800] : theme.palette.grey[200],
-  backgroundColor: isselected ? "primary" : 'inherit',
-  // maxHeight: 'calc(100vh)',
-  // overflowY: 'auto',
-  // overflowX: 'auto',
-  [`& .${treeItemClasses.content}`]: {
-    borderRadius: theme.spacing(0.5),
-    // padding: theme.spacing(0.5, 1),
-    // margin: theme.spacing(0.2, 0),
-    [`& .${treeItemClasses.label}`]: {
-      fontSize: '0.8rem',
-      fontWeight: 500,
-    },
-  },
-  [`& .${treeItemClasses.iconContainer}`]: {
-    borderRadius: '50%',
-   backgroundColor:
-      theme. palette.mode === 'light' ? alpha(theme.palette.primary.main, 0.25) : theme.palette.primary.dark,
-    color: theme.palette.mode === 'dark' && theme.palette.primary.contrastText,
-    padding: theme.spacing(0, 1.2),
-    cursor: 'pointer',
-  },
-  [`& .${treeItemClasses.groupTransition}`]: {
-    // marginLeft: 15,
-    // borderLeft: `1px dashed ${alpha(theme.palette.text.primary, 1)}`,
-  },
-}));
-
-// const sortTree = (data: OrganizationNode[]): void => {
-//   if (!data) return;
-//   data.sort((a, b) => a.organizationUnit.localeCompare(b.organizationUnit));
-//   data.forEach((node) => sortTree(node.children || []));
-// };
-const sortTree = (data: OrganizationNode[]): void => {
-  if (!data) return;
-  data
-};
-
-const getAllIds = (data: OrganizationNode[]): string[] => {
-  let ids: string[] = [];
-  data.forEach((node) => {
-    ids.push(node.organizationId);
-    if (node.children) {
-      ids = ids.concat(getAllIds(node.children));
-    }
-  });
-  return ids;
-};
+const Search = dynamic(() => import('@/components/search'));
+const EmployeeTable = dynamic(() => import('@/components/employeetable'));
 
 const getAllIdsWithUnits = (data: OrganizationNode[]): Array<{ organizationId: string, organizationUnit: string }> => {
   let result: Array<{ organizationId: string, organizationUnit: string }> = [];
@@ -69,7 +21,6 @@ const getAllIdsWithUnits = (data: OrganizationNode[]): Array<{ organizationId: s
       organizationUnit: node.organizationUnit,
     });
 
-    // ถ้ามี children ก็ทำ recursive เรียกตัวเองเพื่อนำข้อมูล children เข้ามาด้วย
     if (node.children) {
       result = result.concat(getAllIdsWithUnits(node.children));
     }
@@ -89,8 +40,55 @@ const findPathById = (data: OrganizationNode[], id: string): { path: string[], i
   return null;
 };
 
-const Search = dynamic(() => import('@/components/search'));
-const EmployeeTable = dynamic(() => import('@/components/employeetable'));
+const CustomTreeItem = styled(TreeItem)(({ theme, tree, id }: any) => {
+  const findNode:any = (items: any[], nodeId: string) => {
+    for (const item of items) {
+      if (item.id === nodeId) {
+        return item;
+      }
+      if (item.children && item.children.length > 0) {
+        const foundNode = findNode(item.children, nodeId);
+        if (foundNode) {
+          return foundNode;
+        }
+      }
+    }
+    return null;
+  };
+
+
+  const node = findNode(tree, id);
+  const isLevel1 = node ? node.level === true : false;
+
+  return {
+    color: theme.palette.grey[200],
+    [`& .${treeItemClasses.content}`]: {
+      borderRadius: theme.spacing(0.5),
+      padding: theme.spacing(0.5, 1),
+      margin: theme.spacing(0.2, 0),
+      [`& .${treeItemClasses.label}`]: {
+        fontSize: '0.8rem',
+        fontWeight: isLevel1 ? 'bold' : 500,
+      },
+    },
+    [`& .${treeItemClasses.iconContainer}`]: {
+      borderRadius: '50%',
+      backgroundColor: theme.palette.primary.dark,
+      padding: theme.spacing(0, 1.2),
+      ...theme.applyStyles('light', {
+        backgroundColor: alpha(theme.palette.primary.main, 0.25),
+      }),
+      ...theme.applyStyles('dark', {
+        color: theme.palette.primary.contrastText,
+      }),
+    },
+    ...theme.applyStyles('light', {
+      color: theme.palette.grey[800],
+    }),
+  };
+});
+
+
 
 const Dashboard: React.FC<DashboardProps> = ({ organizations, employees }) => {
   const router = useRouter();
@@ -101,20 +99,10 @@ const Dashboard: React.FC<DashboardProps> = ({ organizations, employees }) => {
   const [breadcrumbPath, setBreadcrumbPath] = useState<{ path: string[], ids: string[] }>({ path: [], ids: [] });
   const [isTreeViewVisible, setIsTreeViewVisible] = useState(true);
 
-  const sortedData = organizations;
-  sortTree(sortedData);
-  const allIds = getAllIds(sortedData);
-  const searchAutoComplete = getAllIdsWithUnits(sortedData);
+  const searchAutoComplete = getAllIdsWithUnits(organizations);
 
   const clickHandler = useCallback(
-    (event: React.MouseEvent, orgId: string, haschildren: boolean): void => {
-      event.stopPropagation();
-      if (event.target instanceof Element) {
-        const isIcon = !!(event.target as Element).closest(".MuiTreeItem-iconContainer");
-        if (isIcon && haschildren) {
-          return;
-        }
-      }
+    (orgId: string): void => {
       setSelectedOrganizationId(orgId);
       const result = findPathById(organizations, orgId);
       setBreadcrumbPath(result || { path: [], ids: [] });
@@ -141,33 +129,42 @@ const Dashboard: React.FC<DashboardProps> = ({ organizations, employees }) => {
   useEffect(() => {
     const searchBy = searchParams.get('searchBy');
     const searchInput = searchParams.get('searchInput');
+
     if (searchBy && searchInput) {
-      const result = findPathById(organizations, employees[0]?.organizationId);
-      setBreadcrumbPath(result || { path: [], ids: [] });
+      const organizationId = employees[0]?.organizationId;
+
+      if (organizationId) {
+        const result = findPathById(organizations, organizationId);
+        setBreadcrumbPath(result || { path: [], ids: [] });
+      }
     }
   }, [searchParams, organizations, employees]);
 
-  const renderTree = (nodes: OrganizationNode) => (
-    <StyledTreeItem
-      key={nodes.organizationId}
-      itemId={nodes.organizationId}
-      label={
-        <Box
-          onClick={(event) => clickHandler(event, nodes.organizationId, !!nodes.children)}
-          sx={{
-            fontWeight: nodes.children && nodes.children.length > 0 ? 'bold' : 'normal',
-          }}
-        >
-          {nodes.organizationUnit}
-        </Box>
-      }
-      onClick={(event) => clickHandler(event, nodes.organizationId, !!nodes.children)}
-      isselected={nodes?.organizationId === selectedOrganizationId}
-    >
-      {Array.isArray(nodes.children) ? nodes.children.map((node) => renderTree(node)) : null}
-    </StyledTreeItem>
+  interface TreeItem {
+    id: string;
+    label: string;
+    children: TreeItem[];
+  }
 
-  );
+  const formatTreeItems = (nodes: OrganizationNode[]): TreeItem[] => {
+    return nodes.map(node => ({
+      id: node.organizationId,
+      label: node.organizationUnit,
+      children: node.children ? formatTreeItems(node.children) : [],
+      level: (node.level == 0) || (node.level == 1 )|| !!node?.children?.length, // ตรวจสอบว่า node นี้มีลูก
+    }));
+  };
+
+  const treeItems = formatTreeItems(organizations);
+
+  const getAllIds: any = (items: TreeItem[]) => {
+    return items.flatMap(item => [
+      item.id,
+      ...(item.children ? getAllIds(item.children) : [])
+    ]);
+  };
+
+  const [expandedItems, setExpandedItems] = useState<string[]>(() => getAllIds(treeItems));
 
   return (
     <main>
@@ -177,19 +174,31 @@ const Dashboard: React.FC<DashboardProps> = ({ organizations, employees }) => {
       <div className="flex flex-col md:flex-row w-full px-5 mb-5">
         {isTreeViewVisible && (
           <div className="border-2 rounded p-2 w-full md:w-1/4 mb-5 md:mb-0">
-            <SimpleTreeView
-              defaultExpandedItems={allIds}
-              aria-label="customized"
-              className="min-h-[270px] flex-grow max-w-full md:max-w-[500px]"
-            >
-              {sortedData.map((node) => renderTree(node))}
-            </SimpleTreeView>
+            <Box sx={{ minHeight: 270 }}>
+              <RichTreeView
+                items={treeItems}
+                expandedItems={expandedItems}
+                slots={{ item: (props: any) => <CustomTreeItem {...props} id={props.itemId} /> }}
+                slotProps={{ item: { tree:treeItems } as any }}
+                onItemSelectionToggle={(event, itemId: any) => clickHandler(itemId)}
+                onItemExpansionToggle={(event: any, itemId) => {
+                  // ตรวจสอบว่าเป็นการคลิกที่ไอคอนหรือไม่
+                  if (event.target.closest(`.${treeItemClasses.iconContainer}`)) {
+                    setExpandedItems(prev =>
+                      prev.includes(itemId)
+                        ? prev.filter(id => id !== itemId)
+                        : [...prev, itemId]
+                    );
+                  }
+                }}
+              />
+            </Box>
           </div>
         )}
         <div className={`w-full mx-3 p-3 border-2 rounded bg-white ${isTreeViewVisible ? 'md:w-3/4' : 'md:w-full'}`}>
-          <Search search={search} organizationUnits={searchAutoComplete}/>
+          <Search search={search} organizationUnits={searchAutoComplete} />
           <div className="mx-3">
-            <EmployeeTable dataEmployees={employees} breadcrumbPath={breadcrumbPath}/>
+            <EmployeeTable dataEmployees={employees} breadcrumbPath={breadcrumbPath} />
           </div>
         </div>
       </div>

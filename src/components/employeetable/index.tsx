@@ -129,7 +129,7 @@ const EmployeeTable: React.FC<PropsType> = ({ dataEmployees, breadcrumbPath }: a
       headerClassName: 'super-app-theme--header', headerAlign: 'center'
     },
     {
-      field: 'corporationTitle', headerName: 'Corporation Title', minWidth: 80, maxWidth: 80, flex: 1,
+      field: 'corporationTitle', headerName: 'Corporation Title', minWidth: 80, maxWidth: 140, flex: 1,
       renderCell: (params) => params.row.corporationTitle !== "" ? <div>{abbreviateTitle(params.row.corporationTitle)}</div> : "",
       headerClassName: 'super-app-theme--header', headerAlign: 'center', align: 'center'
     },
@@ -137,8 +137,8 @@ const EmployeeTable: React.FC<PropsType> = ({ dataEmployees, breadcrumbPath }: a
     {
       field: 'extensionCode',
       headerName: 'Ext',
-      minWidth: 70,
-      maxWidth: 70,
+      minWidth: 90,
+      maxWidth: 90,
       flex: 1,
       headerClassName: 'super-app-theme--header',
       headerAlign: 'center',

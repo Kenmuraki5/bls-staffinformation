@@ -1,7 +1,7 @@
 import EmployeeNode from "@/types/employee";
 
 interface StaffInformationProps {
-    employees: EmployeeNode;
+    staffData: EmployeeNode;
 }
 
 export type {

@@ -1,9 +1,26 @@
-import * as React from 'react';
-import { StaffInformationProps } from './type';
-import Image from 'next/image';
+'use client'
+import React from "react";
+import {
+  Person as PersonIcon,
+  Mail as MailIcon,
+  Phone as PhoneIcon,
+  CalendarToday as CalendarTodayIcon,
+  Bookmark as BookmarkIcon,
+  Work as WorkIcon,
+} from "@mui/icons-material";
+import ContactEmergencyIcon from '@mui/icons-material/ContactEmergency';
+import PlaceIcon from '@mui/icons-material/Place';
+import AssuredWorkloadIcon from '@mui/icons-material/AssuredWorkload';
+import BusinessIcon from '@mui/icons-material/Business';
+import { Description } from '@mui/icons-material';
+import AccountBoxIcon from '@mui/icons-material/AccountBox';
+import ContactPhoneIcon from '@mui/icons-material/ContactPhone';
+import AssignmentIndIcon from '@mui/icons-material/AssignmentInd';
+import BadgeIcon from '@mui/icons-material/Badge';
+import { StaffInformationProps } from "./type";
 
+const StaffProfile: React.FC<StaffInformationProps> = ({ staffData }: any) => {
 
-const StaffInformation: React.FC<StaffInformationProps> = ({ employees }) => {
   const convertDate = (d: string) => {
     const date = new Date(d);
     const options: Intl.DateTimeFormatOptions = {
@@ -11,7 +28,7 @@ const StaffInformation: React.FC<StaffInformationProps> = ({ employees }) => {
       month: 'short',
       year: 'numeric',
     };
-    return date.toLocaleString('en-GB', options); // 'en-GB' for dd MMM yyyy format
+    return date.toLocaleString('en-GB', options);
   }
 
 
@@ -21,130 +38,178 @@ const StaffInformation: React.FC<StaffInformationProps> = ({ employees }) => {
     return matches ? matches.map(match => match.replace(/<\/?Name>/g, '') + ':') : [];
   };
 
-  const licensesArray = employees?.otherLicense ? parseLicenses(employees.otherLicense) : [];
-  return (
-    <div className="flex flex-col md:flex-row items-start justify-between p-4 md:p-6 rounded-lg shadow-md bg-white text-black">
-      <fieldset className="w-full border-2 p-4 md:p-5 flex flex-col md:flex-row">
-        <legend className='text-lg font-bold mb-5'>Staff Information</legend>
-        <div className="flex-1">
-          <div className="mb-4 flex flex-col md:flex-row md:items-center">
-            <label className="text-base font-semibold w-full md:w-48 xl:w-64">Staff ID :</label>
-            <span className="ml-2 text-base w-full">
-              {employees?.empId?.toString().padStart(4, '0')}
-            </span>
-          </div>
-          <div className="mb-4 flex flex-col md:flex-row md:items-center">
-            <label className="text-base font-semibold w-full md:w-48 xl:w-64">Extension Code :</label>
-            <span className="ml-2 text-base w-full">{employees?.extensionCode}</span>
-          </div>
-          <div className="mb-4 flex flex-col md:flex-row md:items-center">
-            <label className="text-base font-semibold w-full md:w-48 xl:w-64">Direct Line :</label>
-            <span className="ml-2 text-base w-full">{employees?.directLine}</span>
-          </div>
-          <div className="mb-4 flex flex-col md:flex-row md:items-center">
-            <label className="text-base font-semibold w-full md:w-48 xl:w-64">Email :</label>
-            <span className="ml-2 text-base w-full">{employees?.email}</span>
-          </div>
-          <legend className="mt-10">English Name</legend>
-          <hr />
-          <div className="mb-4 flex flex-col md:flex-row md:items-center">
-            <label className="text-base font-semibold w-full md:w-48 xl:w-64">Title :</label>
-            <span className="ml-2 text-base w-full">{employees?.enTitle}</span>
-          </div>
-          <div className="mb-4 flex flex-col md:flex-row md:items-center">
-            <label className="text-base font-semibold w-full md:w-48 xl:w-64">First Name :</label>
-            <span className="ml-2 text-base w-full">{employees?.enFirstName}</span>
-          </div>
-          <div className="mb-4 flex flex-col md:flex-row md:items-center">
-            <label className="text-base font-semibold w-full md:w-48 xl:w-64">Last Name :</label>
-            <span className="ml-2 text-base w-full">{employees?.enLastName}</span>
-          </div>
-          <legend className="mt-10">ชื่อไทย</legend>
-          <hr />
-          <div className="mb-4 flex flex-col md:flex-row md:items-center">
-            <label className="text-base font-semibold w-full md:w-48 xl:w-64">คำนำหน้า :</label>
-            <span className="ml-2 text-base w-full">{employees?.thTitle}</span>
-          </div>
-          <div className="mb-4 flex flex-col md:flex-row md:items-center">
-            <label className="text-base font-semibold w-full md:w-48 xl:w-64">ชื่อจริง :</label>
-            <span className="ml-2 text-base w-full">{employees?.thFirstName}</span>
-          </div>
-          <div className="mb-4 flex flex-col md:flex-row md:items-center">
-            <label className="text-base font-semibold w-full md:w-48 xl:w-64">นามสกุล :</label>
-            <span className="ml-2 text-base w-full">{employees?.thLastName}</span>
-          </div>
-          <div className="mb-4 flex flex-col md:flex-row md:items-center">
-            <label className="text-base font-semibold w-full md:w-48 xl:w-64">Nickname :</label>
-            <span className="ml-2 text-base w-full">{employees?.nickname}</span>
-          </div>
-          <hr className="mt-10 mb-5" />
-          <div className="mb-4 flex flex-col md:flex-row md:items-center">
-            <label className="text-base font-semibold w-full md:w-48 xl:w-64">Corporation Title :</label>
-            <span className="ml-2 text-base w-full">{employees?.corporationTitle}</span>
-          </div>
-          <div className="mb-4 flex flex-col md:flex-row md:items-center">
-            <label className="text-base font-semibold w-full md:w-48 xl:w-64">Job Title :</label>
-            <span className="ml-2 text-base w-full">{employees?.jobTitle}</span>
-          </div>
-          <div className="mb-4 flex flex-col md:flex-row md:items-center">
-            <label className="text-base font-semibold w-full md:w-48 xl:w-64">Organization Unit :</label>
-            <span className="ml-2 text-base w-full">{employees?.organizationUnit}</span>
-          </div>
-          <div className="mb-4 flex flex-col md:flex-row md:items-center">
-            <label className="text-base font-semibold w-full md:w-48 xl:w-64">Branch :</label>
-            <span className="ml-2 text-base w-full">{employees?.branchName}</span>
-          </div>
-          <div className="mb-4 mt-10 flex flex-col md:flex-row md:items-center">
-            <label className="text-base font-semibold w-full md:w-48 xl:w-64">Derivative Trader :</label>
-            <span className="ml-2 text-base w-full">{employees?.derivativeTrader}</span>
-          </div>
-          <div className="mb-4 flex flex-col md:flex-row md:items-center">
-            <label className="text-base font-semibold w-full md:w-48 xl:w-64">Derivative license :</label>
-            <span className="ml-2 text-base w-full">{employees?.derivativeLicense}</span>
-          </div>
-          <div className="mb-4 flex flex-col md:flex-row md:items-center">
-            <label className="text-base font-semibold w-full md:w-48 xl:w-64">Single (Equity) Trader:</label>
-            <span className="ml-2 text-base w-full">{employees?.singleTrader}</span>
-          </div>
-          <div className="mb-4 flex flex-col md:flex-row md:items-center">
-            <label className="text-base font-semibold w-full md:w-48 xl:w-64">Single (Equity) License:</label>
-            <span className="ml-2 text-base w-full">{employees?.singleLicense}</span>
-          </div>
-          <div className="mb-4 flex flex-col md:flex-row md:items-center">
-            <label className="text-base font-semibold w-full md:w-48 xl:w-64">Other License:</label>
-            <span className="ml-2 text-base w-full">
-              {licensesArray.map((license, index) => (
-                <div key={index}>{license}</div> // สร้าง tag element จาก array
-              ))}
-            </span>
-          </div>
-          <div className="mb-4 mt-10 flex flex-col md:flex-row md:items-center">
-            <label className="text-base font-semibold w-full md:w-48 xl:w-64">Start Working Date:</label>
-            <span className="ml-2 text-base w-full">{employees?.startWorkingDate == '' ? "N/A" : convertDate(employees?.startWorkingDate)}</span>
-          </div>
-          <div className="mb-4 flex flex-col md:flex-row md:items-center">
-            <label className="text-base font-semibold w-full md:w-48 xl:w-64">Last Working Date:</label>
-            <span className="ml-2 text-base w-full">{employees?.lastWorkingDate == '' ? "N/A" : convertDate(employees?.lastWorkingDate)}</span>
-          </div>
-          <div className="mb-4 flex flex-col md:flex-row md:items-center">
-            <label className="text-base font-semibold w-full md:w-48 xl:w-64">Effective Date:</label>
-            <span className="ml-2 text-base w-full">{employees?.effectiveDate == '' ? "N/A" : convertDate(employees?.effectiveDate)}</span>
-          </div>
-        </div>
-        <div className="flex-shrink-0 mb-4 md:mb-0 md:mr-4">
-          {/* <Image src={`${process.env.NEXT_PUBLIC_BASEURL}/uploads/${employees?.empId}.png`} alt="Staff Image" width={200} height={200} className="rounded-full" /> */}
-          <Image
-            src={`http://bualuangintranet.sawasdee.brk1/employee/img/staff/${employees?.empId.toString().padStart(4, '0')}.jpg`}
-            alt="Staff Image"
-            width={200}
-            height={200}
-            className="rounded-full"
-          />
+  const licensesArray = staffData?.otherLicense ? parseLicenses(staffData.otherLicense) : [];
 
+  return (
+    <div className="min-h-screen bg-gray-50 text-black">
+      <div className="mx-auto bg-white rounded-2xl shadow-lg overflow-hidden">
+        <div className="relative h-52 bg-gradient-to-r from-blue-500 to-indigo-600">
+          <div className="absolute -bottom-16 left-8">
+            <div className="relative">
+              <img
+                src={`http://bualuangintranet.sawasdee.brk1/employee/img/staff/${staffData?.empId.toString().padStart(4, '0')}.jpg`}
+                alt="Profile"
+                className="w-48 h-48 bg-white rounded-full border-4 border-white shadow-lg"
+                onError={(e: React.SyntheticEvent<HTMLImageElement, Event>) => {
+                  const target = e.target as HTMLImageElement;
+                  target.src = "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRVnH_582IHmfWb-jRcOEvSN0owDFx1yn8YkQ&s";
+                }}
+              />
+            </div>
+          </div>
         </div>
-      </fieldset>
+        {/* Main Content */}
+        <div className="pt-20 px-10 pb-10">
+          {/* Basic Information */}
+          <div className="mb-8">
+            <h2 className="text-xl font-bold text-gray-900 mb-4 border-b">Staff Information</h2>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <div>
+                <h3 className="flex items-center text-gray-600 mb-2">
+                  <ContactEmergencyIcon className="mr-2" /> Staff ID
+                </h3>
+                <p className="text-lg font-normal">{staffData?.empId?.toString().padStart(4, '0')}</p>
+              </div>
+              <div>
+                <h3 className="flex items-center text-gray-600 mb-2">
+                  <ContactPhoneIcon className="mr-2" /> Extension
+                </h3>
+                <p className="text-lg font-normal">{staffData?.extensionCode}</p>
+              </div>
+              <div>
+                <h3 className="flex items-center text-gray-600 mb-2">
+                  <PhoneIcon className="mr-2" /> DirectLine
+                </h3>
+                <p className="text-lg font-normal">{staffData?.directLine}</p>
+              </div>
+              <div>
+                <h3 className="flex items-center text-gray-600 mb-2">
+                  <MailIcon className="mr-2" /> Email
+                </h3>
+                <p className="text-lg font-normal">{staffData.email}</p>
+              </div>
+              <div>
+                <h3 className="flex items-center text-gray-600 mb-2">
+                  <PersonIcon className="mr-2" /> English Name
+                </h3>
+                <p className="text-lg font-normal">{`${staffData.enTitle}${staffData.enFirstName} ${staffData.enLastName}`}</p>
+              </div>
+              <div>
+                <h3 className="flex items-center text-gray-600 mb-2">
+                  <PersonIcon className="mr-2" /> Thai Name
+                </h3>
+                <p className="text-lg font-normal">{`${staffData.thTitle}${staffData.thFirstName} ${staffData.thLastName}`}</p>
+              </div>
+              <div>
+                <h3 className="flex items-center text-gray-600 mb-2">
+                  <BookmarkIcon className="mr-2" /> Nickname
+                </h3>
+                <p className="text-lg font-normal">{staffData.nickname}</p>
+              </div>
+            </div>
+          </div>
+
+          {/* Employment Information */}
+          <div className="mb-8">
+            <h2 className="text-lg font-bold text-gray-900 mb-4 border-b">Organization</h2>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <div>
+                <h3 className="flex items-center text-gray-600 mb-2">
+                  <BusinessIcon className="mr-2" /> Corporation Title
+                </h3>
+                <p className="text-lg font-normal">{staffData?.corporationTitle}</p>
+              </div>
+              <div>
+                <h3 className="flex items-center text-gray-600 mb-2">
+                  <WorkIcon className="mr-2" /> Job Title
+                </h3>
+                <p className="text-lg font-normal">{staffData?.jobTitle}</p>
+              </div>
+              <div>
+                <h3 className="flex items-center text-gray-600 mb-2">
+                  <WorkIcon className="mr-2" /> Organization Unit
+                </h3>
+                <p className="text-lg font-normal">{staffData?.organizationUnit}</p>
+              </div>
+              <div>
+                <h3 className="flex items-center text-gray-600 mb-2">
+                  <PlaceIcon className="mr-2" /> Branch
+                </h3>
+                <p className="text-lg font-normal">{staffData?.branchName}</p>
+              </div>
+            </div>
+          </div>
+
+          {/* License Information */}
+          <div className="mb-8">
+            <h2 className="text-xl font-bold text-gray-900 mb-4">Licenses</h2>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <div className="p-4 border border-gray-200 rounded-lg shadow-sm hover:shadow-md transition-shadow">
+                <h3 className="flex items-center text-gray-600 mb-2">
+                  <AccountBoxIcon className="mr-2 text-blue-500" /> Derivative Trader
+                </h3>
+                <p className="text-gray-600">{staffData?.derivativeTrader == "" ? "-" : staffData?.derivativeTrader}</p>
+              </div>
+              <div className="p-4 border border-gray-200 rounded-lg shadow-sm hover:shadow-md transition-shadow">
+                <h3 className="flex items-center text-gray-600 mb-2">
+                  <AssuredWorkloadIcon className="mr-2 text-blue-500" /> Derivative License
+                </h3>
+                <p className="text-gray-600">{staffData?.derivativeLicense == "" ? "-" : staffData?.derivativeLicense}</p>
+              </div>
+              <div className="p-4 border border-gray-200 rounded-lg shadow-sm hover:shadow-md transition-shadow">
+                <h3 className="flex items-center text-gray-600 mb-2">
+                  <BadgeIcon className="mr-2 text-red-500" /> Single Trader
+                </h3>
+                <p className="text-gray-600">{staffData?.singleLicense == "" ? "-" : staffData?.singleLicense}</p>
+              </div>
+              <div className="p-4 border border-gray-200 rounded-lg shadow-sm hover:shadow-md transition-shadow">
+                <h3 className="flex items-center text-gray-600 mb-2">
+                  <AssignmentIndIcon className="mr-2 text-red-500" /> Single License
+                </h3>
+                <p className="text-gray-600">{staffData?.singleTrader == "" ? "-" : staffData?.singleTrader}</p>
+              </div>
+              <div className="p-4 border border-gray-200 rounded-lg shadow-sm hover:shadow-md transition-shadow">
+                <h3 className="flex items-center text-gray-600 mb-2">
+                  <Description className="mr-2 text-purple-500" /> Other License
+                </h3>
+                {licensesArray.length > 0 ? (
+                  licensesArray.map((license, index) => (
+                    <div key={index}>{license}</div>
+                  ))
+                ) : (
+                  <div>-</div>
+                )}
+              </div>
+            </div>
+          </div>
+          {/* Dates */}
+          <div>
+            <h2 className="text-xl font-bold text-gray-900 mb-4 border-b">Work Period</h2>
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6 px-5">
+              <div>
+                <h3 className="flex items-center text-gray-600 mb-2">
+                  <CalendarTodayIcon className="mr-2" /> Start Date
+                </h3>
+                <p className="text-lg font-normal">{staffData?.startWorkingDate == '' ? "N/A" : convertDate(staffData?.startWorkingDate)}</p>
+              </div>
+              <div>
+                <h3 className="flex items-center text-gray-600 mb-2">
+                  <CalendarTodayIcon className="mr-2" /> Last Working Date
+                </h3>
+                <p className="text-lg font-normal">{staffData?.lastWorkingDate == '' ? "N/A" : convertDate(staffData?.lastWorkingDate)}</p>
+              </div>
+              <div>
+                <h3 className="flex items-center text-gray-600 mb-2">
+                  <CalendarTodayIcon className="mr-2" /> Effective Date
+                </h3>
+                <p className="text-lg font-normal">{staffData?.effectiveDate == '' ? "N/A" : convertDate(staffData?.effectiveDate)}</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
   );
 };
 
-export default StaffInformation;
+export default StaffProfile;

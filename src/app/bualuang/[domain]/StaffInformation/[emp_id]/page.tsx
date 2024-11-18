@@ -30,16 +30,12 @@ export default async function page({
 }) {
     const employees: any = await getEmployee(params.domain, params.emp_id);
     return (
-        <div className="min-h-screen flex flex-col">
+        <div className="flex flex-col">
             <div className="flex-1 bg-white">
-                <PersistentDrawerLeft />
-                <hr />
                 <section id='Heirachy'>
-                    <div className='flex w-screen overflow-auto'>
-                        <div className='w-full'>
-                            <div className='m-3'>
-                                <StaffInformation employees={employees.employee} />
-                            </div>
+                    <div className='overflow-auto'>
+                        <div className=''>
+                            <StaffInformation staffData={employees.employee} />
                         </div>
                     </div>
                 </section>
