@@ -167,13 +167,13 @@ const Dashboard: React.FC<DashboardProps> = ({ organizations, employees }) => {
   const [expandedItems, setExpandedItems] = useState<string[]>(() => getAllIds(treeItems));
 
   return (
-    <main>
+    <main style={{ height: '100vh', overflow: 'scroll' }}>
       <Button className="mt-5" onClick={toggleTreeViewVisibility}>
         {isTreeViewVisible ? "Hide Panel" : "Show"}
       </Button>
       <div className="flex flex-col md:flex-row w-full px-5 mb-5">
         {isTreeViewVisible && (
-          <div className="border-2 rounded p-2 w-full md:w-1/4 mb-5 md:mb-0" style={{ maxHeight: 'calc(100vh - 60px)', overflowY: 'auto' }}>
+          <div className="border-2 rounded p-2 w-full md:w-1/4 mb-5 md:mb-0">
             <Box sx={{ minHeight: 270 }}>
               <RichTreeView
                 items={treeItems}
@@ -195,7 +195,7 @@ const Dashboard: React.FC<DashboardProps> = ({ organizations, employees }) => {
           </div>
         )}
 
-        <div className={`w-full mx-3 p-3 border-2 rounded bg-white ${isTreeViewVisible ? 'md:w-3/4' : 'md:w-full'} flex flex-col`}>
+        <div className={`w-full mx-3 p-3 border-2 rounded bg-white ${isTreeViewVisible ? 'md:w-3/4' : 'md:w-full'}`}>
           <Search search={search} organizationUnits={searchAutoComplete} />
           <div className="mx-3">
             <EmployeeTable dataEmployees={employees} breadcrumbPath={breadcrumbPath} />
@@ -203,7 +203,6 @@ const Dashboard: React.FC<DashboardProps> = ({ organizations, employees }) => {
         </div>
       </div>
     </main>
-
   );
 };
 
