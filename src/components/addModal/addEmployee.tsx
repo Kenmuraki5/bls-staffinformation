@@ -518,8 +518,6 @@ const EmployeeModal = ({ open, handleClose, addRecord, updateRecord, deleteRecor
               variant="outlined"
               value={directLine}
               onChange={(e) => setDirectLine(e.target.value)}
-              error={!!errors.extension}
-              helperText={errors.extension}
               sx={{ mt: 2 }}
               InputProps={{
                 readOnly: role != "AdminStaffInformation",
