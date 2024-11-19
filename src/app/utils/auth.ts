@@ -39,14 +39,3 @@ export async function getRole(): Promise<string | null> {
   }
 }
 
-export async function getEmail(): Promise<string | null> {
-  try {
-    // const token = await getToken("auth_token");
-    // const data = await parseJwt(token);
-    return "BLS@bualuang.co.th";
-  } catch (error) {
-    console.error('Failed to get email', error);
-    return null;
-  }
-}
-
