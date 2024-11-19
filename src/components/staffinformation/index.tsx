@@ -58,7 +58,7 @@ const StaffProfile: React.FC<StaffInformationProps> = ({ staffData }: any) => {
   return (
     <div className="min-h-screen bg-gray-50 text-black">
       <div className="mx-auto bg-white rounded-2xl shadow-lg overflow-hidden">
-      <div className="relative h-52 bg-gradient-to-r from-[#172554] to-[#1e3a8a]">
+        <div className="relative h-52 bg-gradient-to-r from-[#172554] to-[#1e3a8a]">
           <Link href={`/bualuang/${params?.domain}`} passHref>
             <button className="absolute top-4 left-4 mt-5 text-white">
               <KeyboardArrowLeftIcon />
@@ -66,16 +66,16 @@ const StaffProfile: React.FC<StaffInformationProps> = ({ staffData }: any) => {
           </Link>
 
           <div className="absolute -bottom-16 left-10">
-            <div className="relative">
+            <div className="relative w-48 h-48">
               <Image
                 src={`http://bualuangintranet.sawasdee.brk1/employee/img/staff/${staffData?.empId.toString().padStart(4, '0')}.jpg`}
                 alt="Profile"
-                width={192}
-                height={192}
-                className="bg-white rounded-full border-4 border-white shadow-lg"
+                fill
+                className="bg-white rounded-full border-4 border-white shadow-lg object-cover" // ใช้ object-cover เพื่อให้รูปภาพครอบเต็มแบบไม่เสียอัตราส่วน
               />
             </div>
           </div>
+
         </div>
 
         {/* Main Content */}
