@@ -22,6 +22,7 @@ import { Alert, Snackbar } from '@mui/material';
 import KeyboardArrowLeftIcon from '@mui/icons-material/KeyboardArrowLeft';
 import Link from "next/link";
 import Image from "next/image";
+import BusinessCenterIcon from '@mui/icons-material/BusinessCenter';
 import { useParams } from "next/navigation";
 
 const StaffProfile: React.FC<StaffInformationProps> = ({ staffData }: any) => {
@@ -71,10 +72,11 @@ const StaffProfile: React.FC<StaffInformationProps> = ({ staffData }: any) => {
                 src={`http://bualuangintranet.sawasdee.brk1/employee/img/staff/${staffData?.empId.toString().padStart(4, '0')}.jpg`}
                 alt="Profile"
                 fill
-                className="bg-white rounded-full border-4 border-white shadow-lg object-cover" // ใช้ object-cover เพื่อให้รูปภาพครอบเต็มแบบไม่เสียอัตราส่วน
+                className="bg-white rounded-full border-4 border-white shadow-lg object-cover object-top"
               />
             </div>
           </div>
+
 
         </div>
 
@@ -149,7 +151,7 @@ const StaffProfile: React.FC<StaffInformationProps> = ({ staffData }: any) => {
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               <div>
                 <h3 className="flex items-center text-gray-600 mb-2">
-                  <BusinessIcon className="mr-2" /> Corporation Title
+                  <BusinessCenterIcon className="mr-2" /> Corporation Title
                 </h3>
                 <p className="text-lg font-normal" onDoubleClick={(e) => handleCopyToClipboard(staffData?.corporationTitle || '')}>
                   {staffData?.corporationTitle}
@@ -165,7 +167,7 @@ const StaffProfile: React.FC<StaffInformationProps> = ({ staffData }: any) => {
               </div>
               <div>
                 <h3 className="flex items-center text-gray-600 mb-2">
-                  <WorkIcon className="mr-2" /> Organization Unit
+                  <BusinessIcon className="mr-2" /> Organization Unit
                 </h3>
                 <p className="text-lg font-normal" onDoubleClick={(e) => handleCopyToClipboard(staffData?.organizationUnit || '')}>
                   {staffData?.organizationUnit}
