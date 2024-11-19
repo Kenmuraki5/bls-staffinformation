@@ -412,7 +412,7 @@ const EmployeeModal = ({ open, handleClose, addRecord, updateRecord, deleteRecor
               ? "Edit Staff Information" : selectedRow == null && role == "AdminStaffInformation" ? "Add Employee" : "Staff Information"}
           </Typography>
           <Box sx={{ ml: 'auto', display: 'flex', alignItems: 'center' }}>
-            {role === "AdminStaffInformation" && (
+            {true && (
               <>
                 <Button
                   variant="outlined"
@@ -425,7 +425,7 @@ const EmployeeModal = ({ open, handleClose, addRecord, updateRecord, deleteRecor
               </>
             )}
           </Box>
-          {role === "AdminStaffInformation" && selectedRow != null && (
+          {true && selectedRow != null && (
             <Box>
               <Button
                 color='error'
@@ -559,9 +559,9 @@ const EmployeeModal = ({ open, handleClose, addRecord, updateRecord, deleteRecor
                   onChange={(e) => setNickName(e.target.value)}
                   error={!!errors.thNickName}
                   helperText={errors.thNickName}
-                  InputProps={{
-                    readOnly: role != "AdminStaffInformation",
-                  }}
+                  // InputProps={{
+                  //   readOnly: role != "AdminStaffInformation",
+                  // }}
                 />
               </Grid>
 
@@ -575,9 +575,9 @@ const EmployeeModal = ({ open, handleClose, addRecord, updateRecord, deleteRecor
                   onChange={(e) => setThFirstName(e.target.value)}
                   error={!!errors.thFirstName}
                   helperText={errors.thFirstName}
-                  InputProps={{
-                    readOnly: role != "AdminStaffInformation",
-                  }}
+                  // InputProps={{
+                  //   readOnly: role != "AdminStaffInformation",
+                  // }}
                 />
               </Grid>
 
@@ -590,9 +590,9 @@ const EmployeeModal = ({ open, handleClose, addRecord, updateRecord, deleteRecor
                   onChange={(e) => setThLastName(e.target.value)}
                   error={!!errors.thLastName}
                   helperText={errors.thLastName}
-                  InputProps={{
-                    readOnly: role != "AdminStaffInformation",
-                  }}
+                  // InputProps={{
+                  //   readOnly: role != "AdminStaffInformation",
+                  // }}
                 />
               </Grid>
 
@@ -606,9 +606,9 @@ const EmployeeModal = ({ open, handleClose, addRecord, updateRecord, deleteRecor
                   onChange={(e) => setEnFirstName(e.target.value)}
                   error={!!errors.enFirstName}
                   helperText={errors.enFirstName}
-                  InputProps={{
-                    readOnly: role != "AdminStaffInformation",
-                  }}
+                  // InputProps={{
+                  //   readOnly: role != "AdminStaffInformation",
+                  // }}
                 />
               </Grid>
               <Grid item xs={12} sm={6}>
@@ -620,9 +620,9 @@ const EmployeeModal = ({ open, handleClose, addRecord, updateRecord, deleteRecor
                   onChange={(e) => setEnLastName(e.target.value)}
                   error={!!errors.enLastName}
                   helperText={errors.enLastName}
-                  InputProps={{
-                    readOnly: role != "AdminStaffInformation",
-                  }}
+                  // InputProps={{
+                  //   readOnly: role != "AdminStaffInformation",
+                  // }}
                 />
               </Grid>
 
@@ -734,9 +734,9 @@ const EmployeeModal = ({ open, handleClose, addRecord, updateRecord, deleteRecor
                   onChange={(e) => setHireDate(e.target.value)}
                   error={!!errors.startWorkingDate}
                   helperText={errors.startWorkingDate}
-                  InputProps={{
-                    readOnly: role != "AdminStaffInformation",
-                  }}
+                  // InputProps={{
+                  //   readOnly: role != "AdminStaffInformation",
+                  // }}
                 />
               </Grid>
               <Grid item xs={12} sm={6}>
@@ -750,9 +750,9 @@ const EmployeeModal = ({ open, handleClose, addRecord, updateRecord, deleteRecor
                   onChange={(e) => setLastWorkingDate(e.target.value)}
                   error={!!errors.lastWorkingDate}
                   helperText={errors.lastWorkingDate}
-                  InputProps={{
-                    readOnly: role != "AdminStaffInformation",
-                  }}
+                  // InputProps={{
+                  //   readOnly: role != "AdminStaffInformation",
+                  // }}
                 />
               </Grid>
               <Grid item xs={12} sm={6}>
@@ -766,9 +766,9 @@ const EmployeeModal = ({ open, handleClose, addRecord, updateRecord, deleteRecor
                   onChange={(e) => setEffectiveDate(e.target.value)}
                   error={!!errors.effectiveDate}
                   helperText={errors.effectiveDate}
-                  InputProps={{
-                    readOnly: role != "AdminStaffInformation",
-                  }}
+                  // InputProps={{
+                  //   readOnly: role != "AdminStaffInformation",
+                  // }}
                 />
               </Grid>
               <Grid item xs={12}>
@@ -781,9 +781,9 @@ const EmployeeModal = ({ open, handleClose, addRecord, updateRecord, deleteRecor
                   variant="outlined"
                   value={derivativeTrader}
                   onChange={(e) => setDerivativeTrader(e.target.value)}
-                  InputProps={{
-                    readOnly: role != "AdminStaffInformation",
-                  }}
+                  // InputProps={{
+                  //   readOnly: role != "AdminStaffInformation",
+                  // }}
                 />
               </Grid>
               <Grid item xs={12} sm={6}>
@@ -793,9 +793,9 @@ const EmployeeModal = ({ open, handleClose, addRecord, updateRecord, deleteRecor
                   variant="outlined"
                   value={derivativeLicense}
                   onChange={(e) => setDerivativeLicense(e.target.value)}
-                  InputProps={{
-                    readOnly: role != "AdminStaffInformation",
-                  }}
+                  // InputProps={{
+                  //   readOnly: role != "AdminStaffInformation",
+                  // }}
                 />
               </Grid>
               <Grid item xs={12} sm={6}>
@@ -805,9 +805,9 @@ const EmployeeModal = ({ open, handleClose, addRecord, updateRecord, deleteRecor
                   variant="outlined"
                   value={singleTrader}
                   onChange={(e) => setSingleTrader(e.target.value)}
-                  InputProps={{
-                    readOnly: role != "AdminStaffInformation",
-                  }}
+                  // InputProps={{
+                  //   readOnly: role != "AdminStaffInformation",
+                  // }}
                 />
               </Grid>
               <Grid item xs={12} sm={6}>
@@ -817,9 +817,9 @@ const EmployeeModal = ({ open, handleClose, addRecord, updateRecord, deleteRecor
                   variant="outlined"
                   value={singleLicense}
                   onChange={(e) => setSingleLicense(e.target.value)}
-                  InputProps={{
-                    readOnly: role != "AdminStaffInformation",
-                  }}
+                  // InputProps={{
+                  //   readOnly: role != "AdminStaffInformation",
+                  // }}
                 />
               </Grid>
               <Grid item xs={12} sm={6}>
@@ -829,9 +829,9 @@ const EmployeeModal = ({ open, handleClose, addRecord, updateRecord, deleteRecor
                   variant="outlined"
                   value={otherLicense}
                   onChange={(e) => setOtherLicense(e.target.value)}
-                  InputProps={{
-                    readOnly: role != "AdminStaffInformation",
-                  }}
+                  // InputProps={{
+                  //   readOnly: role != "AdminStaffInformation",
+                  // }}
                 />
               </Grid>
             </Grid>
