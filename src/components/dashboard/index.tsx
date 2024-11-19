@@ -130,16 +130,16 @@ const Dashboard: React.FC<DashboardProps> = ({ organizations, employees }) => {
     const searchBy = searchParams.get('searchBy');
     const searchInput = searchParams.get('searchInput');
 
-    if (searchBy === "organizationUnit" && searchInput) {
+    if (searchBy && searchInput) {
       const organizationId = employees[0]?.organizationId;
 
-      if (organizationId) {
+      if (searchBy === "organizationUnit" && organizationId) {
         const result = findPathById(organizations, organizationId);
         setBreadcrumbPath(result || { path: [], ids: [] });
       }
-    }
-    else {
-      setBreadcrumbPath({ path: [], ids: [] });
+      else {
+        setBreadcrumbPath({ path: [], ids: [] });
+      }
     }
   }, [searchParams, organizations, employees]);
 
