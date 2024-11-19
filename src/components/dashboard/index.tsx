@@ -173,7 +173,7 @@ const Dashboard: React.FC<DashboardProps> = ({ organizations, employees }) => {
       </Button>
       <div className="flex flex-col md:flex-row w-full px-5 mb-5">
         {isTreeViewVisible && (
-          <div className="border-2 rounded p-2 w-full md:w-1/4 mb-5 md:mb-0" style={{ maxHeight: 'calc(100vh - 100px)', overflowY: 'auto', scrollbarWidth: 'none' }}>
+          <div className="border-2 rounded p-2 w-full md:w-1/4 mb-5 md:mb-0" style={{ maxHeight: 'calc(100vh - 120px)', overflowY: 'auto', scrollbarWidth: 'none' }}>
             <Box sx={{ minHeight: 270 }}>
               <RichTreeView
                 items={treeItems}
