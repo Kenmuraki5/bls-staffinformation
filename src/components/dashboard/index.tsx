@@ -130,7 +130,7 @@ const Dashboard: React.FC<DashboardProps> = ({ organizations, employees }) => {
     const searchBy = searchParams.get('searchBy');
     const searchInput = searchParams.get('searchInput');
 
-    if (searchBy && searchInput) {
+    if (searchBy === "organizationUnit" && searchInput) {
       const organizationId = employees[0]?.organizationId;
 
       if (organizationId) {
