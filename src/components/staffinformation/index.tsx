@@ -19,6 +19,8 @@ import AssignmentIndIcon from '@mui/icons-material/AssignmentInd';
 import BadgeIcon from '@mui/icons-material/Badge';
 import { StaffInformationProps } from "./type";
 import { Alert, Snackbar } from '@mui/material';
+import KeyboardArrowLeftIcon from '@mui/icons-material/KeyboardArrowLeft';
+import Link from "next/link";
 
 const StaffProfile: React.FC<StaffInformationProps> = ({ staffData }: any) => {
 
@@ -54,7 +56,13 @@ const StaffProfile: React.FC<StaffInformationProps> = ({ staffData }: any) => {
   return (
     <div className="min-h-screen bg-gray-50 text-black">
       <div className="mx-auto bg-white rounded-2xl shadow-lg overflow-hidden">
-        <div className="relative h-52 bg-gradient-to-r from-blue-500 to-indigo-600">
+      <div className="relative h-52 bg-gradient-to-r from-blue-500 to-indigo-600">
+          <Link href="/" passHref>
+            <button className="absolute top-4 left-4 mt-5 text-white">
+              <KeyboardArrowLeftIcon />
+            </button>
+          </Link>
+
           <div className="absolute -bottom-16 left-8">
             <div className="relative">
               <img
@@ -104,32 +112,32 @@ const StaffProfile: React.FC<StaffInformationProps> = ({ staffData }: any) => {
                 <h3 className="flex items-center text-gray-600 mb-2">
                   <MailIcon className="mr-2" /> Email
                 </h3>
-                <p className="text-lg font-normal" onDoubleClick={(e) => handleCopyToClipboard(staffData.email)}>
-                  {staffData.email}
+                <p className="text-lg font-normal" onDoubleClick={(e) => handleCopyToClipboard(staffData?.email)}>
+                  {staffData?.email}
                 </p>
               </div>
               <div>
                 <h3 className="flex items-center text-gray-600 mb-2">
                   <PersonIcon className="mr-2" /> English Name
                 </h3>
-                <p className="text-lg font-normal" onDoubleClick={(e) => handleCopyToClipboard(`${staffData.enTitle}${staffData.enFirstName} ${staffData.enLastName}`)}>
-                  {`${staffData.enTitle}${staffData.enFirstName} ${staffData.enLastName}`}
+                <p className="text-lg font-normal" onDoubleClick={(e) => handleCopyToClipboard(`${staffData?.enTitle}${staffData?.enFirstName} ${staffData?.enLastName}`)}>
+                  {`${staffData?.enTitle}${staffData?.enFirstName} ${staffData?.enLastName}`}
                 </p>
               </div>
               <div>
                 <h3 className="flex items-center text-gray-600 mb-2">
                   <PersonIcon className="mr-2" /> Thai Name
                 </h3>
-                <p className="text-lg font-normal" onDoubleClick={(e) => handleCopyToClipboard(`${staffData.thTitle}${staffData.thFirstName} ${staffData.thLastName}`)}>
-                  {`${staffData.thTitle}${staffData.thFirstName} ${staffData.thLastName}`}
+                <p className="text-lg font-normal" onDoubleClick={(e) => handleCopyToClipboard(`${staffData?.thTitle}${staffData?.thFirstName} ${staffData?.thLastName}`)}>
+                  {`${staffData?.thTitle}${staffData?.thFirstName} ${staffData?.thLastName}`}
                 </p>
               </div>
               <div>
                 <h3 className="flex items-center text-gray-600 mb-2">
                   <BookmarkIcon className="mr-2" /> Nickname
                 </h3>
-                <p className="text-lg font-normal" onDoubleClick={(e) => handleCopyToClipboard(staffData.nickname || '')}>
-                  {staffData.nickname}
+                <p className="text-lg font-normal" onDoubleClick={(e) => handleCopyToClipboard(staffData?.nickname || '')}>
+                  {staffData?.nickname}
                 </p>
               </div>
             </div>
