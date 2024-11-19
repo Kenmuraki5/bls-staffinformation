@@ -95,8 +95,8 @@ const StaffProfile: React.FC<StaffInformationProps> = ({ staffData }: any) => {
                 <Image
                   src={`/${params?.domain?.toLowerCase()}.png`}
                   alt={`${params?.domain} LOGO`}
-                  width={50}
-                  height={50}
+                  width={42}
+                  height={42}
                   priority
                 />
               )}
