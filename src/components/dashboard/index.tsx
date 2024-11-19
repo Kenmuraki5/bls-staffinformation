@@ -167,13 +167,13 @@ const Dashboard: React.FC<DashboardProps> = ({ organizations, employees }) => {
   const [expandedItems, setExpandedItems] = useState<string[]>(() => getAllIds(treeItems));
 
   return (
-    <main style={{ height: '100vh', overflow: 'scroll' }}>
+    <main>
       <Button className="mt-5" onClick={toggleTreeViewVisibility}>
         {isTreeViewVisible ? "Hide Panel" : "Show"}
       </Button>
       <div className="flex flex-col md:flex-row w-full px-5 mb-5">
         {isTreeViewVisible && (
-          <div className="border-2 rounded p-2 w-full md:w-1/4 mb-5 md:mb-0">
+          <div className="border-2 rounded p-2 w-full md:w-1/4 mb-5 md:mb-0" style={{ maxHeight: 'calc(100vh - 75px)', overflowY: 'auto', scrollbarWidth: 'none' }}>
             <Box sx={{ minHeight: 270 }}>
               <RichTreeView
                 items={treeItems}
