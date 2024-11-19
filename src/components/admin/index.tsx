@@ -39,7 +39,7 @@ function EditToolbar(props: EditToolbarProps) {
 
   return (
     <GridToolbarContainer>
-      {role === "ReadTest" && (
+      {role === "AdminStaffInformation" && (
         <Button color="primary" startIcon={<AddIcon />} onClick={handleClick}>
           Add record
         </Button>

@@ -407,11 +407,11 @@ const EmployeeModal = ({ open, handleClose, addRecord, updateRecord, deleteRecor
             <ArrowBackIcon />
           </IconButton>
           <Typography variant="h6" component="h6" className="ml-12 text-black">
-            {selectedRow && Object.keys(selectedRow).length > 0 && role == "ReadTest"
-              ? "Edit Staff Information" : selectedRow == null && role == "ReadTest" ? "Add Employee" : "Staff Information"}
+            {selectedRow && Object.keys(selectedRow).length > 0 && role == "AdminStaffInformation"
+              ? "Edit Staff Information" : selectedRow == null && role == "AdminStaffInformation" ? "Add Employee" : "Staff Information"}
           </Typography>
           <Box sx={{ ml: 'auto', display: 'flex', alignItems: 'center' }}>
-            {role === "ReadTest" && (
+            {role === "AdminStaffInformation" && (
               <>
                 <Button
                   variant="outlined"
@@ -424,7 +424,7 @@ const EmployeeModal = ({ open, handleClose, addRecord, updateRecord, deleteRecor
               </>
             )}
           </Box>
-          {role === "ReadTest" && selectedRow != null && (
+          {role === "AdminStaffInformation" && selectedRow != null && (
             <Box>
               <Button
                 color='error'
@@ -448,7 +448,7 @@ const EmployeeModal = ({ open, handleClose, addRecord, updateRecord, deleteRecor
               src={avatarImage || ''}
               sx={{ width: 150, height: 150 }}
             />
-            {role == "ReadTest" && (
+            {role == "AdminStaffInformation" && (
               <>
                 <input
                   type="file"
@@ -475,7 +475,7 @@ const EmployeeModal = ({ open, handleClose, addRecord, updateRecord, deleteRecor
               helperText={errors.empId}
               sx={{ mt: 2 }}
               InputProps={{
-                readOnly: role != "ReadTest" && selectedRow && Object.keys(selectedRow).length > 0,
+                readOnly: role != "AdminStaffInformation" && selectedRow && Object.keys(selectedRow).length > 0,
               }}
             />
 
@@ -491,7 +491,7 @@ const EmployeeModal = ({ open, handleClose, addRecord, updateRecord, deleteRecor
               helperText={errors.email}
               sx={{ mt: 2 }}
               InputProps={{
-                readOnly: role != "ReadTest",
+                readOnly: role != "AdminStaffInformation",
               }}
             />
             <TextField
@@ -504,7 +504,7 @@ const EmployeeModal = ({ open, handleClose, addRecord, updateRecord, deleteRecor
               onChange={(e) => setExtension(e.target.value)}
               sx={{ mt: 2 }}
               InputProps={{
-                readOnly: role != "ReadTest",
+                readOnly: role != "AdminStaffInformation",
               }}
             />
             <TextField
@@ -517,7 +517,7 @@ const EmployeeModal = ({ open, handleClose, addRecord, updateRecord, deleteRecor
               onChange={(e) => setDirectLine(e.target.value)}
               sx={{ mt: 2 }}
               InputProps={{
-                readOnly: role != "ReadTest",
+                readOnly: role != "AdminStaffInformation",
               }}
             />
           </Grid>
@@ -538,7 +538,7 @@ const EmployeeModal = ({ open, handleClose, addRecord, updateRecord, deleteRecor
                   value={title}
                   onChange={(e) => setTitle(e.target.value)}
                   label="Title"
-                  readOnly={role != "ReadTest"}
+                  readOnly={role != "AdminStaffInformation"}
                   error={!!errors.title}
                 >
                   <MenuItem value="นาย/Mr.">นาย / Mr.</MenuItem>
@@ -557,7 +557,7 @@ const EmployeeModal = ({ open, handleClose, addRecord, updateRecord, deleteRecor
                   error={!!errors.thNickName}
                   helperText={errors.thNickName}
                   InputProps={{
-                    readOnly: role != "ReadTest",
+                    readOnly: role != "AdminStaffInformation",
                   }}
                 />
               </Grid>
@@ -573,7 +573,7 @@ const EmployeeModal = ({ open, handleClose, addRecord, updateRecord, deleteRecor
                   error={!!errors.thFirstName}
                   helperText={errors.thFirstName}
                   InputProps={{
-                    readOnly: role != "ReadTest",
+                    readOnly: role != "AdminStaffInformation",
                   }}
                 />
               </Grid>
@@ -588,7 +588,7 @@ const EmployeeModal = ({ open, handleClose, addRecord, updateRecord, deleteRecor
                   error={!!errors.thLastName}
                   helperText={errors.thLastName}
                   InputProps={{
-                    readOnly: role != "ReadTest",
+                    readOnly: role != "AdminStaffInformation",
                   }}
                 />
               </Grid>
@@ -604,7 +604,7 @@ const EmployeeModal = ({ open, handleClose, addRecord, updateRecord, deleteRecor
                   error={!!errors.enFirstName}
                   helperText={errors.enFirstName}
                   InputProps={{
-                    readOnly: role != "ReadTest",
+                    readOnly: role != "AdminStaffInformation",
                   }}
                 />
               </Grid>
@@ -618,7 +618,7 @@ const EmployeeModal = ({ open, handleClose, addRecord, updateRecord, deleteRecor
                   error={!!errors.enLastName}
                   helperText={errors.enLastName}
                   InputProps={{
-                    readOnly: role != "ReadTest",
+                    readOnly: role != "AdminStaffInformation",
                   }}
                 />
               </Grid>
@@ -648,7 +648,7 @@ const EmployeeModal = ({ open, handleClose, addRecord, updateRecord, deleteRecor
                         .includes(query)
                     );
                   }}
-                  readOnly={role !== "ReadTest"}
+                  readOnly={role !== "AdminStaffInformation"}
                 />
               </Grid>
               <Grid item xs={12} sm={6}>
@@ -667,7 +667,7 @@ const EmployeeModal = ({ open, handleClose, addRecord, updateRecord, deleteRecor
                   }}
                   renderInput={(params) => <TextField {...params} required label="Domain" error={!!errors.domainId}
                     helperText={errors.domainId} />}
-                  readOnly={role !== "ReadTest"}
+                  readOnly={role !== "AdminStaffInformation"}
                 />
               </Grid>
               <Grid item xs={12} sm={6}>
@@ -681,7 +681,7 @@ const EmployeeModal = ({ open, handleClose, addRecord, updateRecord, deleteRecor
                   }}
                   renderInput={(params) => <TextField {...params} required label="Organization Unit" error={!!errors.organizationUnit}
                     helperText={errors.organizationUnit} />}
-                  readOnly={role != "ReadTest"}
+                  readOnly={role != "AdminStaffInformation"}
                 />
               </Grid>
 
@@ -696,7 +696,7 @@ const EmployeeModal = ({ open, handleClose, addRecord, updateRecord, deleteRecor
                     setJobId(newValue ? newValue.jobId : null);
                   }}
                   renderInput={(params) => <TextField {...params} label="Jobs" />}
-                  readOnly={role != "ReadTest"}
+                  readOnly={role != "AdminStaffInformation"}
                 />
               </Grid>
               <Grid item xs={12} sm={6}>
@@ -710,7 +710,7 @@ const EmployeeModal = ({ open, handleClose, addRecord, updateRecord, deleteRecor
                   }}
                   renderInput={(params) => <TextField {...params} required label="Branch" error={!!errors.branch}
                     helperText={errors.branch} />}
-                  readOnly={role != "ReadTest"}
+                  readOnly={role != "AdminStaffInformation"}
                 />
               </Grid>
 
@@ -732,7 +732,7 @@ const EmployeeModal = ({ open, handleClose, addRecord, updateRecord, deleteRecor
                   error={!!errors.startWorkingDate}
                   helperText={errors.startWorkingDate}
                   InputProps={{
-                    readOnly: role != "ReadTest",
+                    readOnly: role != "AdminStaffInformation",
                   }}
                 />
               </Grid>
@@ -748,7 +748,7 @@ const EmployeeModal = ({ open, handleClose, addRecord, updateRecord, deleteRecor
                   error={!!errors.lastWorkingDate}
                   helperText={errors.lastWorkingDate}
                   InputProps={{
-                    readOnly: role != "ReadTest",
+                    readOnly: role != "AdminStaffInformation",
                   }}
                 />
               </Grid>
@@ -764,7 +764,7 @@ const EmployeeModal = ({ open, handleClose, addRecord, updateRecord, deleteRecor
                   error={!!errors.effectiveDate}
                   helperText={errors.effectiveDate}
                   InputProps={{
-                    readOnly: role != "ReadTest",
+                    readOnly: role != "AdminStaffInformation",
                   }}
                 />
               </Grid>
@@ -779,7 +779,7 @@ const EmployeeModal = ({ open, handleClose, addRecord, updateRecord, deleteRecor
                   value={derivativeTrader}
                   onChange={(e) => setDerivativeTrader(e.target.value)}
                   InputProps={{
-                    readOnly: role != "ReadTest",
+                    readOnly: role != "AdminStaffInformation",
                   }}
                 />
               </Grid>
@@ -791,7 +791,7 @@ const EmployeeModal = ({ open, handleClose, addRecord, updateRecord, deleteRecor
                   value={derivativeLicense}
                   onChange={(e) => setDerivativeLicense(e.target.value)}
                   InputProps={{
-                    readOnly: role != "ReadTest",
+                    readOnly: role != "AdminStaffInformation",
                   }}
                 />
               </Grid>
@@ -803,7 +803,7 @@ const EmployeeModal = ({ open, handleClose, addRecord, updateRecord, deleteRecor
                   value={singleTrader}
                   onChange={(e) => setSingleTrader(e.target.value)}
                   InputProps={{
-                    readOnly: role != "ReadTest",
+                    readOnly: role != "AdminStaffInformation",
                   }}
                 />
               </Grid>
@@ -815,7 +815,7 @@ const EmployeeModal = ({ open, handleClose, addRecord, updateRecord, deleteRecor
                   value={singleLicense}
                   onChange={(e) => setSingleLicense(e.target.value)}
                   InputProps={{
-                    readOnly: role != "ReadTest",
+                    readOnly: role != "AdminStaffInformation",
                   }}
                 />
               </Grid>
@@ -827,7 +827,7 @@ const EmployeeModal = ({ open, handleClose, addRecord, updateRecord, deleteRecor
                   value={otherLicense}
                   onChange={(e) => setOtherLicense(e.target.value)}
                   InputProps={{
-                    readOnly: role != "ReadTest",
+                    readOnly: role != "AdminStaffInformation",
                   }}
                 />
               </Grid>

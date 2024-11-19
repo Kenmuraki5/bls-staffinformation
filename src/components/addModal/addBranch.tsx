@@ -186,6 +186,7 @@ export default function BranchModal({
               onChange={(e) => setBranchEngName(e.target.value)}
               error={!!errors.branchEngName}
               helperText={errors.branchEngName}
+              InputProps={{ readOnly: role !== 'AdminStaffInformation' }}
             />
             <TextField
               label="Branch Thai Name"
@@ -195,6 +196,7 @@ export default function BranchModal({
               onChange={(e) => setBranchThName(e.target.value)}
               error={!!errors.branchThName}
               helperText={errors.branchThName}
+              InputProps={{ readOnly: role !== 'AdminStaffInformation' }}
             />
             <TextField
               label="English Address"
@@ -204,6 +206,7 @@ export default function BranchModal({
               onChange={(e) => setEngAddr(e.target.value)}
               error={!!errors.engAddr}
               helperText={errors.engAddr}
+              InputProps={{ readOnly: role !== 'AdminStaffInformation' }}
               multiline
             />
             <TextField
@@ -214,6 +217,7 @@ export default function BranchModal({
               onChange={(e) => setThAddr(e.target.value)}
               error={!!errors.thAddr}
               helperText={errors.thAddr}
+              InputProps={{ readOnly: role !== 'AdminStaffInformation' }}
               multiline
             />
             <TextField
@@ -224,6 +228,7 @@ export default function BranchModal({
               onChange={(e) => setTelephone(e.target.value)}
               error={!!errors.telephone}
               helperText={errors.telephone}
+              InputProps={{ readOnly: role !== 'AdminStaffInformation' }}
             />
             <TextField
               label="Fax"
@@ -233,6 +238,7 @@ export default function BranchModal({
               onChange={(e) => setFax(e.target.value)}
               error={!!errors.fax}
               helperText={errors.fax}
+              InputProps={{ readOnly: role !== 'AdminStaffInformation' }}
             />
             <TextField
               label="Zone Code"
@@ -242,6 +248,7 @@ export default function BranchModal({
               onChange={(e) => setZoneCode(e.target.value)}
               error={!!errors.zoneCode}
               helperText={errors.zoneCode}
+              InputProps={{ readOnly: role !== 'AdminStaffInformation' }}
             />
           </Grid>
         </Grid>
