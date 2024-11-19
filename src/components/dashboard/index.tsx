@@ -1,9 +1,8 @@
 'use client'
 import { useRouter, useSearchParams } from 'next/navigation';
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback, useMemo } from 'react';
 import { RichTreeView } from '@mui/x-tree-view/RichTreeView';
 import { TreeItem, treeItemClasses } from '@mui/x-tree-view/TreeItem';
-import { TreeViewBaseItem } from '@mui/x-tree-view/models';
 import { alpha, Box, Button, styled } from '@mui/material';
 import { OrganizationNode } from '@/types/organization';
 import { DashboardProps } from './type';
@@ -99,7 +98,7 @@ const Dashboard: React.FC<DashboardProps> = ({ organizations, employees }) => {
   const [breadcrumbPath, setBreadcrumbPath] = useState<{ path: string[], ids: string[] }>({ path: [], ids: [] });
   const [isTreeViewVisible, setIsTreeViewVisible] = useState(true);
 
-  const searchAutoComplete = getAllIdsWithUnits(organizations);
+  const searchAutoComplete = useMemo(() => getAllIdsWithUnits(organizations), [organizations]);
 
   const clickHandler = useCallback(
     (orgId: string): void => {
@@ -123,6 +122,9 @@ const Dashboard: React.FC<DashboardProps> = ({ organizations, employees }) => {
   };
 
   const search = (searchBy: string, searchInput: string) => {
+    if (searchInput.trim() === '') {
+      return;
+    }
     router.push(`?searchBy=${searchBy}&searchInput=${searchInput}`);
   };
 
@@ -141,7 +143,7 @@ const Dashboard: React.FC<DashboardProps> = ({ organizations, employees }) => {
         setBreadcrumbPath({ path: [], ids: [] });
       }
     }
-  }, [searchParams, organizations, employees]);
+  }, [searchParams]);
 
   interface TreeItem {
     id: string;
@@ -158,7 +160,7 @@ const Dashboard: React.FC<DashboardProps> = ({ organizations, employees }) => {
     }));
   };
 
-  const treeItems = formatTreeItems(organizations);
+  const treeItems = useMemo(() => formatTreeItems(organizations), [organizations]);
 
   const getAllIds: any = (items: TreeItem[]) => {
     return items.flatMap(item => [
@@ -169,6 +171,26 @@ const Dashboard: React.FC<DashboardProps> = ({ organizations, employees }) => {
 
   const [expandedItems, setExpandedItems] = useState<string[]>(() => getAllIds(treeItems));
 
+  const MemoizedEmployeeTable = useMemo(() => <EmployeeTable dataEmployees={employees} breadcrumbPath={breadcrumbPath} />, [employees, breadcrumbPath]);
+  const MemoizedTreeView = useMemo(() => (
+    <RichTreeView
+      items={treeItems}
+      expandedItems={expandedItems}
+      slots={{ item: (props: any) => <CustomTreeItem {...props} id={props.itemId} /> }}
+      slotProps={{ item: { tree: treeItems } as any }}
+      onItemSelectionToggle={(event, itemId: any) => clickHandler(itemId)}
+      onItemExpansionToggle={(event: any, itemId) => {
+        if (event.target.closest(`.${treeItemClasses.iconContainer}`)) {
+          setExpandedItems(prev =>
+            prev.includes(itemId)
+              ? prev.filter(id => id !== itemId)
+              : [...prev, itemId]
+          );
+        }
+      }}
+    />
+  ), [treeItems, expandedItems, clickHandler]);
+
   return (
     <main>
       <Button className="mt-5" onClick={toggleTreeViewVisibility}>
@@ -178,22 +200,7 @@ const Dashboard: React.FC<DashboardProps> = ({ organizations, employees }) => {
         {isTreeViewVisible && (
           <div className="border-2 rounded p-2 w-full md:w-1/4 mb-5 md:mb-0" style={{ maxHeight: 'calc(100vh - 125px)', overflowY: 'auto', scrollbarWidth: 'none' }}>
             <Box sx={{ minHeight: 270 }}>
-              <RichTreeView
-                items={treeItems}
-                expandedItems={expandedItems}
-                slots={{ item: (props: any) => <CustomTreeItem {...props} id={props.itemId} /> }}
-                slotProps={{ item: { tree: treeItems } as any }}
-                onItemSelectionToggle={(event, itemId: any) => clickHandler(itemId)}
-                onItemExpansionToggle={(event: any, itemId) => {
-                  if (event.target.closest(`.${treeItemClasses.iconContainer}`)) {
-                    setExpandedItems(prev =>
-                      prev.includes(itemId)
-                        ? prev.filter(id => id !== itemId)
-                        : [...prev, itemId]
-                    );
-                  }
-                }}
-              />
+              {MemoizedTreeView}
             </Box>
           </div>
         )}
@@ -201,7 +208,7 @@ const Dashboard: React.FC<DashboardProps> = ({ organizations, employees }) => {
         <div className={`w-full mx-3 p-3 border-2 rounded bg-white ${isTreeViewVisible ? 'md:w-3/4' : 'md:w-full'}`}>
           <Search search={search} organizationUnits={searchAutoComplete} />
           <div className="mx-3">
-            <EmployeeTable dataEmployees={employees} breadcrumbPath={breadcrumbPath} />
+            {MemoizedEmployeeTable}
           </div>
         </div>
       </div>
