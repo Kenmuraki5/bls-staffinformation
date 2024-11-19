@@ -41,7 +41,7 @@ const findPathById = (data: OrganizationNode[], id: string): { path: string[], i
 };
 
 const CustomTreeItem = styled(TreeItem)(({ theme, tree, id }: any) => {
-  const findNode:any = (items: any[], nodeId: string) => {
+  const findNode: any = (items: any[], nodeId: string) => {
     for (const item of items) {
       if (item.id === nodeId) {
         return item;
@@ -151,7 +151,7 @@ const Dashboard: React.FC<DashboardProps> = ({ organizations, employees }) => {
       id: node.organizationId,
       label: node.organizationUnit,
       children: node.children ? formatTreeItems(node.children) : [],
-      level: (node.level == 0) || (node.level == 1 )|| !!node?.children?.length, // ตรวจสอบว่า node นี้มีลูก
+      level: (node.level == 0) || (node.level == 1) || !!node?.children?.length, // ตรวจสอบว่า node นี้มีลูก
     }));
   };
 
@@ -171,18 +171,17 @@ const Dashboard: React.FC<DashboardProps> = ({ organizations, employees }) => {
       <Button className="mt-5" onClick={toggleTreeViewVisibility}>
         {isTreeViewVisible ? "Hide Panel" : "Show"}
       </Button>
-      <div className="flex flex-col md:flex-row w-full px-5 mb-5">
+      <div className="flex flex-col md:flex-row w-full px-5 mb-5" style={{ height: '100vh', overflow: 'hidden' }}>
         {isTreeViewVisible && (
-          <div className="border-2 rounded p-2 w-full md:w-1/4 mb-5 md:mb-0">
+          <div className="border-2 rounded p-2 w-full md:w-1/4 mb-5 md:mb-0" style={{ position: 'sticky', top: 0, height: '100vh', overflowY: 'auto' }}>
             <Box sx={{ minHeight: 270 }}>
               <RichTreeView
                 items={treeItems}
                 expandedItems={expandedItems}
                 slots={{ item: (props: any) => <CustomTreeItem {...props} id={props.itemId} /> }}
-                slotProps={{ item: { tree:treeItems } as any }}
+                slotProps={{ item: { tree: treeItems } as any }}
                 onItemSelectionToggle={(event, itemId: any) => clickHandler(itemId)}
                 onItemExpansionToggle={(event: any, itemId) => {
-                  // ตรวจสอบว่าเป็นการคลิกที่ไอคอนหรือไม่
                   if (event.target.closest(`.${treeItemClasses.iconContainer}`)) {
                     setExpandedItems(prev =>
                       prev.includes(itemId)
@@ -195,7 +194,8 @@ const Dashboard: React.FC<DashboardProps> = ({ organizations, employees }) => {
             </Box>
           </div>
         )}
-        <div className={`w-full mx-3 p-3 border-2 rounded bg-white ${isTreeViewVisible ? 'md:w-3/4' : 'md:w-full'}`}>
+
+        <div className={`w-full mx-3 p-3 border-2 rounded bg-white ${isTreeViewVisible ? 'md:w-3/4' : 'md:w-full'} flex flex-col`} style={{ height: '100vh', overflowY: 'auto' }}>
           <Search search={search} organizationUnits={searchAutoComplete} />
           <div className="mx-3">
             <EmployeeTable dataEmployees={employees} breadcrumbPath={breadcrumbPath} />
