@@ -30,15 +30,19 @@ const StyledGridOverlay = styled('div')(({ theme }) => ({
 }));
 
 function CustomNoRowsOverlay() {
+  const params:any = useParams();
   return (
     <StyledGridOverlay>
-      <Image
-        src={"/bls.png"}
-        alt='bls logo'
-        width={100}
-        height={100}
-        style={{ filter: 'grayscale(100%)' }} // ทำให้รูปเป็นสีเทา
-      />
+      {["BLS", "BCAP"].includes(params?.domain) && (
+        <Image
+          src={`/${params?.domain?.toLowerCase()}.png`}
+          alt={`${params?.domain} LOGO`}
+          priority
+          width={100}
+          height={100}
+          style={{ filter: 'grayscale(100%)' }} // ทำให้รูปเป็นสีเทา
+        />
+      )}
       <Box sx={{ mt: 2 }}>No data Found</Box>
     </StyledGridOverlay>
 
