@@ -167,13 +167,14 @@ const Dashboard: React.FC<DashboardProps> = ({ organizations, employees }) => {
   const [expandedItems, setExpandedItems] = useState<string[]>(() => getAllIds(treeItems));
 
   return (
-    <main>
+    <main style={{ height: '100vh', overflow: 'hidden' }}>
       <Button className="mt-5" onClick={toggleTreeViewVisibility}>
         {isTreeViewVisible ? "Hide Panel" : "Show"}
       </Button>
-      <div className="flex flex-col md:flex-row w-full px-5 mb-5" style={{ height: '100vh', overflow: 'hidden' }}>
+
+      <div className="flex flex-col md:flex-row w-full px-5 mb-5" style={{ height: 'calc(100vh - 40px)' }}>
         {isTreeViewVisible && (
-          <div className="border-2 rounded p-2 w-full md:w-1/4 mb-5 md:mb-0" style={{ position: 'sticky', top: 0, height: '100vh', overflowY: 'auto' }}>
+          <div className="border-2 rounded p-2 w-full md:w-1/4 mb-5 md:mb-0" style={{ position: 'sticky', top: 0, height: '100%', overflowY: 'auto', scrollbarWidth: 'none' }}>
             <Box sx={{ minHeight: 270 }}>
               <RichTreeView
                 items={treeItems}
@@ -195,9 +196,9 @@ const Dashboard: React.FC<DashboardProps> = ({ organizations, employees }) => {
           </div>
         )}
 
-        <div className={`w-full mx-3 p-3 border-2 rounded bg-white ${isTreeViewVisible ? 'md:w-3/4' : 'md:w-full'} flex flex-col`} style={{ height: '100vh', overflowY: 'auto' }}>
+        <div className={`w-full mx-3 p-3 border-2 rounded bg-white ${isTreeViewVisible ? 'md:w-3/4' : 'md:w-full'} flex flex-col`} style={{ height: '100%', overflowY: 'auto', scrollbarWidth: 'none' }}>
           <Search search={search} organizationUnits={searchAutoComplete} />
-          <div className="mx-3">
+          <div className="mx-3 flex-grow">
             <EmployeeTable dataEmployees={employees} breadcrumbPath={breadcrumbPath} />
           </div>
         </div>
