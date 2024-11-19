@@ -29,7 +29,7 @@ import { useRouter } from 'next/navigation';
 const StaffProfile: React.FC<StaffInformationProps> = ({ staffData }: any) => {
 
   const [openSnackbar, setOpenSnackbar] = useState(false);
-  const params = useParams();
+  const params:any = useParams();
   const convertDate = (d: string) => {
     const date = new Date(d);
     const options: Intl.DateTimeFormatOptions = {
@@ -68,10 +68,8 @@ const StaffProfile: React.FC<StaffInformationProps> = ({ staffData }: any) => {
     <div className="min-h-screen bg-gray-50 text-black">
       <div className="mx-auto bg-white rounded-2xl shadow-lg overflow-hidden">
         <div className="relative h-52 bg-gradient-to-r from-[#172554] to-[#1e3a8a]">
-          <button onClick={handleGoBack}>
-            <button className="absolute top-4 left-4 mt-5 text-white">
-              <KeyboardArrowLeftIcon />
-            </button>
+          <button onClick={handleGoBack} className="absolute top-4 left-4 mt-5 text-white">
+            <KeyboardArrowLeftIcon />
           </button>
 
           <div className="absolute -bottom-16 left-10">
@@ -92,7 +90,20 @@ const StaffProfile: React.FC<StaffInformationProps> = ({ staffData }: any) => {
         <div className="pt-24 px-10 pb-10">
           {/* Basic Information */}
           <div className="mb-8">
-            <h2 className="text-xl font-bold text-gray-900 mb-4 border-b">Staff Information</h2>
+            <div className="flex items-center mb-4 border-b pb-2">
+              {["BLS", "BCAP"].includes(params?.domain) && (
+                <Image
+                  src={`/${params?.domain?.toLowerCase()}.png`}
+                  alt={`${params?.domain} LOGO`}
+                  width={50}
+                  height={50}
+                  priority
+                />
+              )}
+              <h2 className="text-xl font-bold text-gray-900">Staff Information</h2>
+            </div>
+
+
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               <div>
                 <h3 className="flex items-center text-gray-600 mb-2">
