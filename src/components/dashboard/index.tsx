@@ -138,6 +138,9 @@ const Dashboard: React.FC<DashboardProps> = ({ organizations, employees }) => {
         setBreadcrumbPath(result || { path: [], ids: [] });
       }
     }
+    else {
+      setBreadcrumbPath({ path: [], ids: [] });
+    }
   }, [searchParams, organizations, employees]);
 
   interface TreeItem {
