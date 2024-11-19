@@ -24,7 +24,7 @@ import Link from "next/link";
 import Image from "next/image";
 import BusinessCenterIcon from '@mui/icons-material/BusinessCenter';
 import { useParams } from "next/navigation";
-import { useRouter } from "next/router";
+import { useRouter } from 'next/navigation';
 
 const StaffProfile: React.FC<StaffInformationProps> = ({ staffData }: any) => {
 
