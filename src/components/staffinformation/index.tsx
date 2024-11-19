@@ -21,11 +21,13 @@ import { StaffInformationProps } from "./type";
 import { Alert, Snackbar } from '@mui/material';
 import KeyboardArrowLeftIcon from '@mui/icons-material/KeyboardArrowLeft';
 import Link from "next/link";
+import Image from "next/image";
+import { useParams } from "next/navigation";
 
 const StaffProfile: React.FC<StaffInformationProps> = ({ staffData }: any) => {
 
   const [openSnackbar, setOpenSnackbar] = useState(false);
-
+  const params = useParams();
   const convertDate = (d: string) => {
     const date = new Date(d);
     const options: Intl.DateTimeFormatOptions = {
@@ -56,30 +58,28 @@ const StaffProfile: React.FC<StaffInformationProps> = ({ staffData }: any) => {
   return (
     <div className="min-h-screen bg-gray-50 text-black">
       <div className="mx-auto bg-white rounded-2xl shadow-lg overflow-hidden">
-      <div className="relative h-52 bg-gradient-to-r from-blue-500 to-indigo-600">
-          <Link href="/" passHref>
+      <div className="relative h-52 bg-gradient-to-r from-[#172554] to-[#1e3a8a]">
+          <Link href={`/bualuang/${params?.domain}`} passHref>
             <button className="absolute top-4 left-4 mt-5 text-white">
               <KeyboardArrowLeftIcon />
             </button>
           </Link>
 
-          <div className="absolute -bottom-16 left-8">
+          <div className="absolute -bottom-16 left-10">
             <div className="relative">
-              <img
+              <Image
                 src={`http://bualuangintranet.sawasdee.brk1/employee/img/staff/${staffData?.empId.toString().padStart(4, '0')}.jpg`}
                 alt="Profile"
-                className="w-48 h-48 bg-white rounded-full border-4 border-white shadow-lg"
-                onError={(e: React.SyntheticEvent<HTMLImageElement, Event>) => {
-                  const target = e.target as HTMLImageElement;
-                  target.src = "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRVnH_582IHmfWb-jRcOEvSN0owDFx1yn8YkQ&s";
-                }}
+                width={192}
+                height={192}
+                className="bg-white rounded-full border-4 border-white shadow-lg"
               />
             </div>
           </div>
         </div>
 
         {/* Main Content */}
-        <div className="pt-20 px-10 pb-10">
+        <div className="pt-24 px-10 pb-10">
           {/* Basic Information */}
           <div className="mb-8">
             <h2 className="text-xl font-bold text-gray-900 mb-4 border-b">Staff Information</h2>
