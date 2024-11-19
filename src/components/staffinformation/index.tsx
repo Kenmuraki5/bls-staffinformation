@@ -24,6 +24,7 @@ import Link from "next/link";
 import Image from "next/image";
 import BusinessCenterIcon from '@mui/icons-material/BusinessCenter';
 import { useParams } from "next/navigation";
+import { useRouter } from "next/router";
 
 const StaffProfile: React.FC<StaffInformationProps> = ({ staffData }: any) => {
 
@@ -56,15 +57,22 @@ const StaffProfile: React.FC<StaffInformationProps> = ({ staffData }: any) => {
     });
   };
 
+  const router = useRouter();
+
+  const handleGoBack = () => {
+    router.back();
+  };
+
+
   return (
     <div className="min-h-screen bg-gray-50 text-black">
       <div className="mx-auto bg-white rounded-2xl shadow-lg overflow-hidden">
         <div className="relative h-52 bg-gradient-to-r from-[#172554] to-[#1e3a8a]">
-          <Link href={`/bualuang/${params?.domain}`} passHref>
+          <button onClick={handleGoBack}>
             <button className="absolute top-4 left-4 mt-5 text-white">
               <KeyboardArrowLeftIcon />
             </button>
-          </Link>
+          </button>
 
           <div className="absolute -bottom-16 left-10">
             <div className="relative w-48 h-48">
