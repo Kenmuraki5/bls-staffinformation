@@ -6,20 +6,25 @@ import fetchWithAuth from "../utils/fetchWithAuth";
 export default async function handleSearch(searchBy: string, searchInput: string, domain: string) {
     console.log(searchBy, searchInput, domain);
 
-    const searchParamMap: { [key: string]: string } = {
-        employeeId: "emp_id",
-        employeeName: "emp_name",
-        organizationUnit: "org_unit",
-        employeenickName: "emp_name"
-    };
+    let url = "";
 
-    const searchParam = searchParamMap[searchBy];
+    if (searchBy === 'organizationUnit') {
+        url = `${process.env.NEXT_PUBLIC_BASEURL}/staffinformation/employee/id/employeeOrg/${domain}/${searchInput}`;
+    } else {
+        const searchParamMap: { [key: string]: string } = {
+            employeeId: "emp_id",
+            employeeName: "emp_name",
+            employeenickName: "emp_name"
+        };
 
-    if (!searchParam) {
-        throw new Error(`Invalid searchBy parameter: ${searchBy}`);
+        const searchParam = searchParamMap[searchBy];
+
+        if (!searchParam) {
+            throw new Error(`Invalid searchBy parameter: ${searchBy}`);
+        }
+
+        url = `${process.env.NEXT_PUBLIC_BASEURL}/staffinformation/employee/${searchBy}/${domain}?${searchParam}=${searchInput}`;
     }
-
-    const url = `${process.env.NEXT_PUBLIC_BASEURL}/staffinformation/employee/${searchBy}/${domain}?${searchParam}=${searchInput}`;
 
     try {
         const response = await fetchWithAuth(url);
@@ -31,9 +36,9 @@ export default async function handleSearch(searchBy: string, searchInput: string
 
         const data = await response.json();
         return data || null;
-    } catch (error:any) {
-        if (error.message == "Unauthorized"){
-            redirect(`${process.env.NEXT_PUBLIC_AUTH_URL}/login`)
+    } catch (error: any) {
+        if (error.message === "Unauthorized") {
+            redirect(`${process.env.NEXT_PUBLIC_AUTH_URL}/login`);
         }
         console.error('Error fetching data:', error);
         return [];

@@ -78,12 +78,12 @@ const Search = ({ search, organizationUnits }: any) => {
                     <>
                         <Autocomplete
                             disablePortal
-                            options={organizationUnits.map((org: any) => org.organizationUnit)}
+                            options={organizationUnits.map((org: any) => org?.organizationUnit)}
                             fullWidth
                             size="small"
-                            value={searchInput}
-                            onChange={(event: any, newValue: string | null) => {
-                                setSearchInput(newValue || '');
+                            value={organizationUnits.find((org: any) => org?.organizationId === searchInput) || ''}
+                            onChange={(event: any, newValue: any | null) => {
+                                setSearchInput(newValue?.organizationId || ''); // ตั้งค่าเป็น orgId
                             }}
                             sx={{ mr: 1 }}
                             onKeyDown={handleKeyDown}
