@@ -175,16 +175,7 @@ const EmployeeTable: React.FC<PropsType> = ({ dataEmployees, breadcrumbPath }: a
 
   const filteredEmployees = alignment === 'all' ? dataEmployees :
     dataEmployees.filter((employee: any) => {
-      const organizationUnits = employee?.organizationUnit?.split(', ').map((unit: string) => unit.split(':')[1]?.toLowerCase());
-
-      if (!searchBy) {
-        return employee?.organizationId === search;
-      }
-
       switch (searchBy) {
-        case 'organizationUnit':
-          return employee?.organizationId === searchInput;
-
         case 'employeeId':
           return employee?.empId == searchInput;
 
@@ -196,7 +187,9 @@ const EmployeeTable: React.FC<PropsType> = ({ dataEmployees, breadcrumbPath }: a
           return employee?.nickname?.toLowerCase().includes(searchInput?.toLowerCase());
 
         default:
-          return false;
+          return employee?.managerId !== "" ||
+            employee?.organizationId === search ||
+            employee?.organizationId === searchInput
       }
     });
 
