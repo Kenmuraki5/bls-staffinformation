@@ -124,8 +124,8 @@ const StaffProfile: React.FC<StaffInformationProps> = ({ staffData }: any) => {
                 <h3 className="flex items-center text-gray-600 mb-2">
                   <PhoneIcon className="mr-2" /> DirectLine
                 </h3>
-                <p className="text-base font-normal" onDoubleClick={(e) => handleCopyToClipboard(staffData?.directLine?.length === 9 && !staffData.directLine.startsWith('0') ? `0${staffData.directLine}` : staffData?.directLine || '')}>
-                  {staffData?.directLine?.length === 9 && !staffData.directLine.startsWith('0') ? `0${staffData.directLine}` : staffData?.directLine}
+                <p className="text-base font-normal" onDoubleClick={(e) => handleCopyToClipboard(staffData?.directLine?.length === 8 && !staffData.directLine.startsWith('0') ? `0${staffData.directLine}` : staffData?.directLine || '')}>
+                  {staffData?.directLine?.length === 8 && !staffData.directLine.startsWith('0') ? `0${staffData.directLine}` : staffData?.directLine}
                 </p>
               </div>
               <div>
