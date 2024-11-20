@@ -125,8 +125,8 @@ const StaffProfile: React.FC<StaffInformationProps> = ({ staffData }: any) => {
                 <h3 className="flex items-center text-gray-600 mb-2">
                   <PhoneIcon className="mr-2" /> DirectLine
                 </h3>
-                <p className="text-base font-normal" onDoubleClick={(e) => handleCopyToClipboard(staffData?.directLine.split(',').map((line:string) => line.padStart(10, '0')).join(', ') || '')}>
-                  {staffData?.directLine.split(',').map((line:string) => line.padStart(10, '0')).join(', ')}
+                <p className="text-base font-normal" onDoubleClick={(e) => handleCopyToClipboard(staffData?.directLine.split(', ').map((line:string) => line.padStart(10, '0')).join(', ') || '')}>
+                  {staffData?.directLine.split(', ').map((line:string) => line.padStart(10, '0')).join(', ')}
                 </p>
               </div>
               <div>
