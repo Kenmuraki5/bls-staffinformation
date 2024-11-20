@@ -111,12 +111,19 @@ const Dashboard: React.FC<DashboardProps> = ({ organizations, employees }) => {
   );
 
   useEffect(() => {
-    if (initialOrganizationId) {
-      const result = findPathById(organizations, initialOrganizationId);
+    const searchBy = searchParams.get('searchBy');
+    const searchInput = searchParams.get('searchInput');
+    
+    const organizationId = searchBy === "organizationUnit" ? searchInput : initialOrganizationId;
+    
+    if (organizationId) {
+      const result = findPathById(organizations, organizationId);
       setBreadcrumbPath(result || { path: [], ids: [] });
+    } else {
+      setBreadcrumbPath({ path: [], ids: [] });
     }
-  }, [initialOrganizationId, organizations]);
-
+  }, [searchParams, initialOrganizationId, organizations]);  
+  
   const toggleTreeViewVisibility = () => {
     setIsTreeViewVisible(!isTreeViewVisible);
   };
@@ -127,23 +134,6 @@ const Dashboard: React.FC<DashboardProps> = ({ organizations, employees }) => {
     }
     router.push(`?searchBy=${searchBy}&searchInput=${searchInput}`);
   };
-
-  useEffect(() => {
-    const searchBy = searchParams.get('searchBy');
-    const searchInput = searchParams.get('searchInput');
-
-    if (searchBy && searchInput) {
-      const organizationId = employees[0]?.organizationId;
-
-      if (searchBy === "organizationUnit" && organizationId) {
-        const result = findPathById(organizations, organizationId);
-        setBreadcrumbPath(result || { path: [], ids: [] });
-      }
-      else {
-        setBreadcrumbPath({ path: [], ids: [] });
-      }
-    }
-  }, [searchParams]);
 
   interface TreeItem {
     id: string;
