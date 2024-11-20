@@ -20,7 +20,6 @@ import BadgeIcon from '@mui/icons-material/Badge';
 import { StaffInformationProps } from "./type";
 import { Alert, Snackbar } from '@mui/material';
 import KeyboardArrowLeftIcon from '@mui/icons-material/KeyboardArrowLeft';
-import Link from "next/link";
 import Image from "next/image";
 import BusinessCenterIcon from '@mui/icons-material/BusinessCenter';
 import { useParams } from "next/navigation";
@@ -125,8 +124,8 @@ const StaffProfile: React.FC<StaffInformationProps> = ({ staffData }: any) => {
                 <h3 className="flex items-center text-gray-600 mb-2">
                   <PhoneIcon className="mr-2" /> DirectLine
                 </h3>
-                <p className="text-base font-normal" onDoubleClick={(e) => handleCopyToClipboard(staffData?.directLine.split(', ').map((line:string) => line.padStart(10, '0')).join(', ') || '')}>
-                  {staffData?.directLine.split(', ').map((line:string) => line.padStart(10, '0')).join(', ')}
+                <p className="text-base font-normal" onDoubleClick={(e) => handleCopyToClipboard(staffData?.directLine?.length === 9 && !staffData.directLine.startsWith('0') ? `0${staffData.directLine}` : staffData?.directLine || '')}>
+                  {staffData?.directLine?.length === 9 && !staffData.directLine.startsWith('0') ? `0${staffData.directLine}` : staffData?.directLine}
                 </p>
               </div>
               <div>
