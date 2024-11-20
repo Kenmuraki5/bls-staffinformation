@@ -630,7 +630,7 @@ const EmployeeModal = ({ open, handleClose, addRecord, updateRecord, deleteRecor
               {/* Fourth Row */}
               <Grid item xs={12} sm={6}>
                 <Autocomplete
-                  id="domain-autocomplete"
+                  id="corporation-autocomplete"
                   options={corporations}
                   getOptionLabel={(option: any) =>
                     `${option.titleShortName} : ${option.titleEngName} / ${option.titleThName}`

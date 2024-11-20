@@ -222,13 +222,13 @@ const StaffProfile: React.FC<StaffInformationProps> = ({ staffData }: any) => {
                 <h3 className="flex items-center text-gray-600 mb-2">
                   <BadgeIcon className="mr-2 text-red-500" /> Single Trader
                 </h3>
-                <p className="text-gray-600">{staffData?.singleLicense == "" ? "-" : staffData?.singleLicense}</p>
+                <p className="text-gray-600">{staffData?.singleTrader == "" ? "-" : staffData?.singleTrader}</p>
               </div>
               <div className="p-4 border border-gray-200 rounded-lg shadow-sm hover:shadow-md transition-shadow">
                 <h3 className="flex items-center text-gray-600 mb-2">
                   <AssignmentIndIcon className="mr-2 text-red-500" /> Single License
                 </h3>
-                <p className="text-gray-600">{staffData?.singleTrader == "" ? "-" : staffData?.singleTrader}</p>
+                <p className="text-gray-600">{staffData?.singleLicense == "" ? "-" : staffData?.singleLicense}</p>
               </div>
               <div className="p-4 border border-gray-200 rounded-lg shadow-sm hover:shadow-md transition-shadow">
                 <h3 className="flex items-center text-gray-600 mb-2">
