@@ -247,7 +247,7 @@ const StaffProfile: React.FC<StaffInformationProps> = ({ staffData }: any) => {
 
           {/* Dates */}
           <div>
-            <h2 className="text-xl font-bold text-gray-900 mb-4 border-b">Work Period</h2>
+            <h2 className="text-xl font-bold text-gray-900 mb-4 border-b">Job Tenure</h2>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6 px-5">
               <div>
                 <h3 className="flex items-center text-gray-600 mb-2">
