@@ -1,8 +1,8 @@
 import fetchWithAuth from '@/app/utils/fetchWithAuth';
+import PageNotAvailable from '@/components/notavailable';
 import dynamic from 'next/dynamic';
 
 const StaffInformation = dynamic(() => import('@/components/staffinformation'));
-const PersistentDrawerLeft = dynamic(() => import('@/components/drawer'));
 
 async function getEmployee(domainId: string, empId: string) {
     try {
@@ -31,18 +31,15 @@ export default async function page({
     const employees: any = await getEmployee(params.domain, params.emp_id);
     return (
         <div className="flex flex-col">
-            <div className="flex-1 bg-white">
-                <section id='Heirachy'>
-                    <div className='overflow-auto'>
-                        <div className=''>
-                            <StaffInformation staffData={employees.employee} />
-                        </div>
-                    </div>
-                </section>
-            </div>
-            <footer className='bg-pink-950 w-full p-2 text-white text-center'>
-                Copyright
-            </footer>
+            {employees.length != 0 ? (
+            <><div className="flex-1 bg-white">
+                    <section id='Heirachy'>
+                        <StaffInformation staffData={employees.employee} />
+                    </section>
+                </div><footer className='bg-pink-950 w-full p-2 text-white text-center'>
+                        Copyright
+                    </footer></>
+            ) : (<PageNotAvailable />)}
         </div>
     );
 }
