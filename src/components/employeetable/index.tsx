@@ -30,7 +30,7 @@ const StyledGridOverlay = styled('div')(({ theme }) => ({
 }));
 
 function CustomNoRowsOverlay() {
-  const params:any = useParams();
+  const params: any = useParams();
   return (
     <StyledGridOverlay>
       {["BLS", "BCAP"].includes(params?.domain) && (
@@ -177,13 +177,27 @@ const EmployeeTable: React.FC<PropsType> = ({ dataEmployees, breadcrumbPath }: a
     dataEmployees.filter((employee: any) => {
       const organizationUnits = employee?.organizationUnit?.split(', ').map((unit: string) => unit.split(':')[1]?.toLowerCase());
 
-      return employee?.managerId !== "" ||
-        employee?.organizationId == search ||
-        organizationUnits?.some((unitName: any) => unitName.includes(searchInput?.toLowerCase())) ||
-        employee?.empId == searchInput ||
-        employee?.enFirstName?.toLowerCase().includes(searchInput?.toLowerCase()) ||
-        employee?.thFirstName?.toLowerCase().includes(searchInput?.toLowerCase()) ||
-        employee?.nickname?.toLowerCase().includes(searchInput?.toLowerCase());
+      if (!searchBy) {
+        return employee?.organizationId === search;
+      }
+
+      switch (searchBy) {
+        case 'organizationUnit':
+          return employee?.organizationId === searchInput;
+
+        case 'employeeId':
+          return employee?.empId == searchInput;
+
+        case 'employeeName':
+          return employee?.enFirstName?.toLowerCase().includes(searchInput?.toLowerCase()) ||
+            employee?.thFirstName?.toLowerCase().includes(searchInput?.toLowerCase());
+
+        case 'employeenickName':
+          return employee?.nickname?.toLowerCase().includes(searchInput?.toLowerCase());
+
+        default:
+          return false;
+      }
     });
 
   return (
