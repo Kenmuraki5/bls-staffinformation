@@ -5,8 +5,9 @@ FROM nginx:alpine
 COPY default.conf /etc/nginx/conf.d/default.conf
 
 # คัดลอก SSL Certificates ไปยัง container
-COPY /home/ssl_csr/all_certificate.crt /etc/ssl/certs/all_certificate.crt
+COPY /home/ssl_csr/certnew-bualuangstaffinfo.sawasdee.brk1.cer /etc/ssl/certs/all_certificate.crt
 COPY /home/ssl_csr/private.key /etc/ssl/private/privatekey.key
+COPY /home/ssl_csr/BLS-Root-CA.cer /etc/ssl/certs/BLS-Root-CA.crt
 
 # เปิดพอร์ต 80 และ 443
 EXPOSE 80 443
