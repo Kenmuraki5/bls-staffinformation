@@ -37,9 +37,6 @@ export default async function handleSearch(searchBy: string, searchInput: string
         const data = await response.json();
         return data || null;
     } catch (error: any) {
-        if (error.message === "Unauthorized") {
-            redirect(`${process.env.NEXT_PUBLIC_AUTH_URL}/login`);
-        }
         console.error('Error fetching data:', error);
         return [];
     }

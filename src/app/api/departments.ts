@@ -13,9 +13,6 @@ export async function getAllDepartments() {
     const data = await res.json();
     return data;
   } catch (error:any) {
-    if (error.message == "Unauthorized"){
-      redirect(`${process.env.NEXT_PUBLIC_AUTH_URL}/login`)
-    }
     console.error('Error fetching departments:', error);
     return { organizations: [] };
   }
@@ -54,9 +51,6 @@ export async function getAllDepartmentsHeirachy(domainID: string | string[] | un
     }
     return await res.json();
   } catch (error:any) {
-    if (error.message == "Unauthorized"){
-      redirect(`${process.env.NEXT_PUBLIC_AUTH_URL}/login`)
-    }
     console.error('Error fetching DepartmentsHeirachy:', error);
     return [];
   }
