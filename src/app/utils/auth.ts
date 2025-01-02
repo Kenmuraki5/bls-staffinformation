@@ -32,9 +32,10 @@ export async function getRole(): Promise<string | null> {
   try {
     const token = await getToken("auth_token");
     const data = await parseJwt(token);
-    return data?.roles?.[0] || null; // Handle cases where roles might not be defined
+    const roles = data?.roles || [];
+    return roles.includes("AdminStaffInformation") ? "AdminStaffInformation" : null;
   } catch (error) {
-    console.error('Failed to get role', error);
+    console.error("Failed to get role", error);
     return null;
   }
 }
