@@ -62,6 +62,29 @@ const StaffProfile: React.FC<StaffInformationProps> = ({ staffData }: any) => {
     router.back();
   };
 
+  function splitJobTitles(jobTitle: string) {
+    if (!jobTitle) return [];
+    
+    let parts = jobTitle.split("/").map(p => p.trim());
+    if (parts.length !== 2) return [jobTitle];
+    
+    let titlesEn = parts[0].split(/, | and |(?= Acting)/).map(t => t.trim());
+    let titlesTh = parts[1].split(/, | และ |(?= รักษาการ)/).map(t => t.trim());
+    
+    let result = [];
+    
+    for (let i = 0; i < Math.max(titlesEn.length, titlesTh.length); i++) {
+      if (titlesEn[i] && titlesTh[i]) {
+        result.push(`${titlesEn[i]} / ${titlesTh[i]}`);
+      } else if (titlesEn[i]) {
+        result.push(`${titlesEn[i]} / `);
+      } else if (titlesTh[i]) {
+        result.push(`/ ${titlesTh[i]}`);
+      }
+    }
+    
+    return result;
+  }
 
   return (
     <div className="min-h-screen bg-gray-50 text-black">
@@ -196,60 +219,23 @@ const StaffProfile: React.FC<StaffInformationProps> = ({ staffData }: any) => {
                 <div className="text-base font-normal">
                   {(() => {
                     if (!staffData?.jobTitle) return null;
-
-                    const [engTitles, thaiTitles] = staffData.jobTitle.split(" / ").map((t: string) => t.trim());
-
-                    let engList = engTitles.split(",").map((t: any) => t.trim());
-                    let thaiList = thaiTitles.split(",").map((t: any) => t.trim());
-
-                    let finalEngList: string[] = [];
-                    let finalThaiList: string[] = [];
-
-                    engList.forEach((title: any, index: any) => {
-                      if (title.startsWith("Acting")) {
-                        finalEngList.push(title);
-                      } else {
-                        finalEngList.push(title);
-                      }
-                    });
-
-                    thaiList.forEach((title: any, index: any) => {
-                      if (title.startsWith("รักษาการ")) {
-                        finalThaiList.push(title);
-                      } else {
-                        finalThaiList.push(title);
-                      }
-                    });
-
-
-                    if (finalEngList.some((title: any) => title.startsWith("Acting"))) {
-                      const actingTitles = finalEngList.filter((t) => t.startsWith("Acting"));
-                      const actingThaiTitles = finalThaiList.filter((t) => t.startsWith("รักษาการ"));
-
-                      actingTitles.forEach((acting, i) => {
-                        if (i > 0) {
-                          finalEngList.push(acting);
-                          finalThaiList.push(actingThaiTitles[i] || "");
-                        }
-                      });
-                    }
+                    const jobTitle = splitJobTitles(staffData?.jobTitle);
 
                     return (
                       <ul className="list-disc list-inside">
-                        {finalEngList.map((title, index) => (
+                        {jobTitle.map((title, index) => (
                           <li
                             key={index}
-                            onDoubleClick={() => handleCopyToClipboard(`${title} / ${finalThaiList[index]}`)}
+                            onDoubleClick={() => handleCopyToClipboard(`${title}`)}
                             className={"font-normal text-base"}
                           >
-                            {title} / {finalThaiList[index]}
+                            {title}
                           </li>
                         ))}
                       </ul>
                     );
                   })()}
                 </div>
-
               </div>
               <div>
                 <h3 className="flex items-center text-gray-600 mb-2">
