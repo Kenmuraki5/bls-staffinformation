@@ -28,7 +28,8 @@ import { getRole } from '@/app/utils/auth';
 import Link from 'next/link';
 import AccountBoxIcon from '@mui/icons-material/AccountBox';
 import HelpIcon from '@mui/icons-material/Help';
-
+import LogoBLS from './logo-bls';
+import LogoBCAP from './logo-bcap';
 const drawerWidth = 240;
 
 const Main = styled('main', { shouldForwardProp: (prop) => prop !== 'open' })<{
@@ -118,8 +119,8 @@ const IconStyled = styled('div')({
 });
 
 const domains = [
-    { id: "BLS", img: "/bls.png" },
-    { id: "BCAP", img: "/bcap.png" }
+    { id: "BLS", img: "/bls-header-logo.png" },
+    { id: "BCAP", img: "/bcap-header-logo.png" }
 ];
 
 export default function PersistentDrawerLeft() {
@@ -187,8 +188,8 @@ export default function PersistentDrawerLeft() {
                         <section id="logo">
                             <div className="flex items-center pt-2">
                                 <div className='pr-3'>
-                                    {params.domain == "BLS" && <Image src={`/bls-header-logo.png`} alt="" width={250} height={250} style={{ width: '200px', height: 'auto' }} priority />}
-                                    {params.domain == "BCAP" && <Image src={`/bcap-header-logo.png`} alt="" width={250} height={250} style={{ width: '150px', height: 'auto' }} priority />}
+                                    {params.domain == "BLS" && <LogoBLS />}
+                                    {params.domain == "BCAP" && <LogoBCAP />}
                                 </div>
                                 <div className='flex justify-between items-center w-full'>
                                     <p className="font-bold text-white text-base sm:text-base md:text-lg">
@@ -218,7 +219,7 @@ export default function PersistentDrawerLeft() {
                             <ListItem disablePadding>
                                 <ListItemButtonStyled>
                                     <IconStyled>
-                                        <Image src={text.img} alt={text.id} width={30} height={30} style={{ width: '100%', height: 'auto' }} />
+                                        <Image src={text.img} alt={text.id} width={20} height={20} />
                                     </IconStyled>
                                     <ListItemText primary={text.id} />
                                 </ListItemButtonStyled>

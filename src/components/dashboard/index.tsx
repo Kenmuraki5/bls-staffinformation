@@ -3,10 +3,12 @@ import { useRouter, useSearchParams } from 'next/navigation';
 import { useState, useEffect, useCallback, useMemo } from 'react';
 import { RichTreeView } from '@mui/x-tree-view/RichTreeView';
 import { TreeItem, treeItemClasses } from '@mui/x-tree-view/TreeItem';
-import { alpha, Box, Button, styled } from '@mui/material';
+import { alpha, Box, Button, styled, SvgIcon, SvgIconProps } from '@mui/material';
 import { OrganizationNode } from '@/types/organization';
 import { DashboardProps } from './type';
 import dynamic from 'next/dynamic';
+import AddBoxIcon from '@mui/icons-material/AddBox';
+import IndeterminateCheckBoxIcon from '@mui/icons-material/IndeterminateCheckBox';
 
 const Search = dynamic(() => import('@/components/search'));
 const EmployeeTable = dynamic(() => import('@/components/employeetable'));
@@ -70,20 +72,26 @@ const CustomTreeItem = styled(TreeItem)(({ theme, tree, id }: any) => {
         fontWeight: isLevel1 ? 'bold' : 500,
       },
     },
-    [`& .${treeItemClasses.iconContainer}`]: {
-      borderRadius: '50%',
-      backgroundColor: theme.palette.primary.dark,
-      padding: theme.spacing(0, 1.2),
-      ...theme.applyStyles('light', {
-        backgroundColor: alpha(theme.palette.primary.main, 0.25),
-      }),
-      ...theme.applyStyles('dark', {
-        color: theme.palette.primary.contrastText,
-      }),
-    },
+    // [`& .${treeItemClasses.iconContainer}`]: {
+    //   borderRadius: '50%',
+    //   backgroundColor: theme.palette.primary.dark,
+    //   padding: theme.spacing(0, 1.2),
+    //   ...theme.applyStyles('light', {
+    //     backgroundColor: alpha(theme.palette.primary.main, 0.25),
+    //   }),
+    //   ...theme.applyStyles('dark', {
+    //     color: theme.palette.primary.contrastText,
+    //   }),
+    // },
     ...theme.applyStyles('light', {
       color: theme.palette.grey[800],
     }),
+    [`& .${treeItemClasses.groupTransition}`]: {
+      marginLeft: 15,
+      paddingLeft: 0,
+      borderLeft: `1px dashed ${alpha(theme.palette.text.primary, 0.4)}`,
+    },
+
   };
 });
 
@@ -113,17 +121,17 @@ const Dashboard: React.FC<DashboardProps> = ({ organizations, employees }) => {
   useEffect(() => {
     const searchBy = searchParams.get('searchBy');
     const searchInput = searchParams.get('searchInput');
-    
+
     const organizationId = searchBy === "organizationUnit" ? searchInput : initialOrganizationId;
-    
+
     if (organizationId) {
       const result = findPathById(organizations, organizationId);
       setBreadcrumbPath(result || { path: [], ids: [] });
     } else {
       setBreadcrumbPath({ path: [], ids: [] });
     }
-  }, [searchParams, initialOrganizationId, organizations]);  
-  
+  }, [searchParams, initialOrganizationId, organizations]);
+
   const toggleTreeViewVisibility = () => {
     setIsTreeViewVisible(!isTreeViewVisible);
   };
@@ -160,14 +168,34 @@ const Dashboard: React.FC<DashboardProps> = ({ organizations, employees }) => {
   };
 
   const [expandedItems, setExpandedItems] = useState<string[]>(() => getAllIds(treeItems));
-
+  
+  function CloseSquare(props: SvgIconProps) {
+    return (
+      <SvgIcon
+        className="close"
+        fontSize="inherit"
+        style={{ width: 14, height: 14 }}
+        {...props}
+      >
+        {/* tslint:disable-next-line: max-line-length */}
+        <path d="M17.485 17.512q-.281.281-.682.281t-.696-.268l-4.12-4.147-4.12 4.147q-.294.268-.696.268t-.682-.281-.281-.682.294-.669l4.12-4.147-4.12-4.147q-.294-.268-.294-.669t.281-.682.682-.281.696 .268l4.12 4.147 4.12-4.147q.294-.268.696-.268t.682.281 .281.669-.294.682l-4.12 4.147 4.12 4.147q.294.268 .294.669t-.281.682zM22.047 22.074v0 0-20.147 0h-20.12v0 20.147 0h20.12zM22.047 24h-20.12q-.803 0-1.365-.562t-.562-1.365v-20.147q0-.776.562-1.351t1.365-.575h20.147q.776 0 1.351.575t.575 1.351v20.147q0 .803-.575 1.365t-1.378.562v0z" />
+      </SvgIcon>
+    );
+  }
   const MemoizedEmployeeTable = useMemo(() => <EmployeeTable dataEmployees={employees} breadcrumbPath={breadcrumbPath} />, [employees, breadcrumbPath]);
   const MemoizedTreeView = useMemo(() => (
     <RichTreeView
       items={treeItems}
       expandedItems={expandedItems}
-      slots={{ item: (props: any) => <CustomTreeItem {...props} id={props.itemId} /> }}
-      slotProps={{ item: { tree: treeItems } as any }}
+      slots={{ 
+        item: (props: any) => <CustomTreeItem {...props} id={props.itemId} />,
+        endIcon: CloseSquare,
+        expandIcon: AddBoxIcon,
+        collapseIcon: IndeterminateCheckBoxIcon,
+      }}
+      slotProps={{ 
+        item: { tree: treeItems } as any,
+      }}
       onItemSelectionToggle={(event, itemId: any) => clickHandler(itemId)}
       onItemExpansionToggle={(event: any, itemId) => {
         if (event.target.closest(`.${treeItemClasses.iconContainer}`)) {

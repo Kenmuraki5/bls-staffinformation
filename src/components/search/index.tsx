@@ -34,7 +34,7 @@ const Search = ({ search, organizationUnits }: any) => {
                 <p className='text-white font-bold rounded px-5'>SEARCH</p>
             </div> */}
             <div className="flex items-center mt-3">
-                <FormControl sx={{ minWidth: 150, width: 250, m: 1 }} size='small'>
+                <FormControl sx={{ minWidth: 250, m: 1 }} size='small'>
                     <InputLabel id="demo-simple-select-label">Search By</InputLabel>
                     <Select
                         labelId="demo-simple-select-label"
@@ -69,7 +69,7 @@ const Search = ({ search, organizationUnits }: any) => {
                             }}
                         />
                         <Button
-                            sx={{ backgroundColor: 'primary.main', color: 'white', '&:hover': { backgroundColor: 'primary.dark' } }}
+                            sx={{ px: 2, backgroundColor: 'primary.main', color: 'white', '&:hover': { backgroundColor: 'primary.dark' } }}
                             onClick={() => {
                                 const query = searchBy === 'employeeId' ? searchInput.replace(/^0+/, '') : searchInput;
                                 search(searchBy, query);
@@ -110,7 +110,7 @@ const Search = ({ search, organizationUnits }: any) => {
 
 
                         <Button
-                            sx={{ backgroundColor: 'primary.main', color: 'white', '&:hover': { backgroundColor: 'primary.dark' } }}
+                            sx={{ px: 2, backgroundColor: 'primary.main', color: 'white', '&:hover': { backgroundColor: 'primary.dark' } }}
                             onClick={() => {
                                 const encodedSearchInput = encodeURIComponent(searchInput);
                                 search(searchBy, encodedSearchInput);

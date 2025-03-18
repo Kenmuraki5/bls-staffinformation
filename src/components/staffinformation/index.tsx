@@ -193,9 +193,19 @@ const StaffProfile: React.FC<StaffInformationProps> = ({ staffData }: any) => {
                   <WorkIcon className="mr-2" />
                   <p className="text-blue-900 font-bold">Job Title</p>
                 </h3>
-                <p className="text-base font-normal" onDoubleClick={(e) => handleCopyToClipboard(staffData?.jobTitle || '')}>
-                  {staffData?.jobTitle}
-                </p>
+                <div className="text-base font-normal">
+                  {staffData?.jobTitle
+                    ?.split(", ")
+                    ?.map((title: any, index: any) => (
+                      <p
+                        key={index}
+                        onDoubleClick={() => handleCopyToClipboard(title)}
+                        className={title.includes("Acting") ? "font-semibold text-gray-700" : ""}
+                      >
+                        {title.includes("Acting") ? `Acting: ${title.replace("Acting", "").trim()}` : title}
+                      </p>
+                    ))}
+                </div>
               </div>
               <div>
                 <h3 className="flex items-center text-gray-600 mb-2">

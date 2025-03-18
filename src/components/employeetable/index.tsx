@@ -224,7 +224,7 @@ const EmployeeTable: React.FC<PropsType> = ({ dataEmployees, breadcrumbPath }: a
           </ToggleButton>
         </ToggleButtonGroup>
       </div>
-      <Breadcrumbs separator="›" aria-label="breadcrumb" maxItems={4} className='my-2'>
+      <Breadcrumbs separator=">" aria-label="breadcrumb" maxItems={4} className='my-2'>
         {breadcrumbPath?.path.length && params.domain == "BLS" && <Image src={`/bls.png`} alt="" width={50} height={50} style={{ width: '50px', height: 'auto' }} priority />}
         {breadcrumbPath?.path.length && params.domain == "BCAP" && <Image src={`/bcap.png`} alt="" width={50} height={50} style={{ width: '50px', height: 'auto' }} priority />}
         {breadcrumbPath.path.map((label: any, index: any) => (
