@@ -199,49 +199,57 @@ const StaffProfile: React.FC<StaffInformationProps> = ({ staffData }: any) => {
 
                     const [engTitles, thaiTitles] = staffData.jobTitle.split(" / ").map((t: string) => t.trim());
 
-                    let engList: string[] = [];
-                    let thaiList: string[] = [];
+                    let engList = engTitles.split(",").map((t: any) => t.trim());
+                    let thaiList = thaiTitles.split(",").map((t: any) => t.trim());
 
-                    engTitles.split(",").forEach((t: any) => {
-                      if (t.includes(" and Acting ")) {
-                        const [mainEng, actingEng] = t.split(" and Acting ").map((s:any) => s.trim());
-                        engList.push(mainEng);
-                        engList.push(`Acting ${actingEng}`);
+                    let finalEngList: string[] = [];
+                    let finalThaiList: string[] = [];
+
+                    engList.forEach((title: any, index: any) => {
+                      if (title.startsWith("Acting")) {
+                        finalEngList.push(title);
                       } else {
-                        engList.push(t.trim());
+                        finalEngList.push(title);
                       }
                     });
 
-                    thaiTitles.split(",").forEach((t: any) => {
-                      if (t.includes(" และรักษาการ")) {
-                        const [mainThai, actingThai] = t.split(" และรักษาการ").map((s: any) => s.trim());
-                        thaiList.push(mainThai);
-                        thaiList.push(`รักษาการ ${actingThai}`);
+                    thaiList.forEach((title: any, index: any) => {
+                      if (title.startsWith("รักษาการ")) {
+                        finalThaiList.push(title);
                       } else {
-                        thaiList.push(t.trim());
+                        finalThaiList.push(title);
                       }
                     });
+
+
+                    if (finalEngList.some((title: any) => title.startsWith("Acting"))) {
+                      const actingTitles = finalEngList.filter((t) => t.startsWith("Acting"));
+                      const actingThaiTitles = finalThaiList.filter((t) => t.startsWith("รักษาการ"));
+
+                      actingTitles.forEach((acting, i) => {
+                        if (i > 0) {
+                          finalEngList.push(acting);
+                          finalThaiList.push(actingThaiTitles[i] || "");
+                        }
+                      });
+                    }
 
                     return (
                       <ul className="list-disc list-inside">
-                        {engList.map((title, index) => {
-                          const isActing = title.startsWith("Acting");
-                          const thaiTitle = thaiList[index] || "";
-
-                          return (
-                            <li
-                              key={index}
-                              onDoubleClick={() => handleCopyToClipboard(`${title} ${thaiTitle}`)}
-                              className={isActing ? "font-semibold text-gray-700" : ""}
-                            >
-                              {title} {thaiTitle}
-                            </li>
-                          );
-                        })}
+                        {finalEngList.map((title, index) => (
+                          <li
+                            key={index}
+                            onDoubleClick={() => handleCopyToClipboard(`${title} / ${finalThaiList[index]}`)}
+                            className={"font-normal text-base"}
+                          >
+                            {title} / {finalThaiList[index]}
+                          </li>
+                        ))}
                       </ul>
                     );
                   })()}
                 </div>
+
               </div>
               <div>
                 <h3 className="flex items-center text-gray-600 mb-2">
