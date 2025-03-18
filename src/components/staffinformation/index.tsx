@@ -62,15 +62,15 @@ const StaffProfile: React.FC<StaffInformationProps> = ({ staffData }: any) => {
     router.back();
   };
 
-  function splitJobTitles(jobTitle: string) {
+  function splitJobTitles(jobTitle: any) {
     if (!jobTitle) return [];
     
-    let parts = jobTitle.split("/").map(p => p.trim());
+    let parts = jobTitle.split("/").map((p: any) => p.trim());
     if (parts.length !== 2) return [jobTitle];
     
-    let titlesEn = parts[0].split(/, | and |(?= Acting)/).map(t => t.trim());
-    let titlesTh = parts[1].split(/, | และ |(?= รักษาการ)/).map(t => t.trim());
-    
+    let titlesEn = parts[0].split(/, |and|(?= Acting)/).map((t:any) => {return t.trim();});
+    titlesEn[titlesEn.length -1] = !titlesEn[titlesEn.length -1].includes("Acting") ? "Acting Head of " + titlesEn[titlesEn.length -1] : titlesEn[titlesEn.length -1];
+    let titlesTh = parts[1].split(/, |และ|(?= รักษาการ)|(?= เเละ) /).map((t:any) => {return t.trim().replace("เเละ", "รักษาการหัวหน้าส่วน"); });
     let result = [];
     
     for (let i = 0; i < Math.max(titlesEn.length, titlesTh.length); i++) {
