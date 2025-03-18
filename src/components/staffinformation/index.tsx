@@ -194,39 +194,40 @@ const StaffProfile: React.FC<StaffInformationProps> = ({ staffData }: any) => {
                   <p className="text-blue-900 font-bold">Job Title</p>
                 </h3>
                 <div className="text-base font-normal">
-                  {staffData?.jobTitle?.map((title: any, index: any) => {
-                    return title.includes(" and Acting ")
-                      ? (() => {
-                        const [mainTitle, actingTitle] = title.split(" and Acting ");
-                        return (
-                          <>
-                            <p
-                              key={`${index}-main`}
-                              onDoubleClick={() => handleCopyToClipboard(mainTitle.trim())}
-                            >
-                              {mainTitle.trim()}
-                            </p>
-                            <p
-                              key={`${index}-acting`}
-                              onDoubleClick={() => handleCopyToClipboard(actingTitle.trim())}
-                              className="text-base font-normal"
-                            >
-                              Acting {actingTitle.trim()}
-                            </p>
-                          </>
-                        );
-                      })()
-                      : (
-                        <p
-                          key={index}
-                          onDoubleClick={() => handleCopyToClipboard(title)}
-                          className={"text-base font-normal"}
-                        >
-                          {title}
-                        </p>
+                  {(() => {
+                    if (!staffData?.jobTitle) return null;
+
+                    const [engTitle, thaiTitle] = staffData.jobTitle.split(" / ").map((t: string) => t.trim());
+
+                    if (engTitle.includes(" and Acting ")) {
+                      const [mainEng, actingEng] = engTitle.split(" and Acting ").map((t: string) => t.trim());
+                      const [mainThai, actingThai] = thaiTitle.split(" และรักษาการ").map((t: string) => t.trim());
+
+                      return (
+                        <>
+                          <p onDoubleClick={() => handleCopyToClipboard(`${mainEng} ${mainThai}`)}>
+                            {mainEng} {mainThai}
+                          </p>
+                          <p
+                            onDoubleClick={() => handleCopyToClipboard(`Acting ${actingEng} ${actingThai}`)}
+                            className="text-base font-normal"
+                          >
+                            Acting {actingEng} {actingThai}
+                          </p>
+                        </>
                       );
-                  })}
+                    }
+
+                    return (
+                      <p 
+                        className="text-base font-normal" 
+                        onDoubleClick={() => handleCopyToClipboard(staffData.jobTitle)}>
+                        {staffData.jobTitle}
+                      </p>
+                    );
+                  })()}
                 </div>
+
               </div>
               <div>
                 <h3 className="flex items-center text-gray-600 mb-2">
