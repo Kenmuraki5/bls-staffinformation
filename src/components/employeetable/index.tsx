@@ -130,7 +130,7 @@ const EmployeeTable: React.FC<PropsType> = ({ dataEmployees, breadcrumbPath }: a
                       {org_unit?.name}
                     </a>
                   ) : (
-                    <span style={{ color: 'gray' }}>{org_unit?.name}</span>
+                    <span style={{ color: 'black' }}>{org_unit?.name}</span>
                   )}
                   <hr />
                 </div>
