@@ -62,27 +62,38 @@ const StaffProfile: React.FC<StaffInformationProps> = ({ staffData }: any) => {
     router.back();
   };
 
-  function splitJobTitles(jobTitle: any) {
+  function splitJobTitles(jobTitle: string) {
     if (!jobTitle) return [];
-    
-    let parts = jobTitle.split("/").map((p: any) => p.trim());
+  
+    let parts = jobTitle.split("/").map((p: any) => p.trim()); 
     if (parts.length !== 2) return [jobTitle];
-    
-    let titlesEn = parts[0].split(/, |and|(?= Acting)/).map((t:any) => {return t.trim();});
-    titlesEn[titlesEn.length -1] = !titlesEn[titlesEn.length -1].includes("Acting") ? "Acting Head of " + titlesEn[titlesEn.length -1] : titlesEn[titlesEn.length -1];
-    let titlesTh = parts[1].split(/, |และ|(?= รักษาการ)|(?= เเละ) /).map((t:any) => {return t.trim().replace("เเละ", "รักษาการหัวหน้าส่วน"); });
-    let result = [];
-    
-    for (let i = 0; i < Math.max(titlesEn.length, titlesTh.length); i++) {
-      if (titlesEn[i] && titlesTh[i]) {
-        result.push(`${titlesEn[i]} / ${titlesTh[i]}`);
-      } else if (titlesEn[i]) {
-        result.push(`${titlesEn[i]} / `);
-      } else if (titlesTh[i]) {
-        result.push(`/ ${titlesTh[i]}`);
+  
+    let titlesEn = parts[0].split(/, |and|(?= Acting)/).map((t: any) => t.trim());
+    for (let i = titlesEn.length - 1; i > 0; i--) {
+      if (titlesEn.length > 1 && !titlesEn[i].includes("Acting")) {
+        titlesEn[i] = "Acting Head of " + titlesEn[i];
       }
     }
-    
+  
+    let titlesTh = parts[1].split(/, |และ|(?<= เเละ )/).map((t: any) => t.trim().replace(" เเละ", ""));
+    let result = [];
+  
+    for (let i = 0; i < Math.max(titlesEn.length, titlesTh.length); i++) {
+      let engTitle = titlesEn[i] || "";
+      let thaiTitle = titlesTh[i] || "";
+  
+      if (engTitle && thaiTitle) {
+        thaiTitle = !thaiTitle.includes("รักษาการหัวหน้าส่วน") && !thaiTitle.includes("หัวหน้าฝ่าย") && !thaiTitle.includes("หัวหน้าส่วนงาน") ? "รักษาการหัวหน้าส่วน " + thaiTitle : thaiTitle;
+        result.push(`${engTitle} / ${thaiTitle}`);
+      }
+      else if (engTitle) {
+        result.push(`${engTitle} /`);
+      }
+      else if (thaiTitle) {
+        result.push(`/ ${thaiTitle}`);
+      }
+    }
+  
     return result;
   }
 
