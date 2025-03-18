@@ -68,12 +68,12 @@ const Search = ({ search, organizationUnits }: any) => {
                                 ),
                             }}
                         />
-                        <Button 
-			    sx={{ backgroundColor: 'primary.main', color: 'white', '&:hover': { backgroundColor: 'primary.dark' } }}
-			    onClick={() => {
-                            const query = searchBy === 'employeeId' ? searchInput.replace(/^0+/, '') : searchInput;
-                            search(searchBy, query);
-                        }}>Search</Button>
+                        <Button
+                            sx={{ backgroundColor: 'primary.main', color: 'white', '&:hover': { backgroundColor: 'primary.dark' } }}
+                            onClick={() => {
+                                const query = searchBy === 'employeeId' ? searchInput.replace(/^0+/, '') : searchInput;
+                                search(searchBy, query);
+                            }}>Search</Button>
                     </>
                 )}
                 {searchBy === 'organizationUnit' && (
@@ -109,12 +109,12 @@ const Search = ({ search, organizationUnits }: any) => {
                         />
 
 
-                        <Button 
-			    sx={{ backgroundColor: 'primary.main', color: 'white', '&:hover': { backgroundColor: 'primary.dark' } }}
-			    onClick={() => {
-                            const encodedSearchInput = encodeURIComponent(searchInput);
-                            search(searchBy, encodedSearchInput);
-                        }}>Search</Button>
+                        <Button
+                            sx={{ backgroundColor: 'primary.main', color: 'white', '&:hover': { backgroundColor: 'primary.dark' } }}
+                            onClick={() => {
+                                const encodedSearchInput = encodeURIComponent(searchInput);
+                                search(searchBy, encodedSearchInput);
+                            }}>Search</Button>
                     </>
                 )}
             </div>

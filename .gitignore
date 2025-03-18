@@ -34,3 +34,7 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+/nginx/*.cer
+/nginx/*.crt
+/nginx/private.key
