@@ -106,7 +106,8 @@ const StaffProfile: React.FC<StaffInformationProps> = ({ staffData }: any) => {
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               <div>
                 <h3 className="flex items-center text-gray-600 mb-2">
-                  <ContactEmergencyIcon className="mr-2" /> Staff ID
+                  <ContactEmergencyIcon className="mr-2" />
+                  <p className="text-blue-900 font-bold">Staff ID</p>
                 </h3>
                 <p className="text-base font-normal" onDoubleClick={(e) => handleCopyToClipboard(staffData?.empId?.toString().padStart(4, '0') || '')}>
                   {staffData?.empId?.toString().padStart(4, '0')}
@@ -114,7 +115,8 @@ const StaffProfile: React.FC<StaffInformationProps> = ({ staffData }: any) => {
               </div>
               <div>
                 <h3 className="flex items-center text-gray-600 mb-2">
-                  <ContactPhoneIcon className="mr-2" /> Extension
+                  <ContactPhoneIcon className="mr-2" />
+                  <p className="text-blue-900 font-bold">Extension</p>
                 </h3>
                 <p className="text-base font-normal" onDoubleClick={(e) => handleCopyToClipboard(staffData?.extensionCode || '')}>
                   {staffData?.extensionCode}
@@ -122,7 +124,8 @@ const StaffProfile: React.FC<StaffInformationProps> = ({ staffData }: any) => {
               </div>
               <div>
                 <h3 className="flex items-center text-gray-600 mb-2">
-                  <PhoneIcon className="mr-2" /> DirectLine
+                  <PhoneIcon className="mr-2" />
+                  <p className="text-blue-900 font-bold">DirectLine</p>
                 </h3>
                 <p className="text-base font-normal" onDoubleClick={(e) => handleCopyToClipboard(staffData?.directLine?.length === 8 && !staffData.directLine.startsWith('0') ? `0${staffData.directLine}` : staffData?.directLine || '')}>
                   {staffData?.directLine?.length === 8 && !staffData.directLine.startsWith('0') ? `0${staffData.directLine}` : staffData?.directLine}
@@ -130,15 +133,22 @@ const StaffProfile: React.FC<StaffInformationProps> = ({ staffData }: any) => {
               </div>
               <div>
                 <h3 className="flex items-center text-gray-600 mb-2">
-                  <MailIcon className="mr-2" /> Email
+                  <MailIcon className="mr-2" />
+                  <p className="text-blue-900 font-bold">Email</p>
                 </h3>
-                <p className="text-base font-normal" onDoubleClick={(e) => handleCopyToClipboard(staffData?.email)}>
+                <a
+                  href={`https://teams.microsoft.com/l/chat/0/0?users=${staffData?.email}`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-base font-normal text-blue-600 hover:underline cursor-pointer"
+                >
                   {staffData?.email}
-                </p>
+                </a>
               </div>
               <div>
                 <h3 className="flex items-center text-gray-600 mb-2">
-                  <PersonIcon className="mr-2" /> English Name
+                  <PersonIcon className="mr-2" />
+                  <p className="text-blue-900 font-bold">English Name</p>
                 </h3>
                 <p className="text-base font-normal" onDoubleClick={(e) => handleCopyToClipboard(`${staffData?.enTitle}${staffData?.enFirstName} ${staffData?.enLastName}`)}>
                   {`${staffData?.enTitle}${staffData?.enFirstName} ${staffData?.enLastName}`}
@@ -146,7 +156,8 @@ const StaffProfile: React.FC<StaffInformationProps> = ({ staffData }: any) => {
               </div>
               <div>
                 <h3 className="flex items-center text-gray-600 mb-2">
-                  <PersonIcon className="mr-2" /> Thai Name
+                  <PersonIcon className="mr-2" />
+                  <p className="text-blue-900 font-bold">Thai Name</p>
                 </h3>
                 <p className="text-base font-normal" onDoubleClick={(e) => handleCopyToClipboard(`${staffData?.thTitle}${staffData?.thFirstName} ${staffData?.thLastName}`)}>
                   {`${staffData?.thTitle}${staffData?.thFirstName} ${staffData?.thLastName}`}
@@ -154,7 +165,8 @@ const StaffProfile: React.FC<StaffInformationProps> = ({ staffData }: any) => {
               </div>
               <div>
                 <h3 className="flex items-center text-gray-600 mb-2">
-                  <BookmarkIcon className="mr-2" /> Nickname
+                  <BookmarkIcon className="mr-2" />
+                  <p className="text-blue-900 font-bold">Nickname</p>
                 </h3>
                 <p className="text-base font-normal" onDoubleClick={(e) => handleCopyToClipboard(staffData?.nickname || '')}>
                   {staffData?.nickname}
@@ -169,7 +181,8 @@ const StaffProfile: React.FC<StaffInformationProps> = ({ staffData }: any) => {
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               <div>
                 <h3 className="flex items-center text-gray-600 mb-2">
-                  <BusinessCenterIcon className="mr-2" /> Corporation Title
+                  <BusinessCenterIcon className="mr-2" />
+                  <p className="text-blue-900 font-bold">Corporation Title</p>
                 </h3>
                 <p className="text-base font-normal" onDoubleClick={(e) => handleCopyToClipboard(staffData?.corporationTitle || '')}>
                   {staffData?.corporationTitle}
@@ -177,7 +190,8 @@ const StaffProfile: React.FC<StaffInformationProps> = ({ staffData }: any) => {
               </div>
               <div>
                 <h3 className="flex items-center text-gray-600 mb-2">
-                  <WorkIcon className="mr-2" /> Job Title
+                  <WorkIcon className="mr-2" />
+                  <p className="text-blue-900 font-bold">Job Title</p>
                 </h3>
                 <p className="text-base font-normal" onDoubleClick={(e) => handleCopyToClipboard(staffData?.jobTitle || '')}>
                   {staffData?.jobTitle}
@@ -185,7 +199,8 @@ const StaffProfile: React.FC<StaffInformationProps> = ({ staffData }: any) => {
               </div>
               <div>
                 <h3 className="flex items-center text-gray-600 mb-2">
-                  <BusinessIcon className="mr-2" /> Organization Unit
+                  <BusinessIcon className="mr-2" />
+                  <p className="text-blue-900 font-bold">Organization Unit</p>
                 </h3>
                 <p className="text-base font-normal" onDoubleClick={(e) => handleCopyToClipboard(staffData?.organizationUnit || '')}>
                   {staffData?.organizationUnit}
@@ -193,7 +208,8 @@ const StaffProfile: React.FC<StaffInformationProps> = ({ staffData }: any) => {
               </div>
               <div>
                 <h3 className="flex items-center text-gray-600 mb-2">
-                  <PlaceIcon className="mr-2" /> Branch
+                  <PlaceIcon className="mr-2" />
+                  <p className="text-blue-900 font-bold">Branch</p>
                 </h3>
                 <p className="text-base font-normal" onDoubleClick={(e) => handleCopyToClipboard(staffData?.branchName || '')}>
                   {staffData?.branchName}
@@ -208,31 +224,36 @@ const StaffProfile: React.FC<StaffInformationProps> = ({ staffData }: any) => {
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               <div className="p-4 border border-gray-200 rounded-lg shadow-sm hover:shadow-md transition-shadow">
                 <h3 className="flex items-center text-gray-600 mb-2">
-                  <AccountBoxIcon className="mr-2 text-blue-500" /> Derivative Trader
+                  <AccountBoxIcon className="mr-2 text-blue-500" />
+                  <p className="text-blue-900 font-bold">Derivative Trader</p>
                 </h3>
                 <p className="text-gray-600">{staffData?.derivativeTrader == "" ? "-" : staffData?.derivativeTrader}</p>
               </div>
               <div className="p-4 border border-gray-200 rounded-lg shadow-sm hover:shadow-md transition-shadow">
                 <h3 className="flex items-center text-gray-600 mb-2">
-                  <AssuredWorkloadIcon className="mr-2 text-blue-500" /> Derivative License
+                  <AssuredWorkloadIcon className="mr-2 text-blue-500" />
+                  <p className="text-blue-900 font-bold">Derivative License</p>
                 </h3>
                 <p className="text-gray-600">{staffData?.derivativeLicense == "" ? "-" : staffData?.derivativeLicense}</p>
               </div>
               <div className="p-4 border border-gray-200 rounded-lg shadow-sm hover:shadow-md transition-shadow">
                 <h3 className="flex items-center text-gray-600 mb-2">
-                  <BadgeIcon className="mr-2 text-red-500" /> Single(Equity) Trader
+                  <BadgeIcon className="mr-2 text-red-500" />
+                  <p className="text-blue-900 font-bold">Single(Equity) Trader</p>
                 </h3>
                 <p className="text-gray-600">{staffData?.singleTrader == "" ? "-" : staffData?.singleTrader}</p>
               </div>
               <div className="p-4 border border-gray-200 rounded-lg shadow-sm hover:shadow-md transition-shadow">
                 <h3 className="flex items-center text-gray-600 mb-2">
-                  <AssignmentIndIcon className="mr-2 text-red-500" /> Single(Equity) License
+                  <AssignmentIndIcon className="mr-2 text-red-500" />
+                  <p className="text-blue-900 font-bold">Single(Equity) License</p>
                 </h3>
                 <p className="text-gray-600">{staffData?.singleLicense == "" ? "-" : staffData?.singleLicense}</p>
               </div>
               <div className="p-4 border border-gray-200 rounded-lg shadow-sm hover:shadow-md transition-shadow">
                 <h3 className="flex items-center text-gray-600 mb-2">
-                  <Description className="mr-2 text-purple-500" /> Other License
+                  <Description className="mr-2 text-purple-500" />
+                  <p className="text-blue-900 font-bold">Other License</p>
                 </h3>
                 {licensesArray.length > 0 ? (
                   licensesArray.map((license, index) => (
@@ -251,7 +272,8 @@ const StaffProfile: React.FC<StaffInformationProps> = ({ staffData }: any) => {
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6 px-5">
               <div>
                 <h3 className="flex items-center text-gray-600 mb-2">
-                  <CalendarTodayIcon className="mr-2" /> Start Date
+                  <CalendarTodayIcon className="mr-2" />
+                  <p className="text-blue-900 font-bold">Start Date</p>
                 </h3>
                 <p className="text-base font-normal" onDoubleClick={(e) => handleCopyToClipboard(convertDate(staffData?.startWorkingDate))}>
                   {staffData?.startWorkingDate == '' ? "N/A" : convertDate(staffData?.startWorkingDate)}
@@ -259,7 +281,8 @@ const StaffProfile: React.FC<StaffInformationProps> = ({ staffData }: any) => {
               </div>
               <div>
                 <h3 className="flex items-center text-gray-600 mb-2">
-                  <CalendarTodayIcon className="mr-2" /> Last Working Day
+                  <CalendarTodayIcon className="mr-2" />
+                  <p className="text-blue-900 font-bold">Last Working Day</p>
                 </h3>
                 <p className="text-base font-normal" onDoubleClick={(e) => handleCopyToClipboard(convertDate(staffData?.lastWorkingDate))}>
                   {staffData?.lastWorkingDate == '' ? "N/A" : convertDate(staffData?.lastWorkingDate)}
@@ -267,7 +290,8 @@ const StaffProfile: React.FC<StaffInformationProps> = ({ staffData }: any) => {
               </div>
               <div>
                 <h3 className="flex items-center text-gray-600 mb-2">
-                  <CalendarTodayIcon className="mr-2" /> Effective Date
+                  <CalendarTodayIcon className="mr-2" />
+                  <p className="text-blue-900 font-bold">Effective Date</p>
                 </h3>
                 <p className="text-base font-normal" onDoubleClick={(e) => handleCopyToClipboard(convertDate(staffData?.effectiveDate))}>
                   {staffData?.effectiveDate == '' ? "N/A" : convertDate(staffData?.effectiveDate)}

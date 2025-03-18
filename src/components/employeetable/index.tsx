@@ -40,7 +40,7 @@ function CustomNoRowsOverlay() {
           priority
           width={100}
           height={100}
-          style={{ filter: 'grayscale(100%)' }} // ทำให้รูปเป็นสีเทา
+          style={{ filter: 'grayscale(100%)' }} // .................
         />
       )}
       <Box sx={{ mt: 2 }}>No data Found</Box>
@@ -95,7 +95,11 @@ const EmployeeTable: React.FC<PropsType> = ({ dataEmployees, breadcrumbPath }: a
     { field: 'thFirstName', headerName: 'Thai Name', minWidth: 100, flex: 1, headerClassName: 'super-app-theme--header', headerAlign: 'center' },
     { field: 'enFirstName', headerName: 'English Name', minWidth: 100, flex: 1, headerClassName: 'super-app-theme--header', headerAlign: 'center' },
     {
-      field: 'organizationUnit', headerName: 'Department', minWidth: 100, maxWidth: 450, flex: 1,
+      field: 'organizationUnit',
+      headerName: 'Department',
+      minWidth: 100,
+      maxWidth: 450,
+      flex: 1,
       renderCell: (params) => {
         const org_units = params.value?.split(', ').map((org_unit: any) => {
           const [id, name] = org_unit?.split(':');
@@ -104,32 +108,38 @@ const EmployeeTable: React.FC<PropsType> = ({ dataEmployees, breadcrumbPath }: a
 
         return (
           <div>
-            {org_units?.map((org_unit: any, index: any) => (
-              <div
-                key={org_unit.id}
-                style={{
-                  padding: '5px',
-                  marginBottom: '5px',
-                }}
-              >
-                <a
-                  href={`?organizationId=${org_unit.id}`}
-                  style={{ color: 'blue', cursor: 'pointer', textDecoration: 'underline' }}
-                  onClick={(e) => {
-                    e.preventDefault();
-                    router.push(`?organizationId=${org_unit.id}`);
+            {org_units?.map((org_unit: any) => {
+              return (
+                <div
+                  key={org_unit.id}
+                  style={{
+                    padding: '5px',
+                    marginBottom: '5px',
                   }}
                 >
-                  {org_unit.name}
-                </a>
-                <hr />
-              </div>
-            ))}
+                  {searchBy == 'organizationUnit' && search != org_unit.id || searchInput != org_unit.id ? (
+                    <a
+                      href={`?organizationId=${org_unit.id}`}
+                      style={{ color: 'blue', cursor: 'pointer', textDecoration: 'underline' }}
+                      onClick={(e) => {
+                        e.preventDefault();
+                        router.push(`?organizationId=${org_unit.id}`);
+                      }}
+                    >
+                      {org_unit.name}
+                    </a>
+                  ) : (
+                    <span style={{ color: 'gray' }}>{org_unit.name}</span>
+                  )}
+                  <hr />
+                </div>
+              );
+            })}
           </div>
         );
-
       },
-      headerClassName: 'super-app-theme--header', headerAlign: 'center'
+      headerClassName: 'super-app-theme--header',
+      headerAlign: 'center',
     },
     {
       field: 'corporationTitle', headerName: 'Corporate Title', minWidth: 90, maxWidth: 90, flex: 1,
@@ -147,11 +157,11 @@ const EmployeeTable: React.FC<PropsType> = ({ dataEmployees, breadcrumbPath }: a
       headerAlign: 'center',
       align: 'center',
       renderCell: (params) => {
-        const codes = params.value.split(', '); // แบ่งข้อมูลด้วยเครื่องหมายจุลภาค
+        const codes = params.value.split(', '); // ...............................
         return (
           <div>
             {codes.map((code: any, index: any) => (
-              <div key={index}>{code}</div> // ขึ้นบรรทัดใหม่สำหรับแต่ละรหัส
+              <div key={index}>{code}</div> // .............................
             ))}
           </div>
         );
@@ -214,7 +224,7 @@ const EmployeeTable: React.FC<PropsType> = ({ dataEmployees, breadcrumbPath }: a
           </ToggleButton>
         </ToggleButtonGroup>
       </div>
-      <Breadcrumbs separator="›" aria-label="breadcrumb" maxItems={4} className='my-2'>
+      <Breadcrumbs separator="�" aria-label="breadcrumb" maxItems={4} className='my-2'>
         {breadcrumbPath?.path.length && params.domain == "BLS" && <Image src={`/bls.png`} alt="" width={50} height={50} style={{ width: '50px', height: 'auto' }} priority />}
         {breadcrumbPath?.path.length && params.domain == "BCAP" && <Image src={`/bcap.png`} alt="" width={50} height={50} style={{ width: '50px', height: 'auto' }} priority />}
         {breadcrumbPath.path.map((label: any, index: any) => (
@@ -259,3 +269,4 @@ const EmployeeTable: React.FC<PropsType> = ({ dataEmployees, breadcrumbPath }: a
 };
 
 export default EmployeeTable;
+

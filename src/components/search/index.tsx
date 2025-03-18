@@ -44,7 +44,7 @@ const Search = ({ search, organizationUnits }: any) => {
                         onChange={handleChange}
                     >
                         <MenuItem aria-label={"Employee ID"} value={"employeeId"}>Staff ID</MenuItem>
-                        <MenuItem aria-label={"Employee Name"} value={"employeeName"}>Name (TH, EN)</MenuItem>
+                        <MenuItem aria-label={"Employee Name"} value={"employeeName"}>Name/Surname (TH, EN)</MenuItem>
                         <MenuItem aria-label={"Employee NickName"} value={"employeenickName"}>Nick Name</MenuItem>
                         <MenuItem aria-label={"Organization Unit"} value={"organizationUnit"}>Organization Unit</MenuItem>
                     </Select>
@@ -68,7 +68,9 @@ const Search = ({ search, organizationUnits }: any) => {
                                 ),
                             }}
                         />
-                        <Button onClick={() => {
+                        <Button 
+			    sx={{ backgroundColor: 'primary.main', color: 'white', '&:hover': { backgroundColor: 'primary.dark' } }}
+			    onClick={() => {
                             const query = searchBy === 'employeeId' ? searchInput.replace(/^0+/, '') : searchInput;
                             search(searchBy, query);
                         }}>Search</Button>
@@ -107,7 +109,9 @@ const Search = ({ search, organizationUnits }: any) => {
                         />
 
 
-                        <Button onClick={() => {
+                        <Button 
+			    sx={{ backgroundColor: 'primary.main', color: 'white', '&:hover': { backgroundColor: 'primary.dark' } }}
+			    onClick={() => {
                             const encodedSearchInput = encodeURIComponent(searchInput);
                             search(searchBy, encodedSearchInput);
                         }}>Search</Button>
