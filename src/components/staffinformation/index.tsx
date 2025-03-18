@@ -204,23 +204,23 @@ const StaffProfile: React.FC<StaffInformationProps> = ({ staffData }: any) => {
                       const [mainThai, actingThai] = thaiTitle.split(" และรักษาการ").map((t: string) => t.trim());
 
                       return (
-                        <>
-                          <p onDoubleClick={() => handleCopyToClipboard(`${mainEng} ${mainThai}`)}>
+                        <ul className="list-disc list-inside">
+                          <li onDoubleClick={() => handleCopyToClipboard(`${mainEng} ${mainThai}`)}>
                             {mainEng} {mainThai}
-                          </p>
-                          <p
+                          </li>
+                          <li
                             onDoubleClick={() => handleCopyToClipboard(`Acting ${actingEng} ${actingThai}`)}
                             className="text-base font-normal"
                           >
                             Acting {actingEng} {actingThai}
-                          </p>
-                        </>
+                          </li>
+                        </ul>
                       );
                     }
 
                     return (
-                      <p 
-                        className="text-base font-normal" 
+                      <p
+                        className="text-base font-normal"
                         onDoubleClick={() => handleCopyToClipboard(staffData.jobTitle)}>
                         {staffData.jobTitle}
                       </p>
