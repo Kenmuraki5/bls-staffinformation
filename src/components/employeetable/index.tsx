@@ -117,7 +117,7 @@ const EmployeeTable: React.FC<PropsType> = ({ dataEmployees, breadcrumbPath }: a
                     marginBottom: '5px',
                   }}
                 >
-                  {searchBy == 'organizationUnit' && search != org_unit.id || searchInput != org_unit.id ? (
+                  {search != org_unit.id || searchInput != org_unit.id ? (
                     <a
                       href={`?organizationId=${org_unit.id}`}
                       style={{ color: 'blue', cursor: 'pointer', textDecoration: 'underline' }}
