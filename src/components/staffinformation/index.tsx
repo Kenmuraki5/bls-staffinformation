@@ -194,17 +194,38 @@ const StaffProfile: React.FC<StaffInformationProps> = ({ staffData }: any) => {
                   <p className="text-blue-900 font-bold">Job Title</p>
                 </h3>
                 <div className="text-base font-normal">
-                  {staffData?.jobTitle
-                    ?.split(", ")
-                    ?.map((title: any, index: any) => (
-                      <p
-                        key={index}
-                        onDoubleClick={() => handleCopyToClipboard(title)}
-                        className={title.includes("Acting") ? "font-semibold text-gray-700" : ""}
-                      >
-                        {title.includes("Acting") ? `Acting: ${title.replace("Acting", "").trim()}` : title}
-                      </p>
-                    ))}
+                  {staffData?.jobTitle?.map((title: any, index: any) => {
+                    return title.includes(" and Acting ")
+                      ? (() => {
+                        const [mainTitle, actingTitle] = title.split(" and Acting ");
+                        return (
+                          <>
+                            <p
+                              key={`${index}-main`}
+                              onDoubleClick={() => handleCopyToClipboard(mainTitle.trim())}
+                            >
+                              {mainTitle.trim()}
+                            </p>
+                            <p
+                              key={`${index}-acting`}
+                              onDoubleClick={() => handleCopyToClipboard(actingTitle.trim())}
+                              className="text-base font-normal"
+                            >
+                              Acting {actingTitle.trim()}
+                            </p>
+                          </>
+                        );
+                      })()
+                      : (
+                        <p
+                          key={index}
+                          onDoubleClick={() => handleCopyToClipboard(title)}
+                          className={"text-base font-normal"}
+                        >
+                          {title}
+                        </p>
+                      );
+                  })}
                 </div>
               </div>
               <div>
