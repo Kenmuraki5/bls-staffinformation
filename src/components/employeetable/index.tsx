@@ -105,10 +105,13 @@ const EmployeeTable: React.FC<PropsType> = ({ dataEmployees, breadcrumbPath }: a
           const [id, name] = org_unit?.split(':');
           return { id, name };
         });
-
+      
         return (
           <div>
             {org_units?.map((org_unit: any) => {
+              const isSelected = search != org_unit?.id || searchInput != org_unit?.id;
+              console.log(isSelected, "search : " + search, "searchInput : " + searchInput)
+              console.log(org_unit.id)
               return (
                 <div
                   key={org_unit.id}
@@ -117,7 +120,7 @@ const EmployeeTable: React.FC<PropsType> = ({ dataEmployees, breadcrumbPath }: a
                     marginBottom: '5px',
                   }}
                 >
-                  {search != org_unit?.id || searchInput != org_unit?.id ? (
+                  {isSelected ? (
                     <a
                       href={`?organizationId=${org_unit?.id}`}
                       style={{ color: 'blue', cursor: 'pointer', textDecoration: 'underline' }}
