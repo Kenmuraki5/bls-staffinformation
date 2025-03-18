@@ -109,9 +109,7 @@ const EmployeeTable: React.FC<PropsType> = ({ dataEmployees, breadcrumbPath }: a
         return (
           <div>
             {org_units?.map((org_unit: any) => {
-              const isSelected = search != org_unit?.id || searchInput != org_unit?.id;
-              console.log(isSelected, "search : " + search, "searchInput : " + searchInput)
-              console.log(org_unit.id)
+              const isSelected = search != org_unit?.id && searchInput != org_unit?.id;
               return (
                 <div
                   key={org_unit.id}
