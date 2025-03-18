@@ -117,19 +117,19 @@ const EmployeeTable: React.FC<PropsType> = ({ dataEmployees, breadcrumbPath }: a
                     marginBottom: '5px',
                   }}
                 >
-                  {search != org_unit.id || searchInput != org_unit.id ? (
+                  {search != org_unit?.id || searchInput != org_unit?.id ? (
                     <a
-                      href={`?organizationId=${org_unit.id}`}
+                      href={`?organizationId=${org_unit?.id}`}
                       style={{ color: 'blue', cursor: 'pointer', textDecoration: 'underline' }}
                       onClick={(e) => {
                         e.preventDefault();
-                        router.push(`?organizationId=${org_unit.id}`);
+                        router.push(`?organizationId=${org_unit?.id}`);
                       }}
                     >
-                      {org_unit.name}
+                      {org_unit?.name}
                     </a>
                   ) : (
-                    <span style={{ color: 'gray' }}>{org_unit.name}</span>
+                    <span style={{ color: 'gray' }}>{org_unit?.name}</span>
                   )}
                   <hr />
                 </div>
