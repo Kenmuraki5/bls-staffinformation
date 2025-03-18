@@ -65,25 +65,24 @@ const StaffProfile: React.FC<StaffInformationProps> = ({ staffData }: any) => {
   function splitJobTitles(jobTitle: string) {
     if (!jobTitle) return [];
   
-    let parts = jobTitle.split("/").map((p: any) => p.trim()); 
-    if (parts.length !== 2) return [jobTitle];
+    let parts = jobTitle.split("/").map(p => p.trim()); 
+    if (parts?.length !== 2) return [jobTitle];
   
-    let titlesEn = parts[0].split(/, |and|(?= Acting)/).map((t: any) => t.trim());
+    let titlesEn = parts[0].split(/, | and |(?= Acting)/).map(t => t.trim());
     for (let i = titlesEn.length - 1; i > 0; i--) {
-      if (titlesEn.length > 1 && !titlesEn[i].includes("Acting")) {
+      if (titlesEn?.length > 1 && !titlesEn[i]?.includes("Acting")) {
         titlesEn[i] = "Acting Head of " + titlesEn[i];
       }
     }
-  
-    let titlesTh = parts[1].split(/, |และ|(?<= เเละ )/).map((t: any) => t.trim().replace(" เเละ", ""));
+    let titlesTh = parts[1].split(/, | และ|(?<= เเละ )/).map(t => t.trim().replace(" เเละ", ""));
     let result = [];
   
-    for (let i = 0; i < Math.max(titlesEn.length, titlesTh.length); i++) {
+    for (let i = 0; i < Math.max(titlesEn?.length, titlesTh?.length); i++) {
       let engTitle = titlesEn[i] || "";
       let thaiTitle = titlesTh[i] || "";
   
       if (engTitle && thaiTitle) {
-        thaiTitle = (i != 0 && !thaiTitle.includes("รักษาการหัวหน้าส่วน") && !thaiTitle.includes("หัวหน้าฝ่าย") && !thaiTitle.includes("หัวหน้าส่วนงาน")) ? "รักษาการหัวหน้าส่วน " + thaiTitle : thaiTitle;
+        thaiTitle = (i != 0 && !thaiTitle?.includes("รักษาการหัวหน้าส่วน") && !thaiTitle?.includes("หัวหน้าฝ่าย") && !thaiTitle?.includes("หัวหน้าส่วนงาน")) ? "รักษาการหัวหน้าส่วน " + thaiTitle : thaiTitle;
         result.push(`${engTitle} / ${thaiTitle}`);
       }
       else if (engTitle) {
