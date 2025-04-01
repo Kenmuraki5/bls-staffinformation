@@ -198,6 +198,12 @@ const Dashboard: React.FC<DashboardProps> = ({ organizations, employees, staffDa
       }}
     />
   ), [treeItems, expandedItems, clickHandler]);
+  const MemoizedSearch = useMemo(() => (
+    <Search search={search} organizationUnits={searchAutoComplete} />
+  ), [searchAutoComplete]);
+  const MemoizedStaffInformation = useMemo(() => (
+    staffData ? <StaffInformation staffData={staffData} /> : MemoizedEmployeeTable
+  ), [staffData, MemoizedEmployeeTable]);
 
   return (
     <main>
@@ -214,9 +220,9 @@ const Dashboard: React.FC<DashboardProps> = ({ organizations, employees, staffDa
         )}
 
         <div className={`w-full mx-3 p-3 border-2 rounded bg-white ${isTreeViewVisible ? 'md:w-3/4' : 'md:w-full'}`}>
-          <Search search={search} organizationUnits={searchAutoComplete} />
+          {MemoizedSearch}
           <div className="mx-3" style={{ maxHeight: 'calc(100vh - 220px)', overflowY: 'auto' }}>
-            {staffData ? <StaffInformation staffData={staffData} /> : MemoizedEmployeeTable}
+            {MemoizedStaffInformation}
           </div>
         </div>
       </div>
