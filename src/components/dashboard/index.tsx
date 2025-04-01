@@ -158,7 +158,7 @@ const Dashboard: React.FC<DashboardProps> = ({ organizations, employees, staffDa
   };
 
   const [expandedItems, setExpandedItems] = useState<string[]>(() => getAllIds(treeItems));
-
+  
   function CloseSquare(props: SvgIconProps) {
     return (
       <SvgIcon
@@ -177,13 +177,13 @@ const Dashboard: React.FC<DashboardProps> = ({ organizations, employees, staffDa
     <RichTreeView
       items={treeItems}
       expandedItems={expandedItems}
-      slots={{
+      slots={{ 
         item: (props: any) => <CustomTreeItem {...props} id={props.itemId} />,
         endIcon: CloseSquare,
         expandIcon: AddBoxIcon,
         collapseIcon: IndeterminateCheckBoxIcon,
       }}
-      slotProps={{
+      slotProps={{ 
         item: { tree: treeItems } as any,
       }}
       onItemSelectionToggle={(event, itemId: any) => clickHandler(itemId)}
@@ -202,8 +202,8 @@ const Dashboard: React.FC<DashboardProps> = ({ organizations, employees, staffDa
     <Search search={search} organizationUnits={searchAutoComplete} />
   ), [searchAutoComplete]);
   const MemoizedStaffInformation = useMemo(() => (
-    staffData ? <StaffInformation staffData={staffData} /> : MemoizedEmployeeTable
-  ), [staffData, MemoizedEmployeeTable]);
+    <StaffInformation staffData={staffData} />
+  ), [staffData, MemoizedSearch]);
 
   return (
     <main>
@@ -222,7 +222,7 @@ const Dashboard: React.FC<DashboardProps> = ({ organizations, employees, staffDa
         <div className={`w-full mx-3 p-3 border-2 rounded bg-white ${isTreeViewVisible ? 'md:w-3/4' : 'md:w-full'}`}>
           {MemoizedSearch}
           <div className="mx-3" style={{ maxHeight: 'calc(100vh - 220px)', overflowY: 'auto' }}>
-            {MemoizedStaffInformation}
+            {staffData ? MemoizedStaffInformation : MemoizedEmployeeTable}
           </div>
         </div>
       </div>
