@@ -81,7 +81,7 @@ const EmployeeTable: React.FC<PropsType> = ({ dataEmployees, breadcrumbPath }: a
         const formattedEmpId = data.value.toString().padStart(4, '0');
         return (
           <a
-            href={`/bualuang/${params.domain}/StaffInformation/${data?.row?.empId}`}
+            href={`/bualuang/${params.domain}?empId=${data?.row?.empId}`}
             style={{ color: 'blue', cursor: 'pointer', textDecoration: 'underline' }}
           >
             {formattedEmpId}
@@ -145,12 +145,17 @@ const EmployeeTable: React.FC<PropsType> = ({ dataEmployees, breadcrumbPath }: a
     {
       field: 'corporationTitle', headerName: 'Corporate Title', minWidth: 90, maxWidth: 90, flex: 1,
       renderCell: (params) => params.row.corporationTitle !== "" ? <div>{abbreviateTitle(params.row.corporationTitle)}</div> : "",
-      headerClassName: 'super-app-theme--header', headerAlign: 'center', align: 'center'
+      headerClassName: 'super-app-theme--header', headerAlign: 'center', align: 'center',
+      renderHeader: () => (
+        <div style={{ textAlign: 'center', fontWeight:'bold' }}>
+          Corporate <br /> Title
+        </div>
+      ),
     },
     { field: 'branchId', headerName: 'Branch', minWidth: 70, maxWidth: 70, flex: 1, headerClassName: 'super-app-theme--header', headerAlign: 'center', align: 'center' },
     {
       field: 'extensionCode',
-      headerName: 'Ext',
+      headerName: 'Ext no.',
       minWidth: 90,
       maxWidth: 90,
       flex: 1,
@@ -158,11 +163,11 @@ const EmployeeTable: React.FC<PropsType> = ({ dataEmployees, breadcrumbPath }: a
       headerAlign: 'center',
       align: 'center',
       renderCell: (params) => {
-        const codes = params.value.split(', '); // ...............................
+        const codes = params.value.split(',');
         return (
           <div>
             {codes.map((code: any, index: any) => (
-              <div key={index}>{code}</div> // .............................
+              <div key={index}>{code}</div>
             ))}
           </div>
         );

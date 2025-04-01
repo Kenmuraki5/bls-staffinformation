@@ -23,7 +23,7 @@ export async function parseJwt(token: string): Promise<any> {
     const jsonPayload = await base64Decode(base64);
     return JSON.parse(jsonPayload);
   } catch (e) {
-    console.error('Failed to parse JWT', e);
+    // console.error('Failed to parse JWT', e);
     return null;
   }
 }

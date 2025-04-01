@@ -10,6 +10,7 @@ import dynamic from 'next/dynamic';
 import AddBoxIcon from '@mui/icons-material/AddBox';
 import IndeterminateCheckBoxIcon from '@mui/icons-material/IndeterminateCheckBox';
 
+const StaffInformation = dynamic(() => import('@/components/staffinformation'));
 const Search = dynamic(() => import('@/components/search'));
 const EmployeeTable = dynamic(() => import('@/components/employeetable'));
 
@@ -72,17 +73,6 @@ const CustomTreeItem = styled(TreeItem)(({ theme, tree, id }: any) => {
         fontWeight: isLevel1 ? 'bold' : 500,
       },
     },
-    // [`& .${treeItemClasses.iconContainer}`]: {
-    //   borderRadius: '50%',
-    //   backgroundColor: theme.palette.primary.dark,
-    //   padding: theme.spacing(0, 1.2),
-    //   ...theme.applyStyles('light', {
-    //     backgroundColor: alpha(theme.palette.primary.main, 0.25),
-    //   }),
-    //   ...theme.applyStyles('dark', {
-    //     color: theme.palette.primary.contrastText,
-    //   }),
-    // },
     ...theme.applyStyles('light', {
       color: theme.palette.grey[800],
     }),
@@ -97,7 +87,7 @@ const CustomTreeItem = styled(TreeItem)(({ theme, tree, id }: any) => {
 
 
 
-const Dashboard: React.FC<DashboardProps> = ({ organizations, employees }) => {
+const Dashboard: React.FC<DashboardProps> = ({ organizations, employees, staffData }) => {
   const router = useRouter();
   const searchParams = useSearchParams();
 
@@ -168,7 +158,7 @@ const Dashboard: React.FC<DashboardProps> = ({ organizations, employees }) => {
   };
 
   const [expandedItems, setExpandedItems] = useState<string[]>(() => getAllIds(treeItems));
-  
+
   function CloseSquare(props: SvgIconProps) {
     return (
       <SvgIcon
@@ -187,13 +177,13 @@ const Dashboard: React.FC<DashboardProps> = ({ organizations, employees }) => {
     <RichTreeView
       items={treeItems}
       expandedItems={expandedItems}
-      slots={{ 
+      slots={{
         item: (props: any) => <CustomTreeItem {...props} id={props.itemId} />,
         endIcon: CloseSquare,
         expandIcon: AddBoxIcon,
         collapseIcon: IndeterminateCheckBoxIcon,
       }}
-      slotProps={{ 
+      slotProps={{
         item: { tree: treeItems } as any,
       }}
       onItemSelectionToggle={(event, itemId: any) => clickHandler(itemId)}
@@ -225,8 +215,8 @@ const Dashboard: React.FC<DashboardProps> = ({ organizations, employees }) => {
 
         <div className={`w-full mx-3 p-3 border-2 rounded bg-white ${isTreeViewVisible ? 'md:w-3/4' : 'md:w-full'}`}>
           <Search search={search} organizationUnits={searchAutoComplete} />
-          <div className="mx-3">
-            {MemoizedEmployeeTable}
+          <div className="mx-3" style={{ maxHeight: 'calc(100vh - 220px)', overflowY: 'auto' }}>
+            {staffData ? <StaffInformation staffData={staffData} /> : MemoizedEmployeeTable}
           </div>
         </div>
       </div>

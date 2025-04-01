@@ -16,6 +16,7 @@ import { Description } from '@mui/icons-material';
 import AccountBoxIcon from '@mui/icons-material/AccountBox';
 import ContactPhoneIcon from '@mui/icons-material/ContactPhone';
 import AssignmentIndIcon from '@mui/icons-material/AssignmentInd';
+import ChatIcon from '@mui/icons-material/Chat';
 import BadgeIcon from '@mui/icons-material/Badge';
 import { StaffInformationProps } from "./type";
 import { Alert, Snackbar } from '@mui/material';
@@ -100,7 +101,7 @@ const StaffProfile: React.FC<StaffInformationProps> = ({ staffData }: any) => {
 
   return (
     <div className="min-h-screen bg-gray-50 text-black">
-      <div className="mx-auto bg-white rounded-2xl shadow-lg overflow-hidden">
+      <div className="mx-auto bg-white shadow-lg overflow-hidden">
         <div className="relative h-52 bg-gradient-to-r from-[#172554] to-[#1e3a8a]">
           <button onClick={handleGoBack} className="absolute top-4 left-4 mt-5 text-white">
             <KeyboardArrowLeftIcon />
@@ -159,34 +160,20 @@ const StaffProfile: React.FC<StaffInformationProps> = ({ staffData }: any) => {
               </div>
               <div>
                 <h3 className="flex items-center text-gray-600 mb-2">
-                  <PhoneIcon className="mr-2" />
-                  <p className="text-blue-900 font-bold">DirectLine</p>
-                </h3>
-                <p className="text-base font-normal" onDoubleClick={(e) => handleCopyToClipboard(staffData?.directLine?.length === 8 && !staffData.directLine.startsWith('0') ? `0${staffData.directLine}` : staffData?.directLine || '')}>
-                  {staffData?.directLine?.length === 8 && !staffData.directLine.startsWith('0') ? `0${staffData.directLine}` : staffData?.directLine}
-                </p>
-              </div>
-              <div>
-                <h3 className="flex items-center text-gray-600 mb-2">
-                  <MailIcon className="mr-2" />
-                  <p className="text-blue-900 font-bold">Email</p>
-                </h3>
-                <a
-                  href={`https://teams.microsoft.com/l/chat/0/0?users=${staffData?.email}`}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="text-base font-normal text-blue-600 hover:underline cursor-pointer"
-                >
-                  {staffData?.email}
-                </a>
-              </div>
-              <div>
-                <h3 className="flex items-center text-gray-600 mb-2">
                   <PersonIcon className="mr-2" />
                   <p className="text-blue-900 font-bold">English Name</p>
                 </h3>
                 <p className="text-base font-normal" onDoubleClick={(e) => handleCopyToClipboard(`${staffData?.enTitle}${staffData?.enFirstName} ${staffData?.enLastName}`)}>
                   {`${staffData?.enTitle}${staffData?.enFirstName} ${staffData?.enLastName}`}
+                </p>
+              </div>
+              <div>
+                <h3 className="flex items-center text-gray-600 mb-2">
+                  <PhoneIcon className="mr-2" />
+                  <p className="text-blue-900 font-bold">DirectLine</p>
+                </h3>
+                <p className="text-base font-normal" onDoubleClick={(e) => handleCopyToClipboard(staffData?.directLine?.length === 8 && !staffData.directLine.startsWith('0') ? `0${staffData.directLine}` : staffData?.directLine || '')}>
+                  {staffData?.directLine?.length === 8 && !staffData.directLine.startsWith('0') ? `0${staffData.directLine}` : staffData?.directLine}
                 </p>
               </div>
               <div>
@@ -200,12 +187,40 @@ const StaffProfile: React.FC<StaffInformationProps> = ({ staffData }: any) => {
               </div>
               <div>
                 <h3 className="flex items-center text-gray-600 mb-2">
+                  <MailIcon className="mr-2" />
+                  <p className="text-blue-900 font-bold">Email</p>
+                </h3>
+                <a
+                  href={`mailto:${staffData?.email}`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-base font-normal text-blue-600 hover:underline cursor-pointer"
+                >
+                  {staffData?.email}
+                </a>
+              </div>
+              <div>
+                <h3 className="flex items-center text-gray-600 mb-2">
                   <BookmarkIcon className="mr-2" />
                   <p className="text-blue-900 font-bold">Nickname</p>
                 </h3>
                 <p className="text-base font-normal" onDoubleClick={(e) => handleCopyToClipboard(staffData?.nickname || '')}>
                   {staffData?.nickname}
                 </p>
+              </div>
+              <div>
+                <h3 className="flex items-center text-gray-600 mb-2">
+                  <ChatIcon className="mr-2" />
+                  <p className="text-blue-900 font-bold">Teams Chat</p>
+                </h3>
+                <a
+                  href={`https://teams.microsoft.com/l/chat/0/0?users=${staffData?.email}`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-base font-normal text-blue-600 hover:underline cursor-pointer"
+                >
+                  {staffData?.email}
+                </a>
               </div>
             </div>
           </div>
@@ -291,14 +306,14 @@ const StaffProfile: React.FC<StaffInformationProps> = ({ staffData }: any) => {
               <div className="p-4 border border-gray-200 rounded-lg shadow-sm hover:shadow-md transition-shadow">
                 <h3 className="flex items-center text-gray-600 mb-2">
                   <BadgeIcon className="mr-2 text-red-500" />
-                  <p className="text-blue-900 font-bold">Single(Equity) Trader</p>
+                  <p className="text-blue-900 font-bold">Equity Trader</p>
                 </h3>
                 <p className="text-gray-600">{staffData?.singleTrader == "" ? "-" : staffData?.singleTrader}</p>
               </div>
               <div className="p-4 border border-gray-200 rounded-lg shadow-sm hover:shadow-md transition-shadow">
                 <h3 className="flex items-center text-gray-600 mb-2">
                   <AssignmentIndIcon className="mr-2 text-red-500" />
-                  <p className="text-blue-900 font-bold">Single(Equity) License</p>
+                  <p className="text-blue-900 font-bold">Equity License</p>
                 </h3>
                 <p className="text-gray-600">{staffData?.singleLicense == "" ? "-" : staffData?.singleLicense}</p>
               </div>

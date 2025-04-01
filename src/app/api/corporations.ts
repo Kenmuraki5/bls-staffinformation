@@ -12,7 +12,7 @@ export async function getAllCorporations() {
     if (error.message == "Unauthorized"){
       redirect(`${process.env.NEXT_PUBLIC_AUTH_URL}/login`)
     }
-    console.error('Error fetching branch:', error);
+    // console.error('Error fetching branch:', error);
     return [];
   }
 }

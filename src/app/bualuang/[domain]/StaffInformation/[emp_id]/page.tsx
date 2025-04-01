@@ -1,25 +1,8 @@
-import fetchWithAuth from '@/app/utils/fetchWithAuth';
+import { getEmployee } from '@/app/api/employees';
 import PageNotAvailable from '@/components/notavailable';
 import dynamic from 'next/dynamic';
 
 const StaffInformation = dynamic(() => import('@/components/staffinformation'));
-
-async function getEmployee(domainId: string, empId: string) {
-    try {
-        const url = `${process.env.NEXT_PUBLIC_BASEURL}/staffinformation/employee/${domainId}/${empId}`;
-        const response = await fetchWithAuth(url, {
-            method: 'GET',
-        });
-
-        if (!response.ok) {
-            throw new Error('Failed to fetch employees');
-        }
-        return await response.json();
-    } catch (error) {
-        console.error('Error fetching employees:', error);
-        return [];
-    }
-}
 
 export default async function page({
     params,

@@ -40,7 +40,7 @@ export default async function handleSearch(searchBy: string, searchInput: string
         if (error.message === "Unauthorized") {
             redirect(`${process.env.NEXT_PUBLIC_AUTH_URL}/login`);
         }
-        console.error('Error fetching data:', error);
+        // console.error('Error fetching data:', error);
         return [];
     }
 }

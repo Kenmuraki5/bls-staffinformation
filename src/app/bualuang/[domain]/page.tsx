@@ -1,6 +1,6 @@
 import React from 'react';
 import dynamic from 'next/dynamic';
-import { getEmployeesByOrgID } from '@/app/api/employees';
+import { getEmployee, getEmployeesByOrgID } from '@/app/api/employees';
 import { getAllDepartmentsHeirachy } from '@/app/api/departments';
 import handleSearch from '@/app/api/search';
 import PageNotAvailable from '@/components/notavailable';
@@ -18,9 +18,12 @@ const Home = async ({
   const organizations: any = await getAllDepartmentsHeirachy(domain);
 
   let employees: any = {};
-
+  let staffData: any = {};
   if (!searchParams?.searchBy) {
     employees = await getEmployeesByOrgID(params.domain as string, searchParams?.organizationId as string);
+    if (searchParams?.empId) {
+      staffData = await getEmployee(params.domain, searchParams?.empId as string);
+    }
   } else {
     employees = await handleSearch(
       searchParams?.searchBy as string,
@@ -33,6 +36,7 @@ const Home = async ({
       {organizations.length != 0  ? (<MainComponent
         organizations={organizations?.organizations || []}
         employees={employees?.employees || []}
+        staffData={staffData?.employee || null}
       />) : (<PageNotAvailable/>)}
     </div>
   );

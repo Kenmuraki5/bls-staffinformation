@@ -15,7 +15,7 @@ export async function getAllManager() {
     if (error.message == "Unauthorized"){
       redirect(`${process.env.NEXT_PUBLIC_AUTH_URL}/login`)
     }
-    console.error('Error fetching manager:', error);
+    // console.error('Error fetching manager:', error);
     return [];
   }
 }

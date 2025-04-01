@@ -15,7 +15,7 @@ export async function getAlldomain() {
     if (error.message == "Unauthorized"){
       redirect(`${process.env.NEXT_PUBLIC_AUTH_URL}/login`)
     }
-    console.error('Error fetching domain:', error);
+    // console.error('Error fetching domain:', error);
     return [];
   }
 }
@@ -30,7 +30,7 @@ export async function getAlldomainClientSide() {
     
     return await res.json();
   } catch (error) {
-    console.error('Error fetching domain:', error);
+    // console.error('Error fetching domain:', error);
     return [];
   }
 }

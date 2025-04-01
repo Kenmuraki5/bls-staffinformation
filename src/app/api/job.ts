@@ -16,7 +16,7 @@ export async function getAllJob() {
     if (error.message == "Unauthorized"){
       redirect(`${process.env.NEXT_PUBLIC_AUTH_URL}/login`)
     }
-    console.error('Error fetching jobs:', error);
+    // console.error('Error fetching jobs:', error);
     return [];
   }
 }
@@ -32,7 +32,7 @@ export async function getAllJobClientSide() {
     
     return await res.json();
   } catch (error) {
-    console.error('Error fetching jobs:', error);
+    // console.error('Error fetching jobs:', error);
     return [];
   }
 }
