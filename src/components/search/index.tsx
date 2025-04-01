@@ -17,14 +17,20 @@ const Search = React.memo(({ search, organizationUnits }: any) => {
         setSearchInput(event.target.value);
     };
 
-    const handleKeyDown = async (event: React.KeyboardEvent) => {
+    const executeSearch = async (searchBy: string, searchInput: string) => {
+        if (searchInput.trim() === '') return;
+        
+        try {
+            const query = searchBy === 'employeeId' ? searchInput.replace(/^0+/, '') : searchInput;
+            await search(searchBy, query);
+        } catch (error) {
+            console.log(error);
+        }
+    };
+
+    const handleKeyDown = (event: React.KeyboardEvent) => {
         if (event.key === 'Enter') {
-            try {
-                const query = searchBy === 'employeeId' ? searchInput.replace(/^0+/, '') : searchInput;
-                await search(searchBy, query);
-            } catch (error) {
-                console.log(error);
-            }
+            executeSearch(searchBy, searchInput);
         }
     };
 
@@ -67,10 +73,8 @@ const Search = React.memo(({ search, organizationUnits }: any) => {
                         />
                         <Button
                             sx={{ px: 2, backgroundColor: 'primary.main', color: 'white', '&:hover': { backgroundColor: 'primary.dark' } }}
-                            onClick={() => {
-                                const query = searchBy === 'employeeId' ? searchInput.replace(/^0+/, '') : searchInput;
-                                search(searchBy, query);
-                            }}>Search</Button>
+                            onClick={() => executeSearch(searchBy, searchInput)}
+                        >Search</Button>
                     </>
                 )}
                 {searchBy === 'organizationUnit' && (
@@ -106,13 +110,17 @@ const Search = React.memo(({ search, organizationUnits }: any) => {
                             sx={{ px: 2, backgroundColor: 'primary.main', color: 'white', '&:hover': { backgroundColor: 'primary.dark' } }}
                             onClick={() => {
                                 const encodedSearchInput = encodeURIComponent(searchInput);
-                                search(searchBy, encodedSearchInput);
-                            }}>Search</Button>
+                                executeSearch(searchBy, encodedSearchInput);
+                            }}
+                        >Search</Button>
                     </>
                 )}
             </div>
         </div>
     );
 });
+
+
+Search.displayName = 'Search';
 
 export default Search;

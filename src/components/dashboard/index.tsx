@@ -103,7 +103,7 @@ const Dashboard: React.FC<DashboardProps> = ({ organizations, employees, staffDa
       setBreadcrumbPath(result || { path: [], ids: [] });
       router.push(`?organizationId=${orgId}`);
     },
-    []
+    [organizations, router]
   );
 
   useEffect(() => {
