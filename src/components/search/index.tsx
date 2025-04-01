@@ -4,7 +4,7 @@ import React, { useState } from 'react';
 import InputAdornment from '@mui/material/InputAdornment';
 import SearchIcon from '@mui/icons-material/Search';
 
-const Search = ({ search, organizationUnits }: any) => {
+const Search = React.memo(({ search, organizationUnits }: any) => {
     const [searchBy, setSearchBy] = useState('');
     const [searchInput, setSearchInput] = useState('');
 
@@ -80,9 +80,7 @@ const Search = ({ search, organizationUnits }: any) => {
                             options={organizationUnits}
                             fullWidth
                             size="small"
-                            value={
-                                organizationUnits.find((org: any) => org.organizationId === searchInput) || null
-                            }
+                            value={organizationUnits.find((org: any) => org.organizationId === searchInput) || null}
                             onChange={(event: any, newValue: any | null) => {
                                 setSearchInput(newValue?.organizationId || '');
                             }}
@@ -104,8 +102,6 @@ const Search = ({ search, organizationUnits }: any) => {
                                 />
                             )}
                         />
-
-
                         <Button
                             sx={{ px: 2, backgroundColor: 'primary.main', color: 'white', '&:hover': { backgroundColor: 'primary.dark' } }}
                             onClick={() => {
@@ -117,6 +113,6 @@ const Search = ({ search, organizationUnits }: any) => {
             </div>
         </div>
     );
-}
+});
 
 export default Search;

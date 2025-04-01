@@ -79,13 +79,18 @@ const EmployeeTable: React.FC<PropsType> = ({ dataEmployees, breadcrumbPath }: a
       flex: 1,
       renderCell: (data) => {
         const formattedEmpId = data.value.toString().padStart(4, '0');
+    
+        const handleClick = () => {
+          router.push(`/bualuang/${params.domain}?empId=${data?.row?.empId}`);
+        };
+    
         return (
-          <a
-            href={`/bualuang/${params.domain}?empId=${data?.row?.empId}`}
+          <span
+            onClick={handleClick}
             style={{ color: 'blue', cursor: 'pointer', textDecoration: 'underline' }}
           >
             {formattedEmpId}
-          </a>
+          </span>
         );
       },
       headerClassName: 'super-app-theme--header',
