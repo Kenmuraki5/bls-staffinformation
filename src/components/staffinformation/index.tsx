@@ -219,7 +219,7 @@ const StaffProfile: React.FC<StaffInformationProps> = ({ staffData }: any) => {
                   rel="noopener noreferrer"
                   className="text-base font-normal text-blue-600 hover:underline cursor-pointer"
                 >
-                  {staffData?.email}
+                  {staffData?.enFirstName + " " + staffData?.enLastName}
                 </a>
               </div>
             </div>
