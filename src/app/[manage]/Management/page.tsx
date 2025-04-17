@@ -28,7 +28,7 @@ export default async function AdminEmployeeManagement({
   const res = fetch ? await fetch() : null;
   const data = res ? res[type] : [];
   return (
-    <div className="min-h-screen bg-white flex flex-col overflowY-hidden">
+    <div className="min-h-screen bg-white flex flex-col overflow-hidden no-scrollbar">
       {data ? (<StartEditButtonGrid data={data || []} type={type} />) : <PageNotAvailable/> }
     </div>
   );

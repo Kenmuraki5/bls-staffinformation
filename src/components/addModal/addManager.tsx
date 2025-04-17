@@ -195,7 +195,7 @@ export default function ManagerModal({
               onChange={(event, newValue) => {
                 setOrganizationId(newValue ? newValue.organizationId : null);
               }}
-              renderInput={(params) => <TextField {...params} label="Organization ID" error={!!errors.organizationId} helperText={errors.organizationId} />}
+              renderInput={(params) => <TextField {...params} label="Head Of Department" error={!!errors.organizationId} helperText={errors.organizationId} />}
               readOnly={role != "AdminStaffInformation"}
             />
           </Grid>

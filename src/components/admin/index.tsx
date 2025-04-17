@@ -444,10 +444,10 @@ export const StartEditButtonGrid: React.FC<AdminEmployeemanagementProps & { type
           overflow: 'visible !important'
         },
         marginTop: 2,
-        overflowY: 'hidden'
+        overflow: 'hidden'
       }}
     >
-      <div style={{ height: '93vh', width: '100%', overflowY: 'hidden' }}>
+      <div style={{ height: '93vh', width: '100%', overflow: 'hidden' }}>
         <DataGrid
           autoHeight={false}
           rows={rows}
