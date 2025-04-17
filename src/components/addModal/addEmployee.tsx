@@ -10,8 +10,8 @@ import { getAllJobClientSide } from '@/app/api/job';
 import { getAlldomainClientSide } from '@/app/api/domain';
 import { getToken } from '@/app/utils/auth';
 import fetchWithAuthClient from '@/app/utils/fetchWithAuthClientSide';
-import { getAllBranch } from '@/app/api/branch';
-import { getAllCorporations } from '@/app/api/corporations';
+import { getAllBranchClientSide } from '@/app/api/branch';
+import { getAllCorporationsClientSide } from '@/app/api/corporations';
 
 const EmployeeModal = ({ open, handleClose, addRecord, updateRecord, deleteRecord, setRows, setSnackbarOpen, setAlertMessage, setError, selectedRow, role }: any) => {
   const [organizations, setOrganizations] = useState([]);
@@ -82,8 +82,8 @@ const EmployeeModal = ({ open, handleClose, addRecord, updateRecord, deleteRecor
       const departments = await getAllDepartmentsClientSide();
       const jobs = await getAllJobClientSide();
       const domains = await getAlldomainClientSide();
-      const branchs = await getAllBranch();
-      const corporations = await getAllCorporations();
+      const branchs = await getAllBranchClientSide();
+      const corporations = await getAllCorporationsClientSide();
       setOrganizations(departments?.organizations || []);
       setJobs(jobs?.jobs || []);
       setDomains(domains?.domains || []);

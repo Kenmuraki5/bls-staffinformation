@@ -23,7 +23,7 @@ export async function getAllJob() {
 
 export async function getAllJobClientSide() {
   try {
-    const url = `${process.env.NEXT_PUBLIC_BASEURL}/staffinformation/job`;
+    const url = `${process.env.NEXT_PUBLIC_BASEURL_CLIENT_SIDE}/staffinformation/job`;
     const res = await fetchWithAuthClient(url);
     
     if (!res.ok) {

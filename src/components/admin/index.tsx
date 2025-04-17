@@ -170,7 +170,7 @@ export const StartEditButtonGrid: React.FC<AdminEmployeemanagementProps & { type
   async function deleteRecord(id: string | number) {
     try {
       const token = await getToken("auth_token");
-      const res = await fetch(`${process.env.NEXT_PUBLIC_BASEURL}/staffinformation/${params.manage}/${id}`, {
+      const res = await fetch(`${process.env.NEXT_PUBLIC_BASEURL_CLIENT_SIDE}/staffinformation/${params.manage}/${id}`, {
         method: "DELETE",
         headers: {
           "authorization": "Bearer " + token,

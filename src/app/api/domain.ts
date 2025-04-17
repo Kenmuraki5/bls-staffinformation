@@ -22,7 +22,7 @@ export async function getAlldomain() {
 
 export async function getAlldomainClientSide() {
   try {
-    const res = await fetchWithAuthClient(`${process.env.NEXT_PUBLIC_BASEURL}/staffinformation/domains`);
+    const res = await fetchWithAuthClient(`${process.env.NEXT_PUBLIC_BASEURL_CLIENT_SIDE}/staffinformation/domains`);
     
     if (!res.ok) {
       throw new Error('Failed to fetch domain');

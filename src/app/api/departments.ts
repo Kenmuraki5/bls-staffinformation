@@ -24,7 +24,7 @@ export async function getAllDepartments() {
 
 export async function getAllDepartmentsClientSide() {
   try {
-    const res = await fetchWithAuthClient(`${process.env.NEXT_PUBLIC_BASEURL}/staffinformation/organizations`, {
+    const res = await fetchWithAuthClient(`${process.env.NEXT_PUBLIC_BASEURL_CLIENT_SIDE}/staffinformation/organizations`, {
       cache: 'no-store',
     });
     if (!res.ok) {
