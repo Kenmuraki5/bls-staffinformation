@@ -192,7 +192,7 @@ export const StartEditButtonGrid: React.FC<AdminEmployeemanagementProps & { type
     try {
       const token = await getToken("auth_token");
       const payloadData = { ...data };
-      const res = await fetch(`${process.env.NEXT_PUBLIC_BASEURL}/staffinformation/${params.manage}`, {
+      const res = await fetch(`${process.env.NEXT_PUBLIC_BASEURL_CLIENT_SIDE}/staffinformation/${params.manage}`, {
         method: "PUT",
         headers: {
           "authorization": "Bearer " + token,
@@ -219,7 +219,7 @@ export const StartEditButtonGrid: React.FC<AdminEmployeemanagementProps & { type
     try {
       const token = await getToken("auth_token");
       const payloadData = { ...data };
-      const res = await fetch(`${process.env.NEXT_PUBLIC_BASEURL}/staffinformation/${params.manage}`, {
+      const res = await fetch(`${process.env.NEXT_PUBLIC_BASEURL_CLIENT_SIDE}/staffinformation/${params.manage}`, {
         method: "POST",
         headers: {
           "authorization": "Bearer " + token,

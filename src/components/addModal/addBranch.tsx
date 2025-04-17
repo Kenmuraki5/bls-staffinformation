@@ -36,11 +36,6 @@ export default function BranchModal({
     if (!engAddr) newErrors.engAddr = 'English Address must not be empty.';
     if (!thAddr) newErrors.thAddr = 'Thai Address must not be empty.';
 
-    const contactRegex = /^(?:\(\d{2,3}\)|\d{2,3})[-.\s]?\d{3,4}[-.\s]?\d{3,4}$/;
-    if (!telephone || !contactRegex.test(telephone)) newErrors.telephone = 'Telephone is not in a valid format.';
-    if (fax && !contactRegex.test(fax)) newErrors.fax = 'Fax is not in a valid format.';
-    if (!zoneCode) newErrors.zoneCode = 'Zone Code must not be empty.';
-
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   };

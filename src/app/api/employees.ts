@@ -43,7 +43,7 @@ export async function getAllEmployees() {
 
 export async function getAllEmployeesClientSide() {
   try {
-    const url = `${process.env.NEXT_PUBLIC_BASEURL}/staffinformation/employee`;
+    const url = `${process.env.NEXT_PUBLIC_BASEURL_CLIENT_SIDE}/staffinformation/employee`;
     const res = await fetchWithAuthClient(url);
     
     if (!res.ok) {
