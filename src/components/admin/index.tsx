@@ -443,7 +443,8 @@ export const StartEditButtonGrid: React.FC<AdminEmployeemanagementProps & { type
           fontWeight: 'bold !important',
           overflow: 'visible !important'
         },
-        marginTop: 2
+        marginTop: 2,
+        overflowY: 'hidden'
       }}
     >
       <div style={{ height: '93vh', width: '100%' }}>
