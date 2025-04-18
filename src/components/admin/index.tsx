@@ -330,6 +330,7 @@ export const StartEditButtonGrid: React.FC<AdminEmployeemanagementProps & { type
     { field: 'startWorkingDate', headerName: 'StartWorkingDate', minWidth: 140, maxWidth: 120, flex: 1, headerAlign: 'center', headerClassName: 'super-app-theme--header', align: 'center', },
     { field: 'lastWorkingDate', headerName: 'LastWorkingDate', minWidth: 140, maxWidth: 120, flex: 1, headerAlign: 'center', headerClassName: 'super-app-theme--header', align: 'center', },
     { field: 'effectiveDate', headerName: 'EffectiveDate', minWidth: 140, maxWidth: 120, flex: 1, headerAlign: 'center', headerClassName: 'super-app-theme--header', align: 'center', },
+    { field: 'picturePath', headerName: 'Picture Path', minWidth: 100, flex: 1, headerAlign: 'center', headerClassName: 'super-app-theme--header', align: 'center' },
   ];
 
   const columns_org: GridColDef[] = [
@@ -400,8 +401,7 @@ export const StartEditButtonGrid: React.FC<AdminEmployeemanagementProps & { type
     { field: 'thAddr', headerName: 'Thai Address', minWidth: 150, flex: 1, headerAlign: 'center', headerClassName: 'super-app-theme--header', align: 'center' },
     { field: 'telephone', headerName: 'Telephone', minWidth: 120, flex: 1, headerAlign: 'center', headerClassName: 'super-app-theme--header', align: 'center' },
     { field: 'fax', headerName: 'Fax', minWidth: 120, flex: 1, headerAlign: 'center', headerClassName: 'super-app-theme--header', align: 'center' },
-    { field: 'zoneCode', headerName: 'Zone Code', minWidth: 100, flex: 1, headerAlign: 'center', headerClassName: 'super-app-theme--header', align: 'center' },
-    { field: 'picturePath', headerName: 'Picture Path', minWidth: 100, flex: 1, headerAlign: 'center', headerClassName: 'super-app-theme--header', align: 'center' },
+    { field: 'zoneCode', headerName: 'Zone Code', minWidth: 100, flex: 1, headerAlign: 'center', headerClassName: 'super-app-theme--header', align: 'center' }
   ];
 
 

@@ -179,68 +179,7 @@ const EmployeeModal = ({ open, handleClose, addRecord, updateRecord, deleteRecor
     return `${year}-${month}-${day}`;
   };
 
-  const isValidEnglishName = (name: string) => /^[a-zA-Z\s]+$/.test(name);
-  const isValidThaiName = (name: string) => /^[\u0E00-\u0E7F\s]+$/.test(name);
-  const isValidEmail = (email: string) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
-  const isValidExtensionCode = (code: string) => /^\d{4}$/.test(code);
-
   const handleSave = async () => {
-    const newErrors: any = {};
-
-    // Validation checks
-    if (title == '') {
-      newErrors.title = 'Title is required.';
-    }
-    if (!isValidEnglishName(enFirstName)) {
-      newErrors.enFirstName = 'English names must contain only English letters.';
-    }
-    if (nickname == '') {
-      newErrors.thNickName = 'Nick name is required.';
-    }
-    if (!isValidEnglishName(enLastName)) {
-      newErrors.enLastName = 'English Last names must contain only English letters.';
-    }
-
-    if (!isValidThaiName(thFirstName)) {
-      newErrors.thFirstName = 'Thai names must contain only Thai characters.';
-    }
-
-    if (!isValidThaiName(thLastName)) {
-      newErrors.thLastName = 'Thai Last names must contain only Thai characters.';
-    }
-
-    if (!isValidEmail(email)) {
-      newErrors.email = 'Please provide a valid email address.';
-    }
-
-    if (!isValidExtensionCode(extension)) {
-      newErrors.extension = 'Extension code must be a 4-digit number.';
-    }
-    if (branchId == '') {
-      newErrors.branch = 'Branch is required.';
-    }
-    if (!domainId) {
-      newErrors.domainId = 'Domain is required.';
-    }
-    if (!organizationId) {
-      if (domainId) {
-        newErrors.organizationUnit = 'Organization Unit is required.';
-      } else {
-        newErrors.organizationUnit = 'Please select a Domain first.';
-      }
-    }
-    if (startWorkingDate == '') {
-      newErrors.startWorkingDate = 'Start working date is required.';
-    }
-    if (lastWorkingDate != '' && lastWorkingDate < startWorkingDate) {
-      newErrors.lastWorkingDate = 'Last working date not letter than start working date.';
-    }
-
-    if (Object.keys(newErrors).length > 0) {
-      setErrors(newErrors);
-      return;
-    }
-
     try {
       const formattedStartDate = formatDateToISO(startWorkingDate);
       const formattedlasttDate = formatDateToISO(lastWorkingDate);
@@ -357,28 +296,12 @@ const EmployeeModal = ({ open, handleClose, addRecord, updateRecord, deleteRecor
         <Grid container spacing={2}>
           {/* Left Column */}
           <Grid size={{ xs: 12, md: 4 }} sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-            <Avatar
+            {avatarImage && (
+              <Avatar
               alt="Employee Avatar"
               src={avatarImage || ''}
               sx={{ width: 150, height: 150 }}
-            />
-            {/* {role == "AdminStaffInformation" && (
-              <>
-                <input
-                  type="file"
-                  accept="image/*"
-                  onChange={handleFileChange}
-                  style={{ display: 'none' }}
-                  id="upload-avatar"
-                />
-                <label htmlFor="upload-avatar">
-                  <IconButton color="primary" component="span">
-                    <CameraAltIcon />
-                  </IconButton>
-                </label>
-              </>
-            )} */}
-
+            />)}
             <TextField
               fullWidth
               label="Employee ID"
@@ -550,7 +473,7 @@ const EmployeeModal = ({ open, handleClose, addRecord, updateRecord, deleteRecor
                     `${option.titleShortName} : ${option.titleEngName} / ${option.titleThName}`
                   }
                   value={corporations.find((cor: any) => cor.titleShortName === corporationTitle) || null}
-                  onChange={(event: any, newValue:any) => {
+                  onChange={(event: any, newValue: any) => {
                     setCorporationTitle(newValue ? newValue.titleShortName : null);
                   }}
                   renderInput={(params) => <TextField {...params} required label="Corporations" />}
