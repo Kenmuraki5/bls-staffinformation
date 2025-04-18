@@ -309,19 +309,21 @@ const EmployeeModal = ({ open, handleClose, addRecord, updateRecord, deleteRecor
                 height={150}
                 className="bg-white rounded-full border-4 border-white shadow-lg object-cover object-top"
               />)}
-            <TextField
-              fullWidth
-              label="Employee ID"
-              variant="outlined"
-              value={empId}
-              onChange={(e) => setStaffId(e.target.value)}
-              error={!!errors.empId}
-              helperText={errors.empId}
-              sx={{ mt: 2 }}
-              InputProps={{
-                readOnly: role != "AdminStaffInformation" && selectedRow && Object.keys(selectedRow).length > 0,
-              }}
-            />
+            {empId && (
+              <TextField
+                fullWidth
+                label="Employee ID"
+                variant="outlined"
+                value={empId}
+                onChange={(e) => setStaffId(e.target.value)}
+                error={!!errors.empId}
+                helperText={errors.empId}
+                sx={{ mt: 2 }}
+                InputProps={{
+                  readOnly: role != "AdminStaffInformation" && selectedRow && Object.keys(selectedRow).length > 0,
+                }}
+              />
+            )}
 
 
             <TextField
@@ -463,10 +465,12 @@ const EmployeeModal = ({ open, handleClose, addRecord, updateRecord, deleteRecor
               <Grid size={{ xs: 12, sm: 6 }}>
                 <TextField
                   fullWidth
-                  label="Short Name*"
+                  label="English Last Name*"
                   variant="outlined"
-                  value={shortName}
-                  onChange={(e) => setShortName(e.target.value)}
+                  value={enLastName}
+                  onChange={(e) => setEnLastName(e.target.value)}
+                  error={!!errors.enLastName}
+                  helperText={errors.enLastName}
                   InputProps={{
                     readOnly: role != "AdminStaffInformation",
                   }}
@@ -475,12 +479,10 @@ const EmployeeModal = ({ open, handleClose, addRecord, updateRecord, deleteRecor
               <Grid size={{ xs: 12, sm: 6 }}>
                 <TextField
                   fullWidth
-                  label="English Last Name*"
+                  label="Short Name*"
                   variant="outlined"
-                  value={enLastName}
-                  onChange={(e) => setEnLastName(e.target.value)}
-                  error={!!errors.enLastName}
-                  helperText={errors.enLastName}
+                  value={shortName}
+                  onChange={(e) => setShortName(e.target.value)}
                   InputProps={{
                     readOnly: role != "AdminStaffInformation",
                   }}
