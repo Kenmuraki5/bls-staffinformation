@@ -149,7 +149,7 @@ export default function DomainModal({
         </Box>
         <Divider className="mb-4" />
         <Grid container spacing={2}>
-          <Grid item xs={12}>
+          <Grid size={12}>
             <TextField
               label="Domain ID"
               variant="standard"

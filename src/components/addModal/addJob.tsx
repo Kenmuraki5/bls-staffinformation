@@ -139,7 +139,7 @@ export default function JobModal({ open, handleClose, addRecord, updateRecord, d
         </Box>
         <Divider className="mb-4" />
         <Grid container spacing={2}>
-          <Grid item xs={12}>
+          <Grid size={{ xs: 12 }}>
             <TextField
               label="Job ID"
               variant="standard"

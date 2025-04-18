@@ -162,7 +162,7 @@ export default function BranchModal({
         </Box>
         <Divider className="mb-4" />
         <Grid container spacing={2}>
-          <Grid item xs={12}>
+          <Grid size={12}>
             <TextField
               label="Branch ID"
               variant="standard"

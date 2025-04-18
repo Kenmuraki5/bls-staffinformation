@@ -442,7 +442,7 @@ const EmployeeModal = ({ open, handleClose, addRecord, updateRecord, deleteRecor
 
         <Grid container spacing={2}>
           {/* Left Column */}
-          <Grid item xs={12} md={4} sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+          <Grid size={{ xs: 12, md: 4 }} sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
             <Avatar
               alt="Employee Avatar"
               src={avatarImage || ''}
@@ -523,15 +523,15 @@ const EmployeeModal = ({ open, handleClose, addRecord, updateRecord, deleteRecor
           </Grid>
 
           {/* Vertical Divider */}
-          <Grid item>
+          <Grid>
             <Divider orientation="vertical" flexItem sx={{ borderRightWidth: 1, height: '100%', mx: 2 }} />
           </Grid>
 
           {/* Right Column */}
-          <Grid item xs={12} md={7}>
+          <Grid size={{ xs: 12, md: 7 }}>
             <Grid container spacing={2}>
               {/* First Row */}
-              <Grid item xs={12} sm={6}>
+              <Grid size={{ xs: 12, md: 6 }}>
                 <InputLabel>Title*</InputLabel>
                 <Select
                   fullWidth
@@ -547,7 +547,7 @@ const EmployeeModal = ({ open, handleClose, addRecord, updateRecord, deleteRecor
                 </Select>
                 {errors.title && <FormHelperText>{errors.title}</FormHelperText>}
               </Grid>
-              <Grid item xs={12} sm={6} mt={3}>
+              <Grid mt={3} size={{ xs: 12, sm: 6 }}>
                 <TextField
                   fullWidth
                   label="Nick Name*"
@@ -563,7 +563,7 @@ const EmployeeModal = ({ open, handleClose, addRecord, updateRecord, deleteRecor
               </Grid>
 
               {/* Second Row */}
-              <Grid item xs={12} sm={6}>
+              <Grid size={{ xs: 12, sm: 6 }}>
                 <TextField
                   fullWidth
                   label="Thai First Name*"
@@ -578,7 +578,7 @@ const EmployeeModal = ({ open, handleClose, addRecord, updateRecord, deleteRecor
                 />
               </Grid>
 
-              <Grid item xs={12} sm={6}>
+              <Grid size={{ xs: 12, sm: 6 }}>
                 <TextField
                   fullWidth
                   label="Thai Last Name*"
@@ -594,7 +594,7 @@ const EmployeeModal = ({ open, handleClose, addRecord, updateRecord, deleteRecor
               </Grid>
 
               {/* Third Row */}
-              <Grid item xs={12} sm={6}>
+              <Grid size={{ xs: 12, sm: 6 }}>
                 <TextField
                   fullWidth
                   label="English First Name*"
@@ -608,7 +608,7 @@ const EmployeeModal = ({ open, handleClose, addRecord, updateRecord, deleteRecor
                   }}
                 />
               </Grid>
-              <Grid item xs={12} sm={6}>
+              <Grid size={{ xs: 12, sm: 6 }}>
                 <TextField
                   fullWidth
                   label="English Last Name*"
@@ -623,12 +623,12 @@ const EmployeeModal = ({ open, handleClose, addRecord, updateRecord, deleteRecor
                 />
               </Grid>
 
-              <Grid item xs={12}>
+              <Grid size={{ xs: 12 }}>
                 <Divider sx={{ my: 2 }} />
               </Grid>
 
               {/* Fourth Row */}
-              <Grid item xs={12} sm={6}>
+              <Grid size={{ xs: 12, sm: 6 }}>
                 <Autocomplete
                   id="corporation-autocomplete"
                   options={corporations}
@@ -651,11 +651,11 @@ const EmployeeModal = ({ open, handleClose, addRecord, updateRecord, deleteRecor
                   readOnly={role !== "AdminStaffInformation"}
                 />
               </Grid>
-              <Grid item xs={12} sm={6}>
+              <Grid size={{ xs: 12, sm: 6 }}>
               </Grid>
 
               {/* Fifth Row */}
-              <Grid item xs={12} sm={6}>
+              <Grid size={{ xs: 12, sm: 6 }}>
                 <Autocomplete
                   id="domain-autocomplete"
                   options={domains}
@@ -670,7 +670,7 @@ const EmployeeModal = ({ open, handleClose, addRecord, updateRecord, deleteRecor
                   readOnly={role !== "AdminStaffInformation"}
                 />
               </Grid>
-              <Grid item xs={12} sm={6}>
+              <Grid size={{ xs: 12, sm: 6 }}>
                 <Autocomplete
                   id="organization-autocomplete"
                   options={organizations?.filter((org: any) => domainId === org.domainId)}
@@ -686,7 +686,7 @@ const EmployeeModal = ({ open, handleClose, addRecord, updateRecord, deleteRecor
               </Grid>
 
               {/* Sixth Row */}
-              <Grid item xs={12} sm={6}>
+              <Grid size={{ xs: 12, sm: 6 }}>
                 <Autocomplete
                   id="jobs-autocomplete"
                   options={jobs}
@@ -699,7 +699,7 @@ const EmployeeModal = ({ open, handleClose, addRecord, updateRecord, deleteRecor
                   readOnly={role != "AdminStaffInformation"}
                 />
               </Grid>
-              <Grid item xs={12} sm={6}>
+              <Grid size={{ xs: 12, sm: 6 }}>
                 <Autocomplete
                   id="branchs-autocomplete"
                   options={branchs}
@@ -714,12 +714,12 @@ const EmployeeModal = ({ open, handleClose, addRecord, updateRecord, deleteRecor
                 />
               </Grid>
 
-              <Grid item xs={12}>
+              <Grid size={{ xs: 12 }}>
                 <Divider sx={{ my: 2 }} />
               </Grid>
 
               {/* Last Row */}
-              <Grid item xs={12} sm={6}>
+              <Grid size={{ xs: 12, sm: 6 }}>
                 <TextField
                   fullWidth
                   required
@@ -736,7 +736,7 @@ const EmployeeModal = ({ open, handleClose, addRecord, updateRecord, deleteRecor
                   }}
                 />
               </Grid>
-              <Grid item xs={12} sm={6}>
+              <Grid size={{ xs: 12, sm: 6 }}>
                 <TextField
                   fullWidth
                   label="Last Working Date"
@@ -752,7 +752,7 @@ const EmployeeModal = ({ open, handleClose, addRecord, updateRecord, deleteRecor
                   }}
                 />
               </Grid>
-              <Grid item xs={12} sm={6}>
+              <Grid size={{ xs: 12, sm: 6 }}>
                 <TextField
                   fullWidth
                   label="Effective Date"
@@ -768,10 +768,10 @@ const EmployeeModal = ({ open, handleClose, addRecord, updateRecord, deleteRecor
                   }}
                 />
               </Grid>
-              <Grid item xs={12}>
+              <Grid size={{ xs: 12 }}>
                 <Divider sx={{ my: 2 }} />
               </Grid>
-              <Grid item xs={12} sm={6}>
+              <Grid size={{ xs: 12, sm: 6 }}>
                 <TextField
                   fullWidth
                   label="Derivative Trader"
@@ -783,7 +783,7 @@ const EmployeeModal = ({ open, handleClose, addRecord, updateRecord, deleteRecor
                   }}
                 />
               </Grid>
-              <Grid item xs={12} sm={6}>
+              <Grid size={{ xs: 12, sm: 6 }}>
                 <TextField
                   fullWidth
                   label="Derivative License"
@@ -795,7 +795,7 @@ const EmployeeModal = ({ open, handleClose, addRecord, updateRecord, deleteRecor
                   }}
                 />
               </Grid>
-              <Grid item xs={12} sm={6}>
+              <Grid size={{ xs: 12, sm: 6 }}>
                 <TextField
                   fullWidth
                   label="Single (Equity) Trader"
@@ -807,7 +807,7 @@ const EmployeeModal = ({ open, handleClose, addRecord, updateRecord, deleteRecor
                   }}
                 />
               </Grid>
-              <Grid item xs={12} sm={6}>
+              <Grid size={{ xs: 12, sm: 6 }}>
                 <TextField
                   fullWidth
                   label="Single (Equity) License"
@@ -819,7 +819,7 @@ const EmployeeModal = ({ open, handleClose, addRecord, updateRecord, deleteRecor
                   }}
                 />
               </Grid>
-              <Grid item xs={12} sm={6}>
+              <Grid size={{ xs: 12, sm: 6 }}>
                 <TextField
                   fullWidth
                   label="Other License(s)"

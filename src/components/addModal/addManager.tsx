@@ -172,7 +172,7 @@ export default function ManagerModal({
         </Box>
         <Divider className="mb-4" />
         <Grid container spacing={2}>
-          <Grid item xs={12}>
+          <Grid size={{ xs: 12 }}>
             <Autocomplete
               className='mb-4'
               id="employeeID-autocomplete"
