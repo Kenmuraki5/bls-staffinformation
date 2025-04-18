@@ -4,6 +4,7 @@ import { getEmployee, getEmployeesByOrgID } from '@/app/api/employees';
 import { getAllDepartmentsHeirachy } from '@/app/api/departments';
 import handleSearch from '@/app/api/search';
 import PageNotAvailable from '@/components/notavailable';
+import { notFound } from 'next/navigation';
 
 const MainComponent = dynamic(() => import('@/components/dashboard'));
 
@@ -31,15 +32,24 @@ const Home = async ({
       params?.domain as string
     );
   }
+
+  const allowedDomains = ['BLS', 'BCAP'];
+  if (!allowedDomains.includes(domain)) {
+    notFound();
+  }
+
+  if (!organizations || organizations.length === 0) {
+    return <PageNotAvailable />;
+  }
+  
   return (
-    <div>
-      {organizations.length != 0  ? (<MainComponent
-        organizations={organizations?.organizations || []}
-        employees={employees?.employees || []}
-        staffData={staffData?.employee || null}
-      />) : (<PageNotAvailable/>)}
-    </div>
+    <MainComponent
+      organizations={organizations?.organizations || []}
+      employees={employees?.employees || []}
+      staffData={staffData?.employee || null}
+    />
   );
+  
 };
 
 export default Home;

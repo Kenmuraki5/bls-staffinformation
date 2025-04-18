@@ -12,6 +12,7 @@ import {
   GridRowId,
   GridRowEditStopReasons,
   GridSlots,
+  GridSlotProps,
 } from '@mui/x-data-grid';
 import { useParams } from 'next/navigation';
 import { getRole, getToken } from '@/app/utils/auth';
@@ -30,8 +31,8 @@ interface EditToolbarProps {
   handleOpenAddModal: (setOpenAddModal: string, row: any) => void
 }
 
-function EditToolbar(props: EditToolbarProps) {
-  const { handleOpenAddModal, role, type } = props;
+function EditToolbar(props: GridSlotProps['toolbar']) {
+  const { handleOpenAddModal, role, type }:any = props;
 
   const handleClick = () => {
     handleOpenAddModal(type, null); // Pass null to clear the selectedRow state
@@ -46,7 +47,8 @@ function EditToolbar(props: EditToolbarProps) {
       )}
     </GridToolbarContainer>
   );
-}
+  };
+
 
 
 export const StartEditButtonGrid: React.FC<AdminEmployeemanagementProps & { type: "employees" | "organizations" | 'domains' | 'branchs' | "managers" | "jobs" }> = ({ data, type }) => {
@@ -458,10 +460,10 @@ export const StartEditButtonGrid: React.FC<AdminEmployeemanagementProps & { type
           onRowModesModelChange={handleRowModesModelChange}
           onRowEditStop={handleRowEditStop}
           slots={{
-            toolbar: EditToolbar as GridSlots['toolbar'],
+            toolbar: EditToolbar,
           }}
           slotProps={{
-            toolbar: { type, role, handleOpenAddModal },
+            toolbar: { type, role, handleOpenAddModal } as any,
           }}
           sx={{ height: '100%', width: '100%' }}
         />
