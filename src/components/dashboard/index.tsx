@@ -197,7 +197,7 @@ const Dashboard: React.FC<DashboardProps> = ({ organizations, employees, staffDa
   ), [treeItems, expandedItems, clickHandler]);
 
   return (
-    <main>
+    <main className='mt-5'>
       <Button className="mt-5" onClick={toggleTreeViewVisibility}>
         {isTreeViewVisible ? "Hide Panel" : "Show"}
       </Button>

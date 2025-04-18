@@ -45,7 +45,6 @@ const EmployeeModal = ({ open, handleClose, addRecord, updateRecord, deleteRecor
   const [domainId, setDomainId] = useState(null);
 
   const [avatarImage, setAvatarImage] = useState<string | null>(null);
-  const [file, setFile] = useState<File | null>(null);
 
   const [errors, setErrors] = useState<any>({
     empId: '',
@@ -57,25 +56,6 @@ const EmployeeModal = ({ open, handleClose, addRecord, updateRecord, deleteRecor
     email: '',
     extension: '',
   });
-
-  const corporationAutocomplete = [
-    'President',
-    'Managing Director',
-    'Deputy Managing Director',
-    'Senior Executve Vice President',
-    'Executve Vice President',
-    'Senior Vice President',
-    'First Vice President',
-    'Vice President',
-    'Deputy Vice President',
-    'Senior Assistant Vice President',
-    'Assistant Vice President',
-    'Supervisor',
-    'Staff',
-    'Temporary',
-    'Advisor',
-    'Senior Managing Director'
-  ];
 
   async function fetchData() {
     try {
@@ -128,7 +108,8 @@ const EmployeeModal = ({ open, handleClose, addRecord, updateRecord, deleteRecor
       setOtherLicense(selectedRow.otherLicense || '');
       setBranchId(selectedRow.branchId || null);
       setDomainId(selectedRow.domainId || null);
-      const imageUrl = `${process.env.NEXT_PUBLIC_BASEURL}/uploads/${selectedRow.empId}.png`;
+      // const imageUrl = `${process.env.NEXT_PUBLIC_BASEURL}/${selectedRow.picturePath}`;
+      const imageUrl = `http://bualuangintranet.sawasdee.brk1/employee/${selectedRow?.picturePath?.replace(/^(\.\/|\.\.\/)+/, '')}`;
       setAvatarImage(imageUrl ? imageUrl : null);
       setHireDate(formatDate(selectedRow.startWorkingDate));
       setLastWorkingDate(formatDate(selectedRow.lastWorkingDate));
@@ -165,18 +146,6 @@ const EmployeeModal = ({ open, handleClose, addRecord, updateRecord, deleteRecor
     setDomainId(null);
     setAvatarImage(null);
     setDirectLine('');
-  };
-
-  const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const file: any = event.target.files?.[0];
-    setFile(file);
-    if (file) {
-      const reader = new FileReader();
-      reader.onloadend = () => {
-        setAvatarImage(reader.result as string);
-      };
-      reader.readAsDataURL(file);
-    }
   };
 
   const formatDateToISO = (dateString: string) => {
@@ -301,9 +270,6 @@ const EmployeeModal = ({ open, handleClose, addRecord, updateRecord, deleteRecor
         corporationTitle: corporationTitle,
         extensionCode: extension,
       };
-      if (file) {
-        await handleUpload();
-      }
       if (selectedRow != null) {
         await updateRecord(data);
         setRows((oldRows: any) =>
@@ -324,58 +290,6 @@ const EmployeeModal = ({ open, handleClose, addRecord, updateRecord, deleteRecor
       setAlertMessage(error.message);
     }
   };
-
-  const handleUpload = async () => {
-    const token = await getToken("auth_token");
-    if (!empId || !file) {
-      alert('Please provide both Employee ID and a file.');
-      return;
-    }
-
-    const reader = new FileReader();
-
-    reader.onloadend = () => {
-      if (reader.result) {
-        const base64String = (reader.result as string).split(',')[1];
-        const imageExtension = file.name.split('.').pop() || '';
-
-        const requestBody = {
-          empId: empId,
-          imageData: base64String,
-          imageExtension: imageExtension
-        };
-        fetchWithAuthClient(`${process.env.NEXT_PUBLIC_BASEURL}/staffinformation/employee/uploadPicture`, {
-          method: 'POST',
-          headers: {
-            'Authorization': `Bearer ${token}`,
-            'Content-Type': 'application/json'
-          },
-          body: JSON.stringify(requestBody)
-        })
-          .then(async response => {
-            if (!response.ok) {
-              const errorText = await response.text();
-              throw new Error(`HTTP error! Status: ${response.status} - ${errorText}`);
-            }
-            alert('Upload successful!');
-            return response.json();
-          })
-          .then(data => {
-            console.log('Success:', data);
-            handleClose(true);
-          })
-          .catch((error) => {
-            console.error('Error:', error);
-            alert(`Error: ${error.message}`);
-          });
-      }
-    };
-
-    if (file) {
-      reader.readAsDataURL(file);
-    }
-  };
-
 
 
   return (
@@ -448,7 +362,7 @@ const EmployeeModal = ({ open, handleClose, addRecord, updateRecord, deleteRecor
               src={avatarImage || ''}
               sx={{ width: 150, height: 150 }}
             />
-            {role == "AdminStaffInformation" && (
+            {/* {role == "AdminStaffInformation" && (
               <>
                 <input
                   type="file"
@@ -463,7 +377,7 @@ const EmployeeModal = ({ open, handleClose, addRecord, updateRecord, deleteRecor
                   </IconButton>
                 </label>
               </>
-            )}
+            )} */}
 
             <TextField
               fullWidth

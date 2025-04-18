@@ -7,7 +7,6 @@ import { getAllBranch } from '@/app/api/branch';
 import { getAllManager } from '@/app/api/manager';
 import { getAllJob } from '@/app/api/job';
 import PageNotAvailable from '@/components/notavailable';
-import UploadEditEmployees from '@/components/admin/UploadEmployeeFile';
 
 export default async function AdminEmployeeManagement({
   params,
@@ -31,7 +30,6 @@ export default async function AdminEmployeeManagement({
   return (
     <div className="min-h-fill bg-white flex flex-col overflow-y-visible">
       {data ? (<StartEditButtonGrid data={data || []} type={type} />) : <PageNotAvailable/> }
-      {/* <UploadEditEmployees></UploadEditEmployees> */}
     </div>
   );
 }

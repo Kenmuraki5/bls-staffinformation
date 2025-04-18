@@ -126,7 +126,7 @@ const UploadEditEmployees = () => {
       <Card sx={{ width: 700, p: 3, mb: 4, boxShadow: 3, borderRadius: 3 }}>
         <CardContent>
           <Typography variant="h5" gutterBottom>
-            อัปโหลดไฟล์พนักงาน
+            อัปโหลดไฟล์
           </Typography>
           <Typography variant="body2" color="text.secondary" gutterBottom>
             รองรับ .csv โดยต้องมีหัวตารางตรงกับโครงสร้างฐานข้อมูล (ไม่เกิน 50 แถว)

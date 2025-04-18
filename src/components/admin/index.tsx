@@ -24,6 +24,7 @@ import JobModal from '../addModal/addJob';
 import BranchModal from '../addModal/addBranch';
 import ManagerModal from '../addModal/addManager';
 import AlertResponse from '../snackbar';
+import UploadFileIcon from '@mui/icons-material/UploadFile';
 
 interface EditToolbarProps {
   type: string
@@ -32,22 +33,38 @@ interface EditToolbarProps {
 }
 
 function EditToolbar(props: GridSlotProps['toolbar']) {
-  const { handleOpenAddModal, role, type }:any = props;
+  const { handleOpenAddModal, role, type }: any = props;
 
   const handleClick = () => {
     handleOpenAddModal(type, null); // Pass null to clear the selectedRow state
   };
 
   return (
-    <GridToolbarContainer>
+    <Box className="mt-3" display="flex" gap={2}>
       {role === "AdminStaffInformation" && (
-        <Button color="primary" startIcon={<AddIcon />} onClick={handleClick}>
-          Add record
-        </Button>
+        <>
+          <Button
+            color="primary"
+            startIcon={<AddIcon />}
+            onClick={handleClick}
+          >
+            Add record
+          </Button>
+          <Button
+            color="secondary"
+            startIcon={<UploadFileIcon />}
+            component="a"
+            href={`/${type}/Management/FileUpload`}
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            Update From file
+          </Button>
+        </>
       )}
-    </GridToolbarContainer>
+    </Box>
   );
-  };
+};
 
 
 
@@ -384,6 +401,7 @@ export const StartEditButtonGrid: React.FC<AdminEmployeemanagementProps & { type
     { field: 'telephone', headerName: 'Telephone', minWidth: 120, flex: 1, headerAlign: 'center', headerClassName: 'super-app-theme--header', align: 'center' },
     { field: 'fax', headerName: 'Fax', minWidth: 120, flex: 1, headerAlign: 'center', headerClassName: 'super-app-theme--header', align: 'center' },
     { field: 'zoneCode', headerName: 'Zone Code', minWidth: 100, flex: 1, headerAlign: 'center', headerClassName: 'super-app-theme--header', align: 'center' },
+    { field: 'picturePath', headerName: 'Picture Path', minWidth: 100, flex: 1, headerAlign: 'center', headerClassName: 'super-app-theme--header', align: 'center' },
   ];
 
 
@@ -415,7 +433,7 @@ export const StartEditButtonGrid: React.FC<AdminEmployeemanagementProps & { type
       ),
     },
     {
-      field: 'empName', headerName: 'Name', minWidth: 200, flex: 1, headerAlign: 'center', headerClassName: 'super-app-theme--header', align: 'center', 
+      field: 'empName', headerName: 'Name', minWidth: 200, flex: 1, headerAlign: 'center', headerClassName: 'super-app-theme--header', align: 'center',
       renderCell: (params) => (
         <div>
           {params.row.empName}
@@ -465,6 +483,7 @@ export const StartEditButtonGrid: React.FC<AdminEmployeemanagementProps & { type
           slotProps={{
             toolbar: { type, role, handleOpenAddModal } as any,
           }}
+          showToolbar
           sx={{ height: '100%', width: '100%' }}
         />
       </div>
