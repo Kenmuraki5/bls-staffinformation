@@ -146,7 +146,7 @@ export default function JobModal({ open, handleClose, addRecord, updateRecord, d
               variant="standard"
               fullWidth
               className="mb-4"
-              value={jobTitle}
+              value={jobTitleTh}
               onChange={(e) => setJobTitle(e.target.value)}
               InputProps={{
                 readOnly: role != "AdminStaffInformation",
