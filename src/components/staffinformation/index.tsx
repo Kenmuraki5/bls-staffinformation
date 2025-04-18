@@ -110,7 +110,7 @@ const StaffProfile: React.FC<StaffInformationProps> = ({ staffData }: any) => {
           <div className="absolute -bottom-16 left-10">
             <div className="relative w-48 h-48">
               <Image
-                src={`http://bualuangintranet.sawasdee.brk1/employee/img/staff/${staffData?.empId?.toString().padStart(4, '0')}.jpg`}
+                src={`http://bualuangintranet.sawasdee.brk1/employee/${staffData?.picturePath?.replace(/^(\.\/|\.\.\/)+/, '')}`}
                 alt="Profile"
                 fill
                 className="bg-white rounded-full border-4 border-white shadow-lg object-cover object-top"
