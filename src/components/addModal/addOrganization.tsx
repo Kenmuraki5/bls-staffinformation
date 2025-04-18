@@ -95,7 +95,6 @@ export default function OrganizationModal({ open, handleClose, addRecord, update
 
     try {
       const data = {
-        organizationId,
         domainId,
         organizationUnit,
         parentOrganizationId,
@@ -185,19 +184,6 @@ export default function OrganizationModal({ open, handleClose, addRecord, update
         <Divider className="mb-4" />
         <Grid container spacing={2}>
           <Grid size={{ xs: 12 }}>
-            <TextField
-              label="Organization ID"
-              variant="standard"
-              fullWidth
-              className="mb-4"
-              value={organizationId}
-              onChange={(e) => setOrganizationId(e.target.value)}
-              error={!!errors.organizationId}
-              helperText={errors.organizationId}
-              InputProps={{
-                readOnly: role !== "AdminStaffInformation" || selectedRow && Object.keys(selectedRow).length > 0,
-              }}
-            />
             <Autocomplete
               className='my-3'
               id="domain-autocomplete"
