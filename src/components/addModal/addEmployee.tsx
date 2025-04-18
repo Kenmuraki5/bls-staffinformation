@@ -299,7 +299,7 @@ const EmployeeModal = ({ open, handleClose, addRecord, updateRecord, deleteRecor
             {avatarImage && (
               <Avatar
               alt="Employee Avatar"
-              src={avatarImage || ''}
+              src={avatarImage}
               sx={{ width: 150, height: 150 }}
             />)}
             <TextField
