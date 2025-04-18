@@ -95,6 +95,7 @@ export default function OrganizationModal({ open, handleClose, addRecord, update
 
     try {
       const data = {
+        organizationId,
         domainId,
         organizationUnit,
         parentOrganizationId,
