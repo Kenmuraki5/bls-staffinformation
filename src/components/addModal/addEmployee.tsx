@@ -12,6 +12,7 @@ import { getToken } from '@/app/utils/auth';
 import fetchWithAuthClient from '@/app/utils/fetchWithAuthClientSide';
 import { getAllBranchClientSide } from '@/app/api/branch';
 import { getAllCorporationsClientSide } from '@/app/api/corporations';
+import Image from 'next/image';
 
 const EmployeeModal = ({ open, handleClose, addRecord, updateRecord, deleteRecord, setRows, setSnackbarOpen, setAlertMessage, setError, selectedRow, role }: any) => {
   const [organizations, setOrganizations] = useState([]);
@@ -108,9 +109,7 @@ const EmployeeModal = ({ open, handleClose, addRecord, updateRecord, deleteRecor
       setOtherLicense(selectedRow.otherLicense || '');
       setBranchId(selectedRow.branchId || null);
       setDomainId(selectedRow.domainId || null);
-      // const imageUrl = `${process.env.NEXT_PUBLIC_BASEURL}/${selectedRow.picturePath}`;
-      const imageUrl = `http://bualuangintranet.sawasdee.brk1/employee/${selectedRow?.picturePath?.replace(/^(\.\/|\.\.\/)+/, '')}`;
-      setAvatarImage(imageUrl ? imageUrl : null);
+      setAvatarImage(selectedRow?.picturePath?.replace(/^(\.\/|\.\.\/)+/, '') || null);
       setHireDate(formatDate(selectedRow.startWorkingDate));
       setLastWorkingDate(formatDate(selectedRow.lastWorkingDate));
       setEffectiveDate(formatDate(selectedRow.effectiveDate));
@@ -297,11 +296,12 @@ const EmployeeModal = ({ open, handleClose, addRecord, updateRecord, deleteRecor
           {/* Left Column */}
           <Grid size={{ xs: 12, md: 4 }} sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
             {avatarImage && (
-              <Avatar
-              alt="Employee Avatar"
-              src={avatarImage}
-              sx={{ width: 150, height: 150 }}
-            />)}
+              <Image
+                src={`http://bualuangintranet.sawasdee.brk1/employee/${avatarImage}`}
+                alt="Profile"
+                fill
+                className="bg-white rounded-full border-4 border-white shadow-lg object-cover object-top"
+              />)}
             <TextField
               fullWidth
               label="Employee ID"
