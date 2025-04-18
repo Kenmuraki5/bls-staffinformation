@@ -417,7 +417,8 @@ export const StartEditButtonGrid: React.FC<AdminEmployeemanagementProps & { type
         </div>
       )
     },
-    { field: 'jobTitle', headerName: 'Job Title', minWidth: 100, flex: 1, headerAlign: 'center', headerClassName: 'super-app-theme--header', align: 'center' },
+    { field: 'jobTitle', headerName: 'Job Title (ENG)', minWidth: 100, flex: 1, headerAlign: 'center', headerClassName: 'super-app-theme--header', align: 'center' },
+    { field: 'jobTitleTh', headerName: 'Job Title (TH)', minWidth: 100, flex: 1, headerAlign: 'center', headerClassName: 'super-app-theme--header', align: 'center' },
   ]
 
   const columns_manager: GridColDef[] = [

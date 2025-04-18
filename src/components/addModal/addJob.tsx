@@ -7,24 +7,11 @@ import DeleteOutlineOutlinedIcon from '@mui/icons-material/DeleteOutlineOutlined
 export default function JobModal({ open, handleClose, addRecord, updateRecord, deleteRecord, setRows, setSnackbarOpen, setAlertMessage, setError, selectedRow, role }: any) {
   const [jobId, setJobId] = useState('');
   const [jobTitle, setJobTitle] = useState('');
+  const [jobTitleTh, setJobTitleTh] = useState('');
   const [errors, setErrors] = useState<{ [key: string]: string }>({});
 
   const validate = () => {
     const newErrors: { [key: string]: string } = {};
-
-    if (!jobId) {
-      newErrors.jobId = 'Job ID must not be empty.';
-    } else if (!/^[A-Z0-9]+$/.test(jobId)) { // Assuming Job ID should be uppercase letters or numbers
-      newErrors.jobId = 'Job ID must be uppercase letters and numbers only.';
-    }
-
-    if (!jobTitle) {
-      newErrors.jobTitle = 'Job Title must not be empty.';
-    } else if (jobTitle.length > 255) {
-      newErrors.jobTitle = 'Job Title must not exceed 255 characters.';
-    } else if (!/^[A-Za-z\s]+ \/ [\u0E00-\u0E7F\s]+$/.test(jobTitle)) {
-      newErrors.jobTitle = 'Job Title must follow the format "English text / Thai text".';
-    }
 
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
@@ -33,6 +20,7 @@ export default function JobModal({ open, handleClose, addRecord, updateRecord, d
   const resetState = () => {
     setJobId('');
     setJobTitle('');
+    setJobTitleTh('');
     setErrors({});
   };
 
@@ -43,7 +31,8 @@ export default function JobModal({ open, handleClose, addRecord, updateRecord, d
 
     try {
       const data = {
-        jobTitle
+        jobTitle,
+        jobTitleTh
       };
       if (selectedRow != null) {
         await updateRecord(data);
@@ -72,6 +61,7 @@ export default function JobModal({ open, handleClose, addRecord, updateRecord, d
     if (selectedRow) {
       setJobId(selectedRow.jobId || '');
       setJobTitle(selectedRow.jobTitle || '');
+      setJobTitleTh(selectedRow.jobTitleTh || '');
     } else {
       resetState();
     }
@@ -154,14 +144,23 @@ export default function JobModal({ open, handleClose, addRecord, updateRecord, d
               }}
             />
             <TextField
-              label="Job Title"
+              label="Job Title (Eng)"
               variant="standard"
               fullWidth
               className="mb-4"
               value={jobTitle}
               onChange={(e) => setJobTitle(e.target.value)}
-              error={!!errors.jobTitle}
-              helperText={errors.jobTitle}
+              InputProps={{
+                readOnly: role != "AdminStaffInformation",
+              }}
+            />
+            <TextField
+              label="Job Title (TH)"
+              variant="standard"
+              fullWidth
+              className="mb-4"
+              value={jobTitle}
+              onChange={(e) => setJobTitle(e.target.value)}
               InputProps={{
                 readOnly: role != "AdminStaffInformation",
               }}
