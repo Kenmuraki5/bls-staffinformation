@@ -319,9 +319,7 @@ const EmployeeModal = ({ open, handleClose, addRecord, updateRecord, deleteRecor
                 error={!!errors.empId}
                 helperText={errors.empId}
                 sx={{ mt: 2 }}
-                InputProps={{
-                  readOnly: role != "AdminStaffInformation" && selectedRow && Object.keys(selectedRow).length > 0,
-                }}
+                aria-readonly
               />
             )}
 

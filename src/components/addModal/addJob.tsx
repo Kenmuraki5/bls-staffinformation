@@ -31,6 +31,7 @@ export default function JobModal({ open, handleClose, addRecord, updateRecord, d
 
     try {
       const data = {
+        jobId,
         jobTitle,
         jobTitleTh
       };
