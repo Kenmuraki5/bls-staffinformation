@@ -319,7 +319,11 @@ const EmployeeModal = ({ open, handleClose, addRecord, updateRecord, deleteRecor
                 error={!!errors.empId}
                 helperText={errors.empId}
                 sx={{ mt: 2 }}
-                aria-readonly
+                slotProps={{
+                  input: {
+                    readOnly: true,
+                  },
+                }}
               />
             )}
 
