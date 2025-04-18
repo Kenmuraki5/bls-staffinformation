@@ -131,19 +131,6 @@ export default function JobModal({ open, handleClose, addRecord, updateRecord, d
         <Grid container spacing={2}>
           <Grid size={{ xs: 12 }}>
             <TextField
-              label="Job ID"
-              variant="standard"
-              fullWidth
-              className="mb-4"
-              value={jobId}
-              onChange={(e) => setJobId(e.target.value)}
-              error={!!errors.jobId}
-              helperText={errors.jobId}
-              InputProps={{
-                readOnly: role != "AdminStaffInformation",
-              }}
-            />
-            <TextField
               label="Job Title (Eng)"
               variant="standard"
               fullWidth
