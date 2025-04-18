@@ -259,7 +259,7 @@ const EmployeeModal = ({ open, handleClose, addRecord, updateRecord, deleteRecor
           <IconButton onClick={handleClose} className='hover:text-blue-500'>
             <ArrowBackIcon />
           </IconButton>
-          <Typography variant="h6" component="h6" className="ml-12 text-black">
+          <Typography variant="body1" className="ml-12 text-black">
             {selectedRow && Object.keys(selectedRow).length > 0 && role == "AdminStaffInformation"
               ? "Edit Staff Information" : selectedRow == null && role == "AdminStaffInformation" ? "Add Employee" : "Staff Information"}
           </Typography>

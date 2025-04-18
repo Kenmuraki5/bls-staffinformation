@@ -129,7 +129,7 @@ export default function BranchModal({
             <IconButton onClick={handleClose} className='hover:text-blue-500'>
               <ArrowBackIcon />
             </IconButton>
-            <Typography variant="h6" component="h6" className="ml-12 text-black">
+            <Typography variant="body1" className="ml-12 text-black">
               {selectedRow != null && role == "AdminStaffInformation" ? "Edit Branch" : selectedRow == null && role == "AdminStaffInformation" ? "Add Branch" : "Domain Information"}
             </Typography>
           </Box>
