@@ -35,6 +35,8 @@ const EmployeeModal = ({ open, handleClose, addRecord, updateRecord, deleteRecor
   const [directLine, setDirectLine] = useState('');
   const [corporationTitle, setCorporationTitle] = useState('');
   const [email, setEmail] = useState('');
+  const [logonId, setLogonId] = useState('');
+  const [shortName, setShortName] = useState('');
   const [organizationId, setOrganizationId] = useState(null);
   const [jobId, setJobId] = useState(null);
   const [derivativeTrader, setDerivativeTrader] = useState('');
@@ -99,6 +101,8 @@ const EmployeeModal = ({ open, handleClose, addRecord, updateRecord, deleteRecor
       setDirectLine(selectedRow.directLine || '');
       setCorporationTitle(selectedRow.corporationTitle || '');
       setEmail(selectedRow.email || '');
+      setLogonId(selectedRow.logonId || '');
+      setShortName(selectedRow.shortName || '');
       setOrganizationId(selectedRow.organizationId || null);
       setJobId(selectedRow.jobId || null);
       setDomainId(selectedRow.domainId);
@@ -207,6 +211,8 @@ const EmployeeModal = ({ open, handleClose, addRecord, updateRecord, deleteRecor
         effectiveDate: formattedeffectiveDate,
         corporationTitle: corporationTitle,
         extensionCode: extension,
+        logonId,
+        shortName
       };
       if (selectedRow != null) {
         await updateRecord(data);
@@ -335,7 +341,17 @@ const EmployeeModal = ({ open, handleClose, addRecord, updateRecord, deleteRecor
             <TextField
               fullWidth
               required
-
+              label="logon ID"
+              variant="outlined"
+              value={logonId}
+              onChange={(e) => setLogonId(e.target.value)}
+              sx={{ mt: 2 }}
+              InputProps={{
+                readOnly: role != "AdminStaffInformation",
+              }}
+            />
+            <TextField
+              fullWidth
               label="Extension"
               variant="outlined"
               value={extension}
@@ -347,8 +363,6 @@ const EmployeeModal = ({ open, handleClose, addRecord, updateRecord, deleteRecor
             />
             <TextField
               fullWidth
-              required
-
               label="DirectLine"
               variant="outlined"
               value={directLine}
@@ -441,6 +455,18 @@ const EmployeeModal = ({ open, handleClose, addRecord, updateRecord, deleteRecor
                   onChange={(e) => setEnFirstName(e.target.value)}
                   error={!!errors.enFirstName}
                   helperText={errors.enFirstName}
+                  InputProps={{
+                    readOnly: role != "AdminStaffInformation",
+                  }}
+                />
+              </Grid>
+              <Grid size={{ xs: 12, sm: 6 }}>
+                <TextField
+                  fullWidth
+                  label="Short Name*"
+                  variant="outlined"
+                  value={shortName}
+                  onChange={(e) => setShortName(e.target.value)}
                   InputProps={{
                     readOnly: role != "AdminStaffInformation",
                   }}
