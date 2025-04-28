@@ -71,11 +71,6 @@ export default function OrganizationModal({ open, handleClose, addRecord, update
 
     let isValid = true;
 
-    if (!organizationId) {
-      newErrors.organizationId = 'Organization ID is required';
-      isValid = false;
-    }
-
     if (!domainId) {
       newErrors.domainId = 'Domain ID is required';
       isValid = false;
