@@ -347,25 +347,19 @@ const EmployeeModal = ({ open, handleClose, addRecord, updateRecord, deleteRecor
                 height={150}
                 className="bg-white rounded-full border-4 border-white shadow-lg object-cover object-top"
               />)}
-            {empId && (
-              <TextField
-                fullWidth
-                label="Employee ID"
-                variant="outlined"
-                value={empId}
-                onChange={(e) => setStaffId(e.target.value)}
-                error={!!errors.empId}
-                helperText={errors.empId}
-                sx={{ mt: 2 }}
-                slotProps={{
-                  input: {
-                    readOnly: true,
-                  },
-                }}
-              />
-            )}
-
-
+            <TextField
+              fullWidth
+              label="Employee ID"
+              variant="outlined"
+              value={empId}
+              onChange={(e) => setStaffId(e.target.value)}
+              error={!!errors.empId}
+              helperText={errors.empId}
+              sx={{ mt: 2 }}
+              InputProps={{
+                readOnly: !!empId, // << ถ้า empId มีค่า => readOnly, ถ้าไม่มี => editable
+              }}
+            />
             <TextField
               fullWidth
               required
@@ -437,7 +431,7 @@ const EmployeeModal = ({ open, handleClose, addRecord, updateRecord, deleteRecor
                 >
                   <MenuItem value="นาย/Mr.">นาย / Mr.</MenuItem>
                   <MenuItem value="นาง/Mrs.">นาง / Mrs.</MenuItem>
-                  <MenuItem value="น.ส./Ms.">น.ส./Ms.</MenuItem>
+                  <MenuItem value="น.ส./Ms.">น.ส. / Ms.</MenuItem>
                 </Select>
                 {errors.title && <FormHelperText>{errors.title}</FormHelperText>}
               </Grid>
