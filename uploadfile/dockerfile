@@ -1,0 +1,35 @@
+# 1. ใช้ Go official image เป็น build stage
+FROM golang:1.21 AS builder
+
+# 2. Set working directory
+WORKDIR /app
+
+# 3. Copy go.mod และ go.sum
+COPY go.mod go.sum ./
+
+# 4. Download dependencies
+RUN go mod download
+
+# 5. Copy source code
+COPY . .
+
+# 6. Build Go binary
+RUN CGO_ENABLED=0 GOOS=linux go build -o upload-server main.go
+
+# 7. สร้าง production image แบบเบา
+FROM alpine:latest
+
+# 8. ติดตั้ง CA certificates
+RUN apk --no-cache add ca-certificates
+
+# 9. Set working directory
+WORKDIR /root/
+
+# 10. Copy binary จาก builder
+COPY --from=builder /app/upload-server .
+
+# 11. Expose port 9090 (เปลี่ยนจาก 8080 เป็น 9090)
+EXPOSE 9090
+
+# 12. Run server
+CMD ["./upload-server"]
