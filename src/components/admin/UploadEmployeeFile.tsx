@@ -82,7 +82,7 @@ const UploadPreviewEmployees = () => {
 
     try {
       setLoading(true);
-      const res = await fetch('http://10.100.30.61:9090/upload-employee-file', {
+      const res = await fetch(`${process.env.NEXT_PUBLIC_BASEURL_CLIENT_SIDE}/upload-employee-file`, {
         method: 'POST',
         body: formData,
       });
