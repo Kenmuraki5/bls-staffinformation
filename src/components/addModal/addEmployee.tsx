@@ -356,10 +356,8 @@ const EmployeeModal = ({ open, handleClose, addRecord, updateRecord, deleteRecor
                 error={!!errors.empId}
                 helperText={errors.empId}
                 sx={{ mt: 2 }}
-                slotProps={{
-                  input: {
-                    readOnly: selectedRow?.empId == "",
-                  },
+                InputProps={{
+                  readOnly: !!selectedRow?.empId,
                 }}
               />
             <TextField
