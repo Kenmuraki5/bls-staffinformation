@@ -347,7 +347,7 @@ const EmployeeModal = ({ open, handleClose, addRecord, updateRecord, deleteRecor
                 height={150}
                 className="bg-white rounded-full border-4 border-white shadow-lg object-cover object-top"
               />)}
-            {empId != "" ? (
+            {selectedRow?.empId != "" && (
               <TextField
                 fullWidth
                 label="Employee ID"
@@ -359,22 +359,10 @@ const EmployeeModal = ({ open, handleClose, addRecord, updateRecord, deleteRecor
                 sx={{ mt: 2 }}
                 slotProps={{
                   input: {
-                    readOnly: true,
+                    readOnly: selectedRow?.empId != "",
                   },
                 }}
-              />) : (
-                <TextField
-                fullWidth
-                label="Employee ID"
-                variant="outlined"
-                value={empId}
-                onChange={(e) => setStaffId(e.target.value)}
-                error={!!errors.empId}
-                helperText={errors.empId}
-                sx={{ mt: 2 }}
-              />
-              )
-            }
+              />)}
             <TextField
               fullWidth
               required
