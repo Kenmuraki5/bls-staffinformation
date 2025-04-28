@@ -1,6 +1,6 @@
 module example.com/m/v2
 
-go 1.24.2
+go 1.21
 
 require (
 	github.com/xuri/excelize/v2 v2.9.0
