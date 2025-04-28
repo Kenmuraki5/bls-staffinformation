@@ -50,7 +50,7 @@ function EditToolbar(props: GridSlotProps['toolbar']) {
           >
             Add record
           </Button>
-          <Button
+          {type == "employees" && (<Button
             color="secondary"
             startIcon={<UploadFileIcon />}
             component="a"
@@ -59,7 +59,7 @@ function EditToolbar(props: GridSlotProps['toolbar']) {
             rel="noopener noreferrer"
           >
             Update From file
-          </Button>
+          </Button>)}
         </>
       )}
     </Box>
