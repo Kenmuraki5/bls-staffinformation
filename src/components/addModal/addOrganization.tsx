@@ -92,7 +92,7 @@ export default function OrganizationModal({ open, handleClose, addRecord, update
       let data: any = {
         domainId,
         organizationUnit,
-        parentOrganizationId,
+        parentOrganizationId: String(parentOrganizationId),
       };
   
       if (selectedRow != null) {
@@ -212,9 +212,9 @@ export default function OrganizationModal({ open, handleClose, addRecord, update
             <Autocomplete
               className='my-3'
               id="organizationID-autocomplete"
-              options={organizations.filter((org:any) => org?.organizationId !== selectedRow?.organizationId)}
+              options={organizations.filter((org:any) => org?.organizationId != selectedRow?.organizationId)}
               getOptionLabel={(option: any) => option.organizationId + ": (" + option.domainId + ") " + option.organizationUnit}
-              value={organizations.find((org: any) => org.organizationId === parentOrganizationId) || null}
+              value={organizations.find((org: any) => org.organizationId == parentOrganizationId) || null}
               onChange={(event, newValue) => {
                 setParentOrganizationId(newValue ? newValue.organizationId : null);
               }}
