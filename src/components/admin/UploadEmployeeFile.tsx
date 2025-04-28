@@ -11,69 +11,32 @@ import {
   Alert,
   CircularProgress,
 } from '@mui/material';
-import Papa from 'papaparse';
 import {
   MaterialReactTable,
   type MRT_ColumnDef,
-  type MRT_Row,
-  type MRT_TableInstance,
 } from 'material-react-table';
+import Papa from 'papaparse';
 
-// All fields from your employees table
-const defaultEmployee: Record<string, any> = {
-  emp_id: '',
-  organization_id: '',
-  branch_id: '',
-  job_id: '',
-  en_title: '',
-  en_first_name: '',
-  en_last_name: '',
-  th_title: '',
-  th_first_name: '',
-  th_last_name: '',
-  short_name: '',
-  division: '',
-  department: '',
-  start_working_date: '',
-  last_working_date: '',
-  effective_date: '',
-  work_status: '',
-  picture_path: '',
-  th_middle_name: '',
-  eng_middle_name: '',
-  nickname: '',
-  extension_code: '',
-  direct_line: '',
-  corporation_title: '',
-  position: '',
-  proximity: '',
-  derivative_trader: '',
-  derivative_license: '',
-  single_trader: '',
-  single_license: '',
-  div_id: '',
-  dep_id: '',
-  logon_id: '',
-  email: '',
-  other_license: '',
-};
-
-const UploadEditEmployees = () => {
+const UploadPreviewEmployees = () => {
   const [data, setData] = useState<Record<string, any>[]>([]);
+  const [columns, setColumns] = useState<MRT_ColumnDef<Record<string, any>>[]>([]);
+  const [file, setFile] = useState<File | null>(null);
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState('');
   const [severity, setSeverity] = useState<'success' | 'error'>('success');
   const [open, setOpen] = useState(false);
 
   const handleFileUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (!file) return;
+    const uploadedFile = e.target.files?.[0];
+    if (!uploadedFile) return;
 
+    setFile(uploadedFile);
     setLoading(true);
-    Papa.parse<Record<string, any>>(file, {
+
+    Papa.parse<Record<string, any>>(uploadedFile, {
       header: true,
       skipEmptyLines: true,
-      complete: (result: Papa.ParseResult<Record<string, any>>) => {
+      complete: (result) => {
         if (result.data.length > 50) {
           setLoading(false);
           setMessage('ไม่สามารถอัปโหลดได้เกิน 50 แถว');
@@ -81,43 +44,62 @@ const UploadEditEmployees = () => {
           setOpen(true);
           return;
         }
+
         setData(result.data);
+
+        if (result.meta.fields) {
+          const dynamicColumns = result.meta.fields.map((field) => ({
+            accessorKey: field,
+            header: field.replace(/_/g, ' ').replace(/\b\w/g, (c) => c.toUpperCase()),
+          }));
+          setColumns(dynamicColumns);
+        }
+
         setLoading(false);
         setMessage('โหลดข้อมูลสำเร็จ');
         setSeverity('success');
         setOpen(true);
       },
       error: () => {
+        setLoading(false);
         setMessage('ไม่สามารถอ่านไฟล์ได้');
         setSeverity('error');
         setOpen(true);
-        setLoading(false);
       },
     });
   };
 
-  const columns: MRT_ColumnDef<Record<string, any>>[] = Object.keys(defaultEmployee).map(
-    (key) => ({
-      accessorKey: key,
-      header: key.replace(/_/g, ' ').replace(/\b\w/g, (c) => c.toUpperCase()),
-    })
-  );
-
-  const handleSubmitAll = async () => {
-    try {
-      const res = await fetch('/api/employees/update-all', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(data),
-      });
-      const result = await res.json();
-      setMessage(result.message || 'อัปเดตข้อมูลสำเร็จ');
-      setSeverity('success');
-      setOpen(true);
-    } catch (error) {
-      setMessage('ส่งข้อมูลล้มเหลว');
+  const handleSubmitFile = async () => {
+    if (!file) {
+      setMessage('กรุณาเลือกไฟล์ก่อน');
       setSeverity('error');
       setOpen(true);
+      return;
+    }
+
+    const formData = new FormData();
+    formData.append('file', file);
+
+    try {
+      setLoading(true);
+      const res = await fetch('http://localhost:8080/upload-employee-file', {
+        method: 'POST',
+        body: formData,
+      });
+
+      if (!res.ok) {
+        const text = await res.text();
+        throw new Error(text || 'Upload failed');
+      }
+
+      setMessage('อัปโหลดไฟล์และบันทึกสำเร็จ');
+      setSeverity('success');
+    } catch (error: any) {
+      setMessage(error.message || 'อัปโหลดล้มเหลว');
+      setSeverity('error');
+    } finally {
+      setOpen(true);
+      setLoading(false);
     }
   };
 
@@ -126,11 +108,12 @@ const UploadEditEmployees = () => {
       <Card sx={{ width: 700, p: 3, mb: 4, boxShadow: 3, borderRadius: 3 }}>
         <CardContent>
           <Typography variant="h5" gutterBottom>
-            อัปโหลดไฟล์
+            อัปโหลดไฟล์พนักงาน
           </Typography>
           <Typography variant="body2" color="text.secondary" gutterBottom>
-            รองรับ .csv โดยต้องมีหัวตารางตรงกับโครงสร้างฐานข้อมูล (ไม่เกิน 50 แถว)
+            รองรับเฉพาะ .csv โดยต้องมีหัวตารางที่ตรงกับโครงสร้างระบบ (ไม่เกิน 50 แถว)
           </Typography>
+
           <Box mt={2}>
             <input
               type="file"
@@ -139,6 +122,14 @@ const UploadEditEmployees = () => {
               style={{ marginBottom: '1rem' }}
             />
           </Box>
+
+          {file && (
+            <Box mt={2} textAlign="center">
+              <Button variant="contained" onClick={handleSubmitFile} disabled={loading}>
+                {loading ? <CircularProgress size={24} color="inherit" /> : 'บันทึกข้อมูล'}
+              </Button>
+            </Box>
+          )}
         </CardContent>
       </Card>
 
@@ -147,30 +138,14 @@ const UploadEditEmployees = () => {
           <MaterialReactTable
             columns={columns}
             data={data}
-            enableEditing
-            editDisplayMode="modal"
-            onEditingRowSave={({ values, row }: {
-              values: Record<string, any>;
-              row: MRT_Row<Record<string, any>>;
-              exitEditingMode: () => void;
-              table: MRT_TableInstance<Record<string, any>>;
-            }) => {
-              const updated = [...data];
-              updated[row.index] = values;
-              setData(updated);
-            }}
+            enableEditing={false} // ❗ ปิดโหมดแก้ไข
           />
-          <Box mt={2} textAlign="right">
-            <Button variant="contained" onClick={handleSubmitAll}>
-              บันทึกการเปลี่ยนแปลงทั้งหมด
-            </Button>
-          </Box>
         </Box>
       )}
 
       <Snackbar
         open={open}
-        autoHideDuration={3000}
+        autoHideDuration={4000}
         onClose={() => setOpen(false)}
         anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}
       >
@@ -182,4 +157,4 @@ const UploadEditEmployees = () => {
   );
 };
 
-export default UploadEditEmployees;
+export default UploadPreviewEmployees;
