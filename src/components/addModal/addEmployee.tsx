@@ -157,6 +157,8 @@ const EmployeeModal = ({ open, handleClose, addRecord, updateRecord, deleteRecor
     setDomainId(null);
     setAvatarImage(null);
     setDirectLine('');
+    setShortName('');
+    setLogonId('');
   };
 
   const formatDateToISO = (dateString: string) => {
@@ -199,10 +201,10 @@ const EmployeeModal = ({ open, handleClose, addRecord, updateRecord, deleteRecor
   const handleSave = async () => {
     try {
       const formattedStartDate = formatDateToISO(startWorkingDate);
-      const formattedlasttDate = formatDateToISO(lastWorkingDate);
-      const formattedeffectiveDate = formatDateToISO(effectiveDate);
-      const data = {
-        empId,
+      const formattedLastDate = formatDateToISO(lastWorkingDate);
+      const formattedEffectiveDate = formatDateToISO(effectiveDate);
+  
+      const data: any = {
         organizationId,
         branchId,
         directLine,
@@ -221,13 +223,19 @@ const EmployeeModal = ({ open, handleClose, addRecord, updateRecord, deleteRecor
         singleLicense,
         otherLicense: generateOtherLicenseXml(),
         startWorkingDate: formattedStartDate,
-        lastWorkingDate: formattedlasttDate,
-        effectiveDate: formattedeffectiveDate,
-        corporationTitle: corporationTitle,
+        lastWorkingDate: formattedLastDate,
+        effectiveDate: formattedEffectiveDate,
+        corporationTitle,
         extensionCode: extension,
         logonId,
-        shortName
+        shortName,
       };
+  
+      // เงื่อนไข: ถ้ามี empId → ค่อยใส่เข้าไป
+      if (empId) {
+        data.empId = empId;
+      }
+  
       if (selectedRow != null) {
         await updateRecord(data);
         setRows((oldRows: any) =>
@@ -238,6 +246,7 @@ const EmployeeModal = ({ open, handleClose, addRecord, updateRecord, deleteRecor
       } else {
         await addRecord(data);
       }
+  
       handleClose(true);
       setSnackbarOpen(true);
       setError(false);
@@ -248,6 +257,7 @@ const EmployeeModal = ({ open, handleClose, addRecord, updateRecord, deleteRecor
       setAlertMessage(error.message);
     }
   };
+  
   const handleOtherLicenseChange = (index: number, value: string) => {
     const updated = [...otherLicenses];
     updated[index] = value;
@@ -427,7 +437,7 @@ const EmployeeModal = ({ open, handleClose, addRecord, updateRecord, deleteRecor
                 >
                   <MenuItem value="นาย/Mr.">นาย / Mr.</MenuItem>
                   <MenuItem value="นาง/Mrs.">นาง / Mrs.</MenuItem>
-                  <MenuItem value="น.ส./Ms.">นาง / Ms.</MenuItem>
+                  <MenuItem value="น.ส./Ms.">น.ส./Ms.</MenuItem>
                 </Select>
                 {errors.title && <FormHelperText>{errors.title}</FormHelperText>}
               </Grid>
