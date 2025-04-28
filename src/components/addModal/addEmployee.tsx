@@ -194,7 +194,7 @@ const EmployeeModal = ({ open, handleClose, addRecord, updateRecord, deleteRecor
 
   const generateOtherLicenseXml = () => {
     if (otherLicenses.length === 0) return "";
-    return `<Licenses>\n${otherLicenses.map(name => `<License><Name>${name}</Name><Key/></License>`).join('\n')}\n</Licenses>`;
+    return `<Licenses>${otherLicenses.map(name => `<License><Name>${name}</Name><Key/></License>`)}</Licenses>`;
   };
 
 
