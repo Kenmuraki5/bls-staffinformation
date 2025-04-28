@@ -2,14 +2,12 @@
 import React, { useEffect, useState } from 'react';
 import { Modal, Box, Typography, TextField, Button, IconButton, Divider, Grid, Avatar, Slide, Autocomplete, FormHelperText, InputLabel, Select, MenuItem } from '@mui/material';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
-import CameraAltIcon from '@mui/icons-material/CameraAlt';
+import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
 import SaveOutlinedIcon from '@mui/icons-material/SaveOutlined';
 import DeleteOutlineOutlinedIcon from '@mui/icons-material/DeleteOutlineOutlined';
 import { getAllDepartmentsClientSide } from '@/app/api/departments';
 import { getAllJobClientSide } from '@/app/api/job';
 import { getAlldomainClientSide } from '@/app/api/domain';
-import { getToken } from '@/app/utils/auth';
-import fetchWithAuthClient from '@/app/utils/fetchWithAuthClientSide';
 import { getAllBranchClientSide } from '@/app/api/branch';
 import { getAllCorporationsClientSide } from '@/app/api/corporations';
 import Image from 'next/image';
@@ -43,9 +41,10 @@ const EmployeeModal = ({ open, handleClose, addRecord, updateRecord, deleteRecor
   const [derivativeLicense, setDerivativeLicense] = useState('');
   const [singleTrader, setSingleTrader] = useState('');
   const [singleLicense, setSingleLicense] = useState('');
-  const [otherLicense, setOtherLicense] = useState('');
   const [branchId, setBranchId] = useState('');
   const [domainId, setDomainId] = useState(null);
+  const [otherLicenses, setOtherLicenses] = useState<string[]>([]);
+
 
   const [avatarImage, setAvatarImage] = useState<string | null>(null);
 
@@ -110,7 +109,10 @@ const EmployeeModal = ({ open, handleClose, addRecord, updateRecord, deleteRecor
       setDerivativeLicense(selectedRow.derivativeLicense || '');
       setSingleTrader(selectedRow.singleTrader || '');
       setSingleLicense(selectedRow.singleLicense || '');
-      setOtherLicense(selectedRow.otherLicense || '');
+      if (selectedRow.otherLicense) {
+        const licenses = extractLicensesFromXml(selectedRow.otherLicense);
+        setOtherLicenses(licenses);
+      }
       setBranchId(selectedRow.branchId || null);
       setDomainId(selectedRow.domainId || null);
       setAvatarImage(selectedRow?.picturePath?.replace(/^(\.\/|\.\.\/)+/, '') || null);
@@ -123,6 +125,12 @@ const EmployeeModal = ({ open, handleClose, addRecord, updateRecord, deleteRecor
       setErrors({});
     }
   }, [selectedRow]);
+
+  const extractLicensesFromXml = (xml: string): string[] => {
+    const matches = xml.match(/<Name>(.*?)<\/Name>/g) || [];
+    return matches.map((match) => match.replace(/<\/?Name>/g, ""));
+  };
+
 
   const resetState = () => {
     setStaffId('');
@@ -144,7 +152,7 @@ const EmployeeModal = ({ open, handleClose, addRecord, updateRecord, deleteRecor
     setDerivativeLicense('');
     setSingleTrader('');
     setSingleLicense('');
-    setOtherLicense('');
+    setOtherLicenses([]);
     setBranchId('');
     setDomainId(null);
     setAvatarImage(null);
@@ -182,6 +190,12 @@ const EmployeeModal = ({ open, handleClose, addRecord, updateRecord, deleteRecor
     return `${year}-${month}-${day}`;
   };
 
+  const generateOtherLicenseXml = () => {
+    if (otherLicenses.length === 0) return "";
+    return `<Licenses>\n${otherLicenses.map(name => `  <License><Name>${name}</Name><Key/></License>`).join('\n')}\n</Licenses>`;
+  };
+
+
   const handleSave = async () => {
     try {
       const formattedStartDate = formatDateToISO(startWorkingDate);
@@ -205,7 +219,7 @@ const EmployeeModal = ({ open, handleClose, addRecord, updateRecord, deleteRecor
         derivativeLicense,
         singleTrader,
         singleLicense,
-        otherLicense,
+        otherLicense: generateOtherLicenseXml(),
         startWorkingDate: formattedStartDate,
         lastWorkingDate: formattedlasttDate,
         effectiveDate: formattedeffectiveDate,
@@ -234,6 +248,20 @@ const EmployeeModal = ({ open, handleClose, addRecord, updateRecord, deleteRecor
       setAlertMessage(error.message);
     }
   };
+  const handleOtherLicenseChange = (index: number, value: string) => {
+    const updated = [...otherLicenses];
+    updated[index] = value;
+    setOtherLicenses(updated);
+  };
+
+  const addOtherLicense = () => {
+    setOtherLicenses([...otherLicenses, ""]);
+  };
+
+  const removeOtherLicense = (index: number) => {
+    setOtherLicenses(otherLicenses.filter((_, i) => i !== index));
+  };
+
 
 
   return (
@@ -456,7 +484,11 @@ const EmployeeModal = ({ open, handleClose, addRecord, updateRecord, deleteRecor
                   label="English First Name*"
                   variant="outlined"
                   value={enFirstName}
-                  onChange={(e) => setEnFirstName(e.target.value)}
+                  onChange={(e) => {
+                    const newFirstName = e.target.value;
+                    setEnFirstName(newFirstName);
+                    setShortName(`${newFirstName} ${enLastName?.charAt(0) || ''}.`);
+                  }}
                   error={!!errors.enFirstName}
                   helperText={errors.enFirstName}
                   InputProps={{
@@ -470,7 +502,11 @@ const EmployeeModal = ({ open, handleClose, addRecord, updateRecord, deleteRecor
                   label="English Last Name*"
                   variant="outlined"
                   value={enLastName}
-                  onChange={(e) => setEnLastName(e.target.value)}
+                  onChange={(e) => {
+                    const newLastName = e.target.value;
+                    setEnLastName(newLastName);
+                    setShortName(`${enFirstName} ${newLastName?.charAt(0) || ''}.`);
+                  }}
                   error={!!errors.enLastName}
                   helperText={errors.enLastName}
                   InputProps={{
@@ -484,9 +520,8 @@ const EmployeeModal = ({ open, handleClose, addRecord, updateRecord, deleteRecor
                   label="Short Name*"
                   variant="outlined"
                   value={shortName}
-                  onChange={(e) => setShortName(e.target.value)}
                   InputProps={{
-                    readOnly: role != "AdminStaffInformation",
+                    readOnly: true,
                   }}
                 />
               </Grid>
@@ -687,7 +722,7 @@ const EmployeeModal = ({ open, handleClose, addRecord, updateRecord, deleteRecor
                   }}
                 />
               </Grid>
-              <Grid size={{ xs: 12, sm: 6 }}>
+              {/* <Grid size={{ xs: 12, sm: 6 }}>
                 <TextField
                   fullWidth
                   label="Other License(s)"
@@ -698,7 +733,40 @@ const EmployeeModal = ({ open, handleClose, addRecord, updateRecord, deleteRecor
                     readOnly: role != "AdminStaffInformation",
                   }}
                 />
+              </Grid> */}
+              <Grid size={{ xs: 12, sm: 6 }}>
+                <Typography variant="h6" gutterBottom>Other Licenses</Typography>
+
+                {otherLicenses.map((license, index) => (
+                  <Box key={index} display="flex" alignItems="center" mb={1}>
+                    <TextField
+                      fullWidth
+                      value={license}
+                      onChange={(e) => handleOtherLicenseChange(index, e.target.value)}
+                      InputProps={{
+                        readOnly: role !== "AdminStaffInformation",
+                      }}
+                    />
+                    {role === "AdminStaffInformation" && (
+                      <IconButton onClick={() => removeOtherLicense(index)}>
+                        <DeleteOutlineOutlinedIcon />
+                      </IconButton>
+                    )}
+                  </Box>
+                ))}
+
+                {role === "AdminStaffInformation" && (
+                  <IconButton
+                    onClick={addOtherLicense}
+                    color="primary"
+                    style={{ marginTop: 8 }}
+                  >
+                    <AddCircleOutlineIcon fontSize="large" />
+                  </IconButton>
+
+                )}
               </Grid>
+
             </Grid>
           </Grid>
         </Grid>
