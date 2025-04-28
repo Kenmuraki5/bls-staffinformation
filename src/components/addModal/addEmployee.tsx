@@ -194,7 +194,7 @@ const EmployeeModal = ({ open, handleClose, addRecord, updateRecord, deleteRecor
 
   const generateOtherLicenseXml = () => {
     if (otherLicenses.length === 0) return "";
-    return `<Licenses>\n${otherLicenses.map(name => `  <License><Name>${name}</Name><Key/></License>`).join('\n')}\n</Licenses>`;
+    return `<Licenses>\n${otherLicenses.map(name => `<License><Name>${name}</Name><Key/></License>`).join('\n')}\n</Licenses>`;
   };
 
 
@@ -347,19 +347,34 @@ const EmployeeModal = ({ open, handleClose, addRecord, updateRecord, deleteRecor
                 height={150}
                 className="bg-white rounded-full border-4 border-white shadow-lg object-cover object-top"
               />)}
-            <TextField
-              fullWidth
-              label="Employee ID"
-              variant="outlined"
-              value={empId}
-              onChange={(e) => setStaffId(e.target.value)}
-              error={!!errors.empId}
-              helperText={errors.empId}
-              sx={{ mt: 2 }}
-              InputProps={{
-                readOnly: !!empId, // << ถ้า empId มีค่า => readOnly, ถ้าไม่มี => editable
-              }}
-            />
+            {empId != "" ? (
+              <TextField
+                fullWidth
+                label="Employee ID"
+                variant="outlined"
+                value={empId}
+                onChange={(e) => setStaffId(e.target.value)}
+                error={!!errors.empId}
+                helperText={errors.empId}
+                sx={{ mt: 2 }}
+                slotProps={{
+                  input: {
+                    readOnly: true,
+                  },
+                }}
+              />) : (
+                <TextField
+                fullWidth
+                label="Employee ID"
+                variant="outlined"
+                value={empId}
+                onChange={(e) => setStaffId(e.target.value)}
+                error={!!errors.empId}
+                helperText={errors.empId}
+                sx={{ mt: 2 }}
+              />
+              )
+            }
             <TextField
               fullWidth
               required
