@@ -92,15 +92,17 @@ export default function OrganizationModal({ open, handleClose, addRecord, update
 
   const handleSave = async () => {
     if (!validateFields()) return;
-
+  
     try {
-      const data = {
-        organizationId,
+      let data: any = {
         domainId,
         organizationUnit,
         parentOrganizationId,
       };
+  
       if (selectedRow != null) {
+        // update ต้องมี organizationId
+        data.organizationId = organizationId;
         await updateRecord(data);
         setRows((oldRows: any) =>
           oldRows.map((row: any) =>
@@ -110,6 +112,7 @@ export default function OrganizationModal({ open, handleClose, addRecord, update
       } else {
         await addRecord(data);
       }
+  
       resetState();
       handleClose(true);
       setSnackbarOpen(true);
@@ -121,6 +124,7 @@ export default function OrganizationModal({ open, handleClose, addRecord, update
       setAlertMessage(error.message);
     }
   };
+  
 
   return (
     <Modal
@@ -160,7 +164,7 @@ export default function OrganizationModal({ open, handleClose, addRecord, update
               <>
                 <Button
                   variant="outlined"
-                  onClick={handleSave}
+                  onClick={() => handleSave()}
                   startIcon={<SaveOutlinedIcon />}
                   sx={{ mr: 1 }} // Add some space between the buttons
                 >

@@ -80,15 +80,17 @@ export default function ManagerModal({
     if (!validate()) {
       return;
     }
-
+  
     try {
-      const data = {
-        managerId,
+      let data: any = {
         empId,
         empName,
-        organizationId
+        organizationId,
       };
+  
       if (selectedRow != null) {
+        // Update: ต้องมี managerId ด้วย
+        data.managerId = managerId;
         await updateRecord(data);
         setRows((oldRows: any) =>
           oldRows.map((row: any) =>
@@ -96,8 +98,10 @@ export default function ManagerModal({
           )
         );
       } else {
+        // Add: ไม่ต้องมี managerId
         await addRecord(data);
       }
+  
       resetState();
       handleClose(true);
       setSnackbarOpen(true);
@@ -109,6 +113,7 @@ export default function ManagerModal({
       setAlertMessage(error.message);
     }
   };
+  
 
   return (
     <Modal

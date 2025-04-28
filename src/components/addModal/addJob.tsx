@@ -28,14 +28,16 @@ export default function JobModal({ open, handleClose, addRecord, updateRecord, d
     if (!validate()) {
       return;
     }
-
+  
     try {
-      const data = {
-        jobId,
+      let data: any = {
         jobTitle,
-        jobTitleTh
+        jobTitleTh,
       };
+  
       if (selectedRow != null) {
+        // Update ต้องใส่ jobId ด้วย
+        data.jobId = jobId;
         await updateRecord(data);
         setRows((oldRows: any) =>
           oldRows.map((row: any) =>
@@ -43,9 +45,10 @@ export default function JobModal({ open, handleClose, addRecord, updateRecord, d
           )
         );
       } else {
+        // Add ไม่ต้องส่ง jobId
         await addRecord(data);
       }
-
+  
       resetState(); // Reset the state after a successful save
       handleClose(true);
       setSnackbarOpen(true);
@@ -56,7 +59,7 @@ export default function JobModal({ open, handleClose, addRecord, updateRecord, d
       setError(true);
       setAlertMessage(error.message);
     }
-  };
+  };  
 
   useEffect(() => {
     if (selectedRow) {
