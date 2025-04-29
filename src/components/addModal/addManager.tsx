@@ -196,7 +196,7 @@ export default function ManagerModal({
               id="organizationID-autocomplete"
               options={organizations}
               getOptionLabel={(option: any) => option.organizationId + ": (" + option.domainId + ") " + option.organizationUnit}
-              value={organizations?.find((org: any) => org.organizationId === organizationId) || null}
+              value={organizations?.find((org: any) => String(org.organizationId) == String(organizationId)) || null}
               onChange={(event, newValue) => {
                 setOrganizationId(newValue ? newValue.organizationId : null);
               }}
