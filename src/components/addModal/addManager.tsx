@@ -183,7 +183,7 @@ export default function ManagerModal({
               id="employeeID-autocomplete"
               options={emp}
               getOptionLabel={(option: any) => `${option.empId} : (${option.thFirstName} ${option.thLastName} ${option.enFirstName} ${option.enLastName})`}
-              value={emp?.find((employee: any) => employee.empId === empId) || null}
+              value={emp?.find((employee: any) => String(employee.empId) == String(empId)) || null}
               onChange={(event, newValue) => {
                 setEmpId(newValue ? newValue?.empId : null);
                 setName(`${newValue?.thFirstName} ${newValue?.thLastName} ${newValue?.enFirstName} ${newValue?.enLastName}`)
