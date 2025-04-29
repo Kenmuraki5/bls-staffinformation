@@ -14,6 +14,7 @@ export default function OrganizationModal({ open, handleClose, addRecord, update
   const [organizationUnitTh, setOrganizationUnitTh] = useState('');
   const [parentOrganizationId, setParentOrganizationId] = useState(null);
   const [organizations, setOrganizations] = useState([]);
+  const [organizationUnitShortName, setOrganizationUnitShortName] = useState('');
 
   const [errors, setErrors] = useState({
     organizationId: '',
@@ -44,7 +45,8 @@ export default function OrganizationModal({ open, handleClose, addRecord, update
       setDomainId(selectedRow.domainId || '');
       setOrganizationUnit(selectedRow.organizationUnit);
       setParentOrganizationId(selectedRow.parentOrganizationId || '');
-      setOrganizationUnitTh(selectedRow.organizationUnitTh);
+      setOrganizationUnitTh(selectedRow.organizationUnitTh || '');
+      setOrganizationUnitShortName(selectedRow.organizationUnitShortName || '')
     } else {
       resetState();
     }
@@ -56,6 +58,7 @@ export default function OrganizationModal({ open, handleClose, addRecord, update
     setOrganizationUnit('');
     setOrganizationUnitTh('');
     setParentOrganizationId(null);
+    setOrganizationUnitShortName('');
     setErrors({
       organizationId: '',
       domainId: '',
@@ -96,6 +99,7 @@ export default function OrganizationModal({ open, handleClose, addRecord, update
         domainId,
         organizationUnit,
         organizationUnitTh,
+        organizationUnitShortName,
         parentOrganizationId: String(parentOrganizationId),
       };
   
@@ -199,6 +203,17 @@ export default function OrganizationModal({ open, handleClose, addRecord, update
               }}
               renderInput={(params) => <TextField {...params} label="Domain" />}
               readOnly={role !== "AdminStaffInformation"}
+            />
+            <TextField
+              label="Short Name"
+              variant="standard"
+              fullWidth
+              className='my-3'
+              value={organizationUnitShortName}
+              onChange={(e) => setOrganizationUnitShortName(e.target.value)}
+              InputProps={{
+                readOnly: role != "AdminStaffInformation",
+              }}
             />
             <TextField
               label="Organization Unit"

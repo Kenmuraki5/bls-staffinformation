@@ -348,6 +348,7 @@ export const StartEditButtonGrid: React.FC<AdminEmployeemanagementProps & { type
     { field: 'domainId', headerName: 'Domain ID', minWidth: 100, flex: 1, headerAlign: 'center', headerClassName: 'super-app-theme--header', align: 'center' },
     { field: 'organizationUnit', headerName: 'Organization Unit', minWidth: 100, flex: 1, headerAlign: 'center', headerClassName: 'super-app-theme--header' },
     { field: 'organizationUnitTh', headerName: 'Organization Unit (TH)', minWidth: 100, flex: 1, headerAlign: 'center', headerClassName: 'super-app-theme--header' },
+    { field: 'organizationUnitShortName', headerName: 'Short Name', minWidth: 70, flex: 1, headerAlign: 'center', headerClassName: 'super-app-theme--header' },
     { field: 'parentOrganizationId', headerName: 'Parent Organization ID', minWidth: 100, flex: 1, headerAlign: 'center', headerClassName: 'super-app-theme--header', align: 'center' },
   ];
 
