@@ -598,7 +598,7 @@ const EmployeeModal = ({ open, handleClose, addRecord, updateRecord, deleteRecor
                   id="jobs-autocomplete"
                   options={jobs}
                   getOptionLabel={(option: any) => option.jobTitle}
-                  value={jobs?.find((job: any) => job.jobId === jobId) || null}
+                  value={jobs?.find((job: any) => String(job.jobId) == String(jobId)) || null}
                   onChange={(event, newValue) => {
                     setJobId(newValue ? newValue.jobId : null);
                   }}
