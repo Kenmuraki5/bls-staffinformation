@@ -582,7 +582,7 @@ const EmployeeModal = ({ open, handleClose, addRecord, updateRecord, deleteRecor
                   id="organization-autocomplete"
                   options={organizations?.filter((org: any) => domainId === org.domainId)}
                   getOptionLabel={(option: any) => option.organizationId + ": (" + option.domainId + ") " + option.organizationUnit}
-                  value={organizations?.find((org: any) => org.organizationId === organizationId) || null}
+                  value={organizations?.find((org: any) => String(org.organizationId) == String(organizationId)) || null}
                   onChange={(event, newValue) => {
                     setOrganizationId(newValue ? newValue.organizationId : null);
                   }}
