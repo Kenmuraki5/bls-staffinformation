@@ -41,6 +41,7 @@ const EmployeeModal = ({ open, handleClose, addRecord, updateRecord, deleteRecor
   const [derivativeLicense, setDerivativeLicense] = useState('');
   const [singleTrader, setSingleTrader] = useState('');
   const [singleLicense, setSingleLicense] = useState('');
+  const [picturePath, setPicturePath] = useState('');
   const [branchId, setBranchId] = useState('');
   const [domainId, setDomainId] = useState(null);
   const [otherLicenses, setOtherLicenses] = useState<string[]>([]);
@@ -109,6 +110,7 @@ const EmployeeModal = ({ open, handleClose, addRecord, updateRecord, deleteRecor
       setDerivativeLicense(selectedRow.derivativeLicense || '');
       setSingleTrader(selectedRow.singleTrader || '');
       setSingleLicense(selectedRow.singleLicense || '');
+      setPicturePath(selectedRow.picturePath || '');
       if (selectedRow.otherLicense) {
         const licenses = extractLicensesFromXml(selectedRow.otherLicense);
         setOtherLicenses(licenses);
@@ -159,6 +161,7 @@ const EmployeeModal = ({ open, handleClose, addRecord, updateRecord, deleteRecor
     setDirectLine('');
     setShortName('');
     setLogonId('');
+    setPicturePath('');
   };
 
   const formatDateToISO = (dateString: string) => {
@@ -228,7 +231,8 @@ const EmployeeModal = ({ open, handleClose, addRecord, updateRecord, deleteRecor
         corporationTitle,
         extensionCode: extension,
         logonId,
-        shortName,
+        shortName: shortName,
+        picturePath
       };
   
       // เงื่อนไข: ถ้ามี empId → ค่อยใส่เข้าไป
@@ -403,6 +407,17 @@ const EmployeeModal = ({ open, handleClose, addRecord, updateRecord, deleteRecor
               variant="outlined"
               value={directLine}
               onChange={(e) => setDirectLine(e.target.value)}
+              sx={{ mt: 2 }}
+              InputProps={{
+                readOnly: role != "AdminStaffInformation",
+              }}
+            />
+            <TextField
+              fullWidth
+              label="Picture Path"
+              variant="outlined"
+              value={picturePath}
+              onChange={(e) => setPicturePath(e.target.value)}
               sx={{ mt: 2 }}
               InputProps={{
                 readOnly: role != "AdminStaffInformation",
