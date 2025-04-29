@@ -50,6 +50,7 @@ type Employee struct {
 	CreatedAt         time.Time      `gorm:"autoCreateTime" json:"created_at"`
 	UpdatedAt         time.Time      `gorm:"autoUpdateTime" json:"updated_at"`
 	DeletedAt         gorm.DeletedAt `gorm:"index" json:"deleted_at"`
+	PicturePath       string         `gorm:"picture_path" json:"picture_path"`
 }
 
 var db *gorm.DB
@@ -218,6 +219,8 @@ func mapRowToEmployee(header, row []string) *Employee {
 			emp.Email = val
 		case "LogonId":
 			emp.LogonId = val
+		case "picturePath":
+			emp.PicturePath = val
 		case "Derivative Trader":
 			emp.DerivativeTrader = val
 		case "Derivative License":
