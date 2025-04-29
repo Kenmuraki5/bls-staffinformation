@@ -11,6 +11,7 @@ export default function OrganizationModal({ open, handleClose, addRecord, update
   const [domainId, setDomainId] = useState('');
   const [domains, setDomains] = useState([]);
   const [organizationUnit, setOrganizationUnit] = useState('');
+  const [organizationUnitTh, setOrganizationUnitTh] = useState('');
   const [parentOrganizationId, setParentOrganizationId] = useState(null);
   const [organizations, setOrganizations] = useState([]);
 
@@ -42,7 +43,8 @@ export default function OrganizationModal({ open, handleClose, addRecord, update
       setOrganizationId(selectedRow.organizationId || '');
       setDomainId(selectedRow.domainId || '');
       setOrganizationUnit(selectedRow.organizationUnit);
-      setParentOrganizationId(selectedRow.parentOrganizationId || '');;
+      setParentOrganizationId(selectedRow.parentOrganizationId || '');
+      setOrganizationUnitTh(selectedRow.organizationUnitTh);
     } else {
       resetState();
     }
@@ -52,6 +54,7 @@ export default function OrganizationModal({ open, handleClose, addRecord, update
     setOrganizationId('');
     setDomainId('');
     setOrganizationUnit('');
+    setOrganizationUnitTh('');
     setParentOrganizationId(null);
     setErrors({
       organizationId: '',
@@ -92,6 +95,7 @@ export default function OrganizationModal({ open, handleClose, addRecord, update
       let data: any = {
         domainId,
         organizationUnit,
+        organizationUnitTh,
         parentOrganizationId: String(parentOrganizationId),
       };
   
@@ -205,6 +209,17 @@ export default function OrganizationModal({ open, handleClose, addRecord, update
               onChange={(e) => setOrganizationUnit(e.target.value)}
               error={!!errors.organizationUnit}
               helperText={errors.organizationUnit}
+              InputProps={{
+                readOnly: role != "AdminStaffInformation",
+              }}
+            />
+            <TextField
+              label="Organization Unit (TH)"
+              variant="standard"
+              fullWidth
+              className='my-3'
+              value={organizationUnitTh}
+              onChange={(e) => setOrganizationUnitTh(e.target.value)}
               InputProps={{
                 readOnly: role != "AdminStaffInformation",
               }}
