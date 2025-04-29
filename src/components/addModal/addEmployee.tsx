@@ -205,10 +205,10 @@ const EmployeeModal = ({ open, handleClose, addRecord, updateRecord, deleteRecor
       const formattedEffectiveDate = formatDateToISO(effectiveDate);
   
       const data: any = {
-        organizationId,
+        organizationId: String(organizationId),
         branchId,
         directLine,
-        jobId,
+        jobId: String(jobId),
         enTitle: title.split("/")[1],
         enFirstName,
         enLastName,

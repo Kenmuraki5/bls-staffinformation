@@ -85,7 +85,7 @@ export default function ManagerModal({
       let data: any = {
         empId,
         empName,
-        organizationId,
+        organizationId: String(organizationId),
       };
   
       if (selectedRow != null) {
