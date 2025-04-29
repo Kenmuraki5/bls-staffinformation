@@ -262,9 +262,16 @@ export const StartEditButtonGrid: React.FC<AdminEmployeemanagementProps & { type
         ])
         return responseData
       }
+      else if (params.manage == "employee") {
+        setRows((oldRows: any) => [
+          ...oldRows,
+          data 
+        ])
+        return responseData
+      }
       setRows((oldRows: any) => [
         ...oldRows,
-        data
+        responseData
       ])
       return responseData;
     } catch (error: any) {
