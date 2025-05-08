@@ -147,7 +147,7 @@ const EmployeeModal = ({ open, handleClose, addRecord, updateRecord, deleteRecor
     const cleanedPath = rawPath.replace(/^(\.\/|\.\.\/)+/, '');
     const primaryUrl = `http://bualuangintranet.sawasdee.brk1/employee/${cleanedPath}`;
     const fallbackFile = rawPath.split('/').pop();
-    const fallbackUrl = `https://bualuangstaffinfo.sawasdee.brk1/employee/${fallbackFile}`;
+    const fallbackUrl = `https://bualuangstaffinfo.sawasdee.brk1/img-staff/${fallbackFile}`;
   
     let finalUrl: string | null = null;
   
