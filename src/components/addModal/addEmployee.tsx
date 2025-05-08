@@ -41,10 +41,10 @@ const EmployeeModal = ({ open, handleClose, addRecord, updateRecord, deleteRecor
   const [derivativeLicense, setDerivativeLicense] = useState('');
   const [singleTrader, setSingleTrader] = useState('');
   const [singleLicense, setSingleLicense] = useState('');
-  const [picturePath, setPicturePath] = useState('');
   const [branchId, setBranchId] = useState('');
   const [domainId, setDomainId] = useState(null);
   const [otherLicenses, setOtherLicenses] = useState<string[]>([]);
+  const [imageFile, setImageFile] = useState<File | null>(null);
 
 
   const [avatarImage, setAvatarImage] = useState<string | null>(null);
@@ -110,14 +110,27 @@ const EmployeeModal = ({ open, handleClose, addRecord, updateRecord, deleteRecor
       setDerivativeLicense(selectedRow.derivativeLicense || '');
       setSingleTrader(selectedRow.singleTrader || '');
       setSingleLicense(selectedRow.singleLicense || '');
-      setPicturePath(selectedRow.picturePath || '');
       if (selectedRow.otherLicense) {
         const licenses = extractLicensesFromXml(selectedRow.otherLicense);
         setOtherLicenses(licenses);
       }
       setBranchId(selectedRow.branchId || null);
       setDomainId(selectedRow.domainId || null);
-      setAvatarImage(selectedRow?.picturePath?.replace(/^(\.\/|\.\.\/)+/, '') || null);
+
+      // image
+      const primaryUrl = `https://bualuangintranet.sawasdee.brk1/employee/${selectedRow?.picturePath?.split('/').pop() || null}`;
+      const fallbackUrl = `https://bualuangstaffinfo.sawasdee.brk1/employee/${selectedRow?.picturePath?.replace(/^(\.\/|\.\.\/)+/, '') || null}`;
+      fetch(primaryUrl, { method: "HEAD" })
+        .then((res) => {
+          if (res.ok) {
+            setAvatarImage(primaryUrl);
+          } else {
+            setAvatarImage(fallbackUrl);
+          }
+        })
+        .catch(() => {
+          setAvatarImage(fallbackUrl);
+        });
       setHireDate(formatDate(selectedRow.startWorkingDate));
       setLastWorkingDate(formatDate(selectedRow.lastWorkingDate));
       setEffectiveDate(formatDate(selectedRow.effectiveDate));
@@ -127,6 +140,32 @@ const EmployeeModal = ({ open, handleClose, addRecord, updateRecord, deleteRecor
       setErrors({});
     }
   }, [selectedRow]);
+
+  const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      setImageFile(file);
+    }
+  };
+
+  const uploadImage = async (empId: string, file: File) => {
+    const formData = new FormData();
+    formData.append('picture', file);
+
+    const res = await fetch(`http://localhost:9393/api/upload/${empId}`, {
+      method: 'POST',
+      body: formData,
+    });
+
+    if (!res.ok) {
+      const err = await res.json();
+      throw new Error(err?.error || "Image upload failed");
+    }
+
+    const data = await res.json();
+    return data.path;
+  };
+
 
   const extractLicensesFromXml = (xml: string): string[] => {
     const matches = xml.match(/<Name>(.*?)<\/Name>/g) || [];
@@ -161,7 +200,6 @@ const EmployeeModal = ({ open, handleClose, addRecord, updateRecord, deleteRecor
     setDirectLine('');
     setShortName('');
     setLogonId('');
-    setPicturePath('');
   };
 
   const formatDateToISO = (dateString: string) => {
@@ -206,7 +244,10 @@ const EmployeeModal = ({ open, handleClose, addRecord, updateRecord, deleteRecor
       const formattedStartDate = formatDateToISO(startWorkingDate);
       const formattedLastDate = formatDateToISO(lastWorkingDate);
       const formattedEffectiveDate = formatDateToISO(effectiveDate);
-  
+
+      let actualEmpId = empId;
+      let uploadedPath;
+
       const data: any = {
         organizationId: String(organizationId),
         branchId,
@@ -231,26 +272,33 @@ const EmployeeModal = ({ open, handleClose, addRecord, updateRecord, deleteRecor
         corporationTitle,
         extensionCode: extension,
         logonId,
-        shortName: shortName,
-        picturePath
+        shortName: shortName
       };
-  
-      // เงื่อนไข: ถ้ามี empId → ค่อยใส่เข้าไป
+
       if (empId) {
         data.empId = empId;
       }
-  
+
       if (selectedRow != null) {
         await updateRecord(data);
-        setRows((oldRows: any) =>
-          oldRows.map((row: any) =>
-            row.empId === selectedRow.empId ? { ...row, ...data } : row
-          )
-        );
       } else {
-        await addRecord(data);
+        const newEmp = await addRecord(data); // 👈 สมมุติว่า addRecord return ข้อมูลใหม่
+        actualEmpId = newEmp.empId;
       }
-  
+
+      // 👇 Upload รูปภาพหลังจากรู้ empId แน่นอน
+      if (imageFile && actualEmpId) {
+        uploadedPath = await uploadImage(actualEmpId, imageFile);
+
+        // อัปเดต picturePath ใน DB แยกอีกที
+        await updateRecord({
+          empId: actualEmpId,
+          picturePath: uploadedPath,
+        });
+
+        setAvatarImage(`https://bualuangintranet.sawasdee.brk1/employee/${uploadedPath.split('/').pop()}`);
+      }
+
       handleClose(true);
       setSnackbarOpen(true);
       setError(false);
@@ -261,7 +309,9 @@ const EmployeeModal = ({ open, handleClose, addRecord, updateRecord, deleteRecor
       setAlertMessage(error.message);
     }
   };
-  
+
+
+
   const handleOtherLicenseChange = (index: number, value: string) => {
     const updated = [...otherLicenses];
     updated[index] = value;
@@ -343,27 +393,40 @@ const EmployeeModal = ({ open, handleClose, addRecord, updateRecord, deleteRecor
         <Grid container spacing={2}>
           {/* Left Column */}
           <Grid size={{ xs: 12, md: 4 }} sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-            {avatarImage && (
+            {avatarImage ? (
               <Image
-                src={`http://bualuangintranet.sawasdee.brk1/employee/${avatarImage}`}
+                src={avatarImage}
                 alt="Profile"
                 width={150}
                 height={150}
                 className="bg-white rounded-full border-4 border-white shadow-lg object-cover object-top"
-              />)}
-              <TextField
-                fullWidth
-                label="Employee ID"
-                variant="outlined"
-                value={empId}
-                onChange={(e) => setStaffId(e.target.value)}
-                error={!!errors.empId}
-                helperText={errors.empId}
-                sx={{ mt: 2 }}
-                InputProps={{
-                  readOnly: !!selectedRow?.empId,
-                }}
-              />
+              />) : (
+              <div style={{ marginTop: '1rem', paddingLeft: '20px' }}>
+                <label htmlFor="upload-image" style={{ display: 'block', marginBottom: '0.5rem' }}>
+                  Upload Picture
+                </label>
+                <input
+                  id="upload-image"
+                  type="file"
+                  accept="image/*"
+                  onChange={handleImageChange}
+                  disabled={role !== "AdminStaffInformation"}
+                />
+              </div>
+            )}
+            <TextField
+              fullWidth
+              label="Employee ID"
+              variant="outlined"
+              value={empId}
+              onChange={(e) => setStaffId(e.target.value)}
+              error={!!errors.empId}
+              helperText={errors.empId}
+              sx={{ mt: 2 }}
+              InputProps={{
+                readOnly: !!selectedRow?.empId,
+              }}
+            />
             <TextField
               fullWidth
               required
@@ -407,17 +470,6 @@ const EmployeeModal = ({ open, handleClose, addRecord, updateRecord, deleteRecor
               variant="outlined"
               value={directLine}
               onChange={(e) => setDirectLine(e.target.value)}
-              sx={{ mt: 2 }}
-              InputProps={{
-                readOnly: role != "AdminStaffInformation",
-              }}
-            />
-            <TextField
-              fullWidth
-              label="Picture Path"
-              variant="outlined"
-              value={picturePath}
-              onChange={(e) => setPicturePath(e.target.value)}
               sx={{ mt: 2 }}
               InputProps={{
                 readOnly: role != "AdminStaffInformation",
@@ -612,13 +664,19 @@ const EmployeeModal = ({ open, handleClose, addRecord, updateRecord, deleteRecor
                 <Autocomplete
                   id="jobs-autocomplete"
                   options={jobs}
-                  getOptionLabel={(option: any) => option.jobTitle}
-                  value={jobs?.find((job: any) => String(job.jobId) == String(jobId)) || null}
+                  getOptionLabel={(option: any) => {
+                    const th = option.jobTitleTh || '';
+                    const en = option.jobTitle || '';
+                    if (!en && th) return th;
+                    if (!th && en) return en;
+                    return `${th} / ${en}`;
+                  }}
+                  value={jobs?.find((job: any) => String(job.jobId) === String(jobId)) || null}
                   onChange={(event, newValue) => {
                     setJobId(newValue ? newValue.jobId : null);
                   }}
                   renderInput={(params) => <TextField {...params} label="Jobs" />}
-                  readOnly={role != "AdminStaffInformation"}
+                  readOnly={role !== "AdminStaffInformation"}
                 />
               </Grid>
               <Grid size={{ xs: 12, sm: 6 }}>
