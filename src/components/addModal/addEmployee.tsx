@@ -423,6 +423,7 @@ const EmployeeModal = ({ open, handleClose, addRecord, updateRecord, deleteRecor
                 alt="Profile"
                 width={150}
                 height={150}
+                unoptimized
                 className="bg-white rounded-full border-4 border-white shadow-lg object-cover object-top"
               />
             )}

@@ -4,8 +4,6 @@ import { redirect } from "next/navigation";
 import fetchWithAuth from "../utils/fetchWithAuth";
 
 export default async function handleSearch(searchBy: string, searchInput: string, domain: string) {
-    console.log(searchBy, searchInput, domain);
-
     let url = "";
 
     if (searchBy === 'organizationUnit') {
