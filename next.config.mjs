@@ -12,7 +12,7 @@ const nextConfig = {
         },
         {
           protocol: 'https',
-          hostname: '*',
+          hostname: 'https://bualuangstaffinfo.sawasdee.brk1',
           pathname: '**',
         },
       ],

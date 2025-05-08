@@ -12,6 +12,7 @@ import { getAllBranchClientSide } from '@/app/api/branch';
 import { getAllCorporationsClientSide } from '@/app/api/corporations';
 import { Skeleton } from '@mui/material';
 import Image from 'next/image';
+import { EmployeeImage } from './EmployeeImage';
 
 const EmployeeModal = ({ open, handleClose, addRecord, updateRecord, deleteRecord, setRows, setSnackbarOpen, setAlertMessage, setError, selectedRow, role }: any) => {
   const [organizations, setOrganizations] = useState([]);
@@ -119,7 +120,7 @@ const EmployeeModal = ({ open, handleClose, addRecord, updateRecord, deleteRecor
       setBranchId(selectedRow.branchId || null);
       setDomainId(selectedRow.domainId || null);
 
-      loadAvatarImage();
+      setAvatarImage(selectedRow?.picturePath || '')
 
       setHireDate(formatDate(selectedRow.startWorkingDate));
       setLastWorkingDate(formatDate(selectedRow.lastWorkingDate));
@@ -130,34 +131,6 @@ const EmployeeModal = ({ open, handleClose, addRecord, updateRecord, deleteRecor
       setErrors({});
     }
   }, [selectedRow]);
-
-  const checkImageExists = async (url: string): Promise<boolean> => {
-    try {
-      const res = await fetch(url, { method: 'GET' });
-      return res.ok;
-    } catch {
-      return false;
-    }
-  };
-
-  const loadAvatarImage = async () => {
-    setAvatarLoading(true);
-
-    const rawPath = selectedRow?.picturePath || '';
-    const cleanedPath = rawPath.replace(/^(\.\/|\.\.\/)+/, '');
-    const primaryUrl = `http://bualuangintranet.sawasdee.brk1/employee/${cleanedPath}`;
-    const fallbackFile = rawPath.split('/').pop();
-    const fallbackUrl = `https://bualuangstaffinfo.sawasdee.brk1/staff-img/${fallbackFile}`;
-
-    if (await checkImageExists(fallbackUrl)) {
-      setAvatarImage(fallbackUrl);
-    }
-    else {
-      setAvatarImage(primaryUrl);
-    }
-    setAvatarLoading(false);
-  };
-
 
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -418,14 +391,7 @@ const EmployeeModal = ({ open, handleClose, addRecord, updateRecord, deleteRecor
                 sx={{ marginTop: '1rem', marginLeft: '20px' }}
               />
             ) : avatarImage && (
-              <Image
-                src={avatarImage}
-                alt="Profile"
-                width={150}
-                height={150}
-                unoptimized
-                className="bg-white rounded-full border-4 border-white shadow-lg object-cover object-top"
-              />
+              <EmployeeImage fileName={avatarImage}/>
             )}
             <div style={{ marginTop: '1rem', paddingLeft: '20px' }}>
               <label htmlFor="upload-image" style={{ display: 'block', marginBottom: '0.5rem' }}>
