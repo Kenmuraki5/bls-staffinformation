@@ -9,19 +9,21 @@ export const EmployeeImage = ({ fileName }: { fileName: string }) => {
   const [unoptimized, setUnoptimized] = useState(true);
 
   return (
-    <Image
-      src={imgSrc}
-      alt="Profile"
-      width={150}
-      height={150}
-      onError={() => {
-        if (imgSrc !== httpUrl) {
-          setImgSrc(httpUrl);
-          setUnoptimized(false)
-        }
-      }}
-      unoptimized={unoptimized}
-      className="rounded-full object-cover"
-    />
+    <div className="relative w-48 h-48">
+      <Image
+        src={imgSrc}
+        alt="Profile"
+        onError={() => {
+          if (imgSrc !== httpUrl) {
+            setImgSrc(httpUrl);
+            setUnoptimized(false)
+          }
+        }}
+        fill
+        unoptimized={unoptimized}
+        className="rounded-full object-cover"
+      />
+    </div>
+
   );
 };

@@ -25,6 +25,7 @@ import Image from "next/image";
 import BusinessCenterIcon from '@mui/icons-material/BusinessCenter';
 import { useParams } from "next/navigation";
 import { useRouter } from 'next/navigation';
+import { EmployeeImage } from "../addModal/EmployeeImage";
 
 const StaffProfile: React.FC<StaffInformationProps> = ({ staffData }: any) => {
 
@@ -109,12 +110,8 @@ const StaffProfile: React.FC<StaffInformationProps> = ({ staffData }: any) => {
 
           <div className="absolute -bottom-16 left-10">
             <div className="relative w-48 h-48">
-              <Image
-                src={`http://bualuangintranet.sawasdee.brk1/employee/${staffData?.picturePath?.replace(/^(\.\/|\.\.\/)+/, '')}`}
-                alt="Profile"
-                fill
-                className="bg-white rounded-full border-4 border-white shadow-lg object-cover object-top"
-              />
+              <EmployeeImage
+                fileName={staffData?.picturePath} />
             </div>
           </div>
 
