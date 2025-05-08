@@ -10,6 +10,7 @@ import { getAllJobClientSide } from '@/app/api/job';
 import { getAlldomainClientSide } from '@/app/api/domain';
 import { getAllBranchClientSide } from '@/app/api/branch';
 import { getAllCorporationsClientSide } from '@/app/api/corporations';
+import { Skeleton } from '@mui/material';
 import Image from 'next/image';
 
 const EmployeeModal = ({ open, handleClose, addRecord, updateRecord, deleteRecord, setRows, setSnackbarOpen, setAlertMessage, setError, selectedRow, role }: any) => {
@@ -48,6 +49,7 @@ const EmployeeModal = ({ open, handleClose, addRecord, updateRecord, deleteRecor
 
 
   const [avatarImage, setAvatarImage] = useState<string | null>(null);
+  const [avatarLoading, setAvatarLoading] = useState(true);
 
   const [errors, setErrors] = useState<any>({
     empId: '',
@@ -120,6 +122,7 @@ const EmployeeModal = ({ open, handleClose, addRecord, updateRecord, deleteRecor
       // image
       const primaryUrl = `https://bualuangintranet.sawasdee.brk1/employee/${selectedRow?.picturePath?.replace(/^(\.\/|\.\.\/)+/, '') || null}`;
       const fallbackUrl = `https://bualuangstaffinfo.sawasdee.brk1/employee/${selectedRow?.picturePath?.split('/').pop() || null}`;
+      setAvatarLoading(true);
       fetch(primaryUrl, { method: "HEAD" })
         .then((res) => {
           if (res.ok) {
@@ -130,6 +133,8 @@ const EmployeeModal = ({ open, handleClose, addRecord, updateRecord, deleteRecor
         })
         .catch(() => {
           setAvatarImage(fallbackUrl);
+        }).finally(() => {
+          setAvatarLoading(false); // ไม่ว่าจะสำเร็จหรือ fail ให้หยุด loading
         });
       setHireDate(formatDate(selectedRow.startWorkingDate));
       setLastWorkingDate(formatDate(selectedRow.lastWorkingDate));
@@ -282,7 +287,7 @@ const EmployeeModal = ({ open, handleClose, addRecord, updateRecord, deleteRecor
       if (selectedRow != null) {
         await updateRecord(data);
       } else {
-        const newEmp = await addRecord(data); // 👈 สมมุติว่า addRecord return ข้อมูลใหม่
+        const newEmp = await addRecord(data);
         actualEmpId = newEmp.empId;
       }
 
@@ -392,15 +397,22 @@ const EmployeeModal = ({ open, handleClose, addRecord, updateRecord, deleteRecor
         <Grid container spacing={2}>
           {/* Left Column */}
           <Grid size={{ xs: 12, md: 4 }} sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-            {avatarImage && (
+            {avatarLoading ? (
+              <Skeleton
+                variant="circular"
+                width={150}
+                height={150}
+                sx={{ marginTop: '1rem', marginLeft: '20px' }}
+              />
+            ) : avatarImage ? (
               <Image
                 src={avatarImage}
                 alt="Profile"
                 width={150}
                 height={150}
                 className="bg-white rounded-full border-4 border-white shadow-lg object-cover object-top"
-              />)
-              } {!selectedRow?.picturePath && (
+              />
+            ) : (
               <div style={{ marginTop: '1rem', paddingLeft: '20px' }}>
                 <label htmlFor="upload-image" style={{ display: 'block', marginBottom: '0.5rem' }}>
                   Upload Picture
