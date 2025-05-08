@@ -10,6 +10,11 @@ const nextConfig = {
           hostname: '*',
           pathname: '**',
         },
+        {
+          protocol: 'https',
+          hostname: '*',
+          pathname: '**',
+        },
       ],
     },
     async redirects() {
