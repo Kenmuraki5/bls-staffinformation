@@ -21,7 +21,7 @@ export const EmployeeImage = ({ fileName }: { fileName: string }) => {
         }}
         fill
         unoptimized={unoptimized}
-        className="rounded-full object-cover"
+        className="bg-white rounded-full border-4 border-white shadow-lg object-contain"
       />
     </div>
 
