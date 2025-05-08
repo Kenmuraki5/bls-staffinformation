@@ -118,8 +118,8 @@ const EmployeeModal = ({ open, handleClose, addRecord, updateRecord, deleteRecor
       setDomainId(selectedRow.domainId || null);
 
       // image
-      const primaryUrl = `https://bualuangintranet.sawasdee.brk1/employee/${selectedRow?.picturePath?.split('/').pop() || null}`;
-      const fallbackUrl = `https://bualuangstaffinfo.sawasdee.brk1/employee/${selectedRow?.picturePath?.replace(/^(\.\/|\.\.\/)+/, '') || null}`;
+      const primaryUrl = `https://bualuangintranet.sawasdee.brk1/employee/${selectedRow?.picturePath?.replace(/^(\.\/|\.\.\/)+/, '') || null}`;
+      const fallbackUrl = `https://bualuangstaffinfo.sawasdee.brk1/employee/${selectedRow?.picturePath?.split('/').pop() || null}`;
       fetch(primaryUrl, { method: "HEAD" })
         .then((res) => {
           if (res.ok) {
@@ -152,7 +152,7 @@ const EmployeeModal = ({ open, handleClose, addRecord, updateRecord, deleteRecor
     const formData = new FormData();
     formData.append('picture', file);
 
-    const res = await fetch(`http://localhost:9393/api/upload/${empId}`, {
+    const res = await fetch(`https://bualuangstaffinfo.sawasdee.brk1/uploads/${empId}`, {
       method: 'POST',
       body: formData,
     });
@@ -296,7 +296,6 @@ const EmployeeModal = ({ open, handleClose, addRecord, updateRecord, deleteRecor
           picturePath: uploadedPath,
         });
 
-        setAvatarImage(`https://bualuangintranet.sawasdee.brk1/employee/${uploadedPath.split('/').pop()}`);
       }
 
       handleClose(true);
