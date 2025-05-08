@@ -284,7 +284,11 @@ const EmployeeModal = ({ open, handleClose, addRecord, updateRecord, deleteRecor
       // 👇 Upload รูปภาพหลังจากรู้ empId แน่นอน
       if (imageFile && actualEmpId) {
         uploadedPath = await uploadImage(actualEmpId, imageFile);
-        setAvatarImage(`${uploadedPath}?v=${Date.now()}`);
+        setRows((oldRows: any) =>
+          oldRows.map((row: any) =>
+            row.empId === selectedRow.empId ? { ...row, picturePath: `${uploadedPath}?v=${Date.now()}` } : row
+          )
+        );
       }
 
       handleClose(true);
