@@ -303,10 +303,10 @@ export const StartEditButtonGrid: React.FC<AdminEmployeemanagementProps & { type
     }
   };
 
-  const columns_emp: GridColDef[] = [
+  const columns_emp = [
     {
       field: 'empId', headerName: 'Staff ID', minWidth: 100, maxWidth: 120, flex: 1, headerAlign: 'center', headerClassName: 'super-app-theme--header', align: 'center', editable: false, hideable: true,
-      renderCell: (params) => (
+      renderCell: (params: any) => (
         <div
           onClick={() => handleOpenAddModal(type, params.row)}
           className='text-center text-blue-500 cursor-pointer flex items-center justify-center h-full hover:underline'
@@ -338,7 +338,7 @@ export const StartEditButtonGrid: React.FC<AdminEmployeemanagementProps & { type
     { field: 'startWorkingDate', headerName: 'StartWorkingDate', minWidth: 140, maxWidth: 120, flex: 1, headerAlign: 'center', headerClassName: 'super-app-theme--header', align: 'center', },
     { field: 'lastWorkingDate', headerName: 'LastWorkingDate', minWidth: 140, maxWidth: 120, flex: 1, headerAlign: 'center', headerClassName: 'super-app-theme--header', align: 'center', },
     { field: 'effectiveDate', headerName: 'EffectiveDate', minWidth: 140, maxWidth: 120, flex: 1, headerAlign: 'center', headerClassName: 'super-app-theme--header', align: 'center', },
-    { field: 'picturePath', headerName: 'Picture Path', minWidth: 100, flex: 1, headerAlign: 'center', headerClassName: 'super-app-theme--header', align: 'center', hideable: true },
+    { field: 'picturePath', headerName: 'Picture Path', minWidth: 100, flex: 1, headerAlign: 'center', headerClassName: 'super-app-theme--header', align: 'center', hide: true },
   ];
 
   const columns_org: GridColDef[] = [
@@ -463,7 +463,7 @@ export const StartEditButtonGrid: React.FC<AdminEmployeemanagementProps & { type
     'jobs': columns_job,
   };
 
-  const initialColumns = columnsMap[type] || [];
+  const initialColumns: any = columnsMap[type] || [];
 
   return (
     <Box
