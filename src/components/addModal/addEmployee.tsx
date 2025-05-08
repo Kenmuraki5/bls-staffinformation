@@ -392,14 +392,15 @@ const EmployeeModal = ({ open, handleClose, addRecord, updateRecord, deleteRecor
         <Grid container spacing={2}>
           {/* Left Column */}
           <Grid size={{ xs: 12, md: 4 }} sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-            {avatarImage ? (
+            {avatarImage && (
               <Image
                 src={avatarImage}
                 alt="Profile"
                 width={150}
                 height={150}
                 className="bg-white rounded-full border-4 border-white shadow-lg object-cover object-top"
-              />) : (
+              />)
+              } {!selectedRow?.picturePath && (
               <div style={{ marginTop: '1rem', paddingLeft: '20px' }}>
                 <label htmlFor="upload-image" style={{ display: 'block', marginBottom: '0.5rem' }}>
                   Upload Picture
