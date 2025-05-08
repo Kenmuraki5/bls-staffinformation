@@ -149,15 +149,12 @@ const EmployeeModal = ({ open, handleClose, addRecord, updateRecord, deleteRecor
     const fallbackFile = rawPath.split('/').pop();
     const fallbackUrl = `https://bualuangstaffinfo.sawasdee.brk1/staff-img/${fallbackFile}`;
   
-    let finalUrl: string | null = null;
-  
-    if (await checkImageExists(primaryUrl)) {
-      finalUrl = primaryUrl;
-    } else if (await checkImageExists(fallbackUrl)) {
-      finalUrl = fallbackUrl;
+    if (await checkImageExists(fallbackUrl)) {
+      setAvatarImage(fallbackUrl);
     }
-  
-    setAvatarImage(finalUrl); // จะเป็น URL ที่ใช้ได้ หรือ null
+    else {
+      setAvatarImage(primaryUrl);
+    }
     setAvatarLoading(false);
   };
   
