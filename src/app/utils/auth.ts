@@ -32,8 +32,8 @@ export async function getRole(): Promise<string | null> {
   try {
     const token = await getToken("auth_token");
     const data = await parseJwt(token);
-    return 'AdminStaffInformation'
-    // return data?.roles?.[0] || null; // Handle cases where roles might not be defined
+    // return 'AdminStaffInformation'
+    return data?.roles?.[0] || null; // Handle cases where roles might not be defined
   } catch (error) {
     console.error('Failed to get role', error);
     return null;
