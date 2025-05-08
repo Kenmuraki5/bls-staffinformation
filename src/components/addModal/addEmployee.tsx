@@ -50,7 +50,6 @@ const EmployeeModal = ({ open, handleClose, addRecord, updateRecord, deleteRecor
 
 
   const [avatarImage, setAvatarImage] = useState<string | null>(null);
-  const [avatarLoading, setAvatarLoading] = useState(true);
 
   const [errors, setErrors] = useState<any>({
     empId: '',
@@ -383,14 +382,7 @@ const EmployeeModal = ({ open, handleClose, addRecord, updateRecord, deleteRecor
         <Grid container spacing={2}>
           {/* Left Column */}
           <Grid size={{ xs: 12, md: 4 }} sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-            {avatarLoading ? (
-              <Skeleton
-                variant="circular"
-                width={150}
-                height={150}
-                sx={{ marginTop: '1rem', marginLeft: '20px' }}
-              />
-            ) : avatarImage && (
+            {avatarImage && (
               <EmployeeImage fileName={avatarImage}/>
             )}
             <div style={{ marginTop: '1rem', paddingLeft: '20px' }}>
