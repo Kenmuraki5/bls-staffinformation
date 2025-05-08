@@ -133,7 +133,7 @@ const EmployeeModal = ({ open, handleClose, addRecord, updateRecord, deleteRecor
 
   const checkImageExists = async (url: string): Promise<boolean> => {
     try {
-      const res = await fetch(url, { method: 'HEAD' });
+      const res = await fetch(url, { method: 'GET' });
       return res.ok;
     } catch {
       return false;
