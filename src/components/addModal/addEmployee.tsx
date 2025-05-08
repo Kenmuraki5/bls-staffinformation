@@ -139,16 +139,16 @@ const EmployeeModal = ({ open, handleClose, addRecord, updateRecord, deleteRecor
       return false;
     }
   };
-  
+
   const loadAvatarImage = async () => {
     setAvatarLoading(true);
-  
+
     const rawPath = selectedRow?.picturePath || '';
     const cleanedPath = rawPath.replace(/^(\.\/|\.\.\/)+/, '');
     const primaryUrl = `http://bualuangintranet.sawasdee.brk1/employee/${cleanedPath}`;
     const fallbackFile = rawPath.split('/').pop();
     const fallbackUrl = `https://bualuangstaffinfo.sawasdee.brk1/staff-img/${fallbackFile}`;
-  
+
     if (await checkImageExists(fallbackUrl)) {
       setAvatarImage(fallbackUrl);
     }
@@ -157,7 +157,7 @@ const EmployeeModal = ({ open, handleClose, addRecord, updateRecord, deleteRecor
     }
     setAvatarLoading(false);
   };
-  
+
 
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -417,7 +417,7 @@ const EmployeeModal = ({ open, handleClose, addRecord, updateRecord, deleteRecor
                 height={150}
                 sx={{ marginTop: '1rem', marginLeft: '20px' }}
               />
-            ) : avatarImage ? (
+            ) : avatarImage && (
               <Image
                 src={avatarImage}
                 alt="Profile"
@@ -425,20 +425,19 @@ const EmployeeModal = ({ open, handleClose, addRecord, updateRecord, deleteRecor
                 height={150}
                 className="bg-white rounded-full border-4 border-white shadow-lg object-cover object-top"
               />
-            ) : (
-              <div style={{ marginTop: '1rem', paddingLeft: '20px' }}>
-                <label htmlFor="upload-image" style={{ display: 'block', marginBottom: '0.5rem' }}>
-                  Upload Picture
-                </label>
-                <input
-                  id="upload-image"
-                  type="file"
-                  accept="image/*"
-                  onChange={handleImageChange}
-                  disabled={role !== "AdminStaffInformation"}
-                />
-              </div>
             )}
+            <div style={{ marginTop: '1rem', paddingLeft: '20px' }}>
+              <label htmlFor="upload-image" style={{ display: 'block', marginBottom: '0.5rem' }}>
+                Upload Picture
+              </label>
+              <input
+                id="upload-image"
+                type="file"
+                accept="image/*"
+                onChange={handleImageChange}
+                disabled={role !== "AdminStaffInformation"}
+              />
+            </div>
             <TextField
               fullWidth
               label="Employee ID"
