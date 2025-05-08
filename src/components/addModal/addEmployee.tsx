@@ -119,23 +119,8 @@ const EmployeeModal = ({ open, handleClose, addRecord, updateRecord, deleteRecor
       setBranchId(selectedRow.branchId || null);
       setDomainId(selectedRow.domainId || null);
 
-      // image
-      const primaryUrl = `https://bualuangintranet.sawasdee.brk1/employee/${selectedRow?.picturePath?.replace(/^(\.\/|\.\.\/)+/, '') || null}`;
-      const fallbackUrl = `https://bualuangstaffinfo.sawasdee.brk1/employee/${selectedRow?.picturePath?.split('/').pop() || null}`;
-      setAvatarLoading(true);
-      fetch(primaryUrl, { method: "HEAD" })
-        .then((res) => {
-          if (res.ok) {
-            setAvatarImage(primaryUrl);
-          } else {
-            setAvatarImage(fallbackUrl);
-          }
-        })
-        .catch(() => {
-          setAvatarImage(fallbackUrl);
-        }).finally(() => {
-          setAvatarLoading(false); // ไม่ว่าจะสำเร็จหรือ fail ให้หยุด loading
-        });
+      loadAvatarImage();
+
       setHireDate(formatDate(selectedRow.startWorkingDate));
       setLastWorkingDate(formatDate(selectedRow.lastWorkingDate));
       setEffectiveDate(formatDate(selectedRow.effectiveDate));
@@ -145,6 +130,37 @@ const EmployeeModal = ({ open, handleClose, addRecord, updateRecord, deleteRecor
       setErrors({});
     }
   }, [selectedRow]);
+
+  const checkImageExists = async (url: string): Promise<boolean> => {
+    try {
+      const res = await fetch(url, { method: 'HEAD' });
+      return res.ok;
+    } catch {
+      return false;
+    }
+  };
+  
+  const loadAvatarImage = async () => {
+    setAvatarLoading(true);
+  
+    const rawPath = selectedRow?.picturePath || '';
+    const cleanedPath = rawPath.replace(/^(\.\/|\.\.\/)+/, '');
+    const primaryUrl = `http://bualuangintranet.sawasdee.brk1/employee/${cleanedPath}`;
+    const fallbackFile = rawPath.split('/').pop();
+    const fallbackUrl = `https://bualuangstaffinfo.sawasdee.brk1/employee/${fallbackFile}`;
+  
+    let finalUrl: string | null = null;
+  
+    if (await checkImageExists(primaryUrl)) {
+      finalUrl = primaryUrl;
+    } else if (await checkImageExists(fallbackUrl)) {
+      finalUrl = fallbackUrl;
+    }
+  
+    setAvatarImage(finalUrl); // จะเป็น URL ที่ใช้ได้ หรือ null
+    setAvatarLoading(false);
+  };
+  
 
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
