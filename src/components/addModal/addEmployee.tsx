@@ -236,7 +236,7 @@ const EmployeeModal = ({ open, handleClose, addRecord, updateRecord, deleteRecor
       const formattedEffectiveDate = formatDateToISO(effectiveDate);
 
       let actualEmpId = empId;
-      let uploadedPath;
+      let uploadedPath : any;
 
       const data: any = {
         organizationId: String(organizationId),
@@ -271,6 +271,11 @@ const EmployeeModal = ({ open, handleClose, addRecord, updateRecord, deleteRecor
 
       if (selectedRow != null) {
         await updateRecord(data);
+        setRows((oldRows: any) =>
+          oldRows.map((row: any) =>
+            row.empId === selectedRow.empId ? { ...row, ...data } : row
+          )
+        );
       } else {
         const newEmp = await addRecord(data);
         actualEmpId = newEmp.empId;
@@ -279,6 +284,7 @@ const EmployeeModal = ({ open, handleClose, addRecord, updateRecord, deleteRecor
       // 👇 Upload รูปภาพหลังจากรู้ empId แน่นอน
       if (imageFile && actualEmpId) {
         uploadedPath = await uploadImage(actualEmpId, imageFile);
+        setAvatarImage(`${uploadedPath}?v=${Date.now()}`);
       }
 
       handleClose(true);

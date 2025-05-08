@@ -338,7 +338,7 @@ export const StartEditButtonGrid: React.FC<AdminEmployeemanagementProps & { type
     { field: 'startWorkingDate', headerName: 'StartWorkingDate', minWidth: 140, maxWidth: 120, flex: 1, headerAlign: 'center', headerClassName: 'super-app-theme--header', align: 'center', },
     { field: 'lastWorkingDate', headerName: 'LastWorkingDate', minWidth: 140, maxWidth: 120, flex: 1, headerAlign: 'center', headerClassName: 'super-app-theme--header', align: 'center', },
     { field: 'effectiveDate', headerName: 'EffectiveDate', minWidth: 140, maxWidth: 120, flex: 1, headerAlign: 'center', headerClassName: 'super-app-theme--header', align: 'center', },
-    { field: 'picturePath', headerName: 'Picture Path', minWidth: 100, flex: 1, headerAlign: 'center', headerClassName: 'super-app-theme--header', align: 'center' },
+    { field: 'picturePath', headerName: 'Picture Path', minWidth: 100, flex: 1, headerAlign: 'center', headerClassName: 'super-app-theme--header', align: 'center', hideable: true },
   ];
 
   const columns_org: GridColDef[] = [

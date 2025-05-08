@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import Image from 'next/image';
 
 export const EmployeeImage = ({ fileName }: { fileName: string }) => {
@@ -7,6 +7,11 @@ export const EmployeeImage = ({ fileName }: { fileName: string }) => {
 
   const [imgSrc, setImgSrc] = useState(httpsUrl);
   const [unoptimized, setUnoptimized] = useState(true);
+
+  useEffect(() => {
+    setImgSrc(httpsUrl);
+    setUnoptimized(true);
+  }, [fileName]);
 
   return (
     <div className="relative w-48 h-48">
