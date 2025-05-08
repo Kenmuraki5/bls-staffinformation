@@ -279,13 +279,6 @@ const EmployeeModal = ({ open, handleClose, addRecord, updateRecord, deleteRecor
       // 👇 Upload รูปภาพหลังจากรู้ empId แน่นอน
       if (imageFile && actualEmpId) {
         uploadedPath = await uploadImage(actualEmpId, imageFile);
-
-        // อัปเดต picturePath ใน DB แยกอีกที
-        await updateRecord({
-          empId: actualEmpId,
-          picturePath: uploadedPath,
-        });
-
       }
 
       handleClose(true);
