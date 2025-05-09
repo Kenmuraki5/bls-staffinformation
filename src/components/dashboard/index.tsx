@@ -118,7 +118,7 @@ const Dashboard: React.FC<DashboardProps> = ({ organizations, employees, staffDa
     } else {
       setBreadcrumbPath({ path: [], ids: [] });
     }
-  }, [searchParams, organizations]);
+  }, [searchParams, initialOrganizationId, organizations]);
 
   const toggleTreeViewVisibility = () => {
     setIsTreeViewVisible(!isTreeViewVisible);
@@ -170,6 +170,7 @@ const Dashboard: React.FC<DashboardProps> = ({ organizations, employees, staffDa
       </SvgIcon>
     );
   }
+  const MemoizedEmployeeTable = useMemo(() => <EmployeeTable dataEmployees={employees} breadcrumbPath={breadcrumbPath} />, [employees, breadcrumbPath]);
   const MemoizedTreeView = useMemo(() => (
     <RichTreeView
       items={treeItems}
@@ -195,9 +196,15 @@ const Dashboard: React.FC<DashboardProps> = ({ organizations, employees, staffDa
       }}
     />
   ), [treeItems, expandedItems, clickHandler]);
+  const MemoizedSearch = useMemo(() => (
+    <Search search={search} organizationUnits={searchAutoComplete} />
+  ), [searchAutoComplete]);
+  const MemoizedStaffInformation = useMemo(() => (
+    <StaffInformation staffData={staffData} />
+  ), [staffData]);
 
   return (
-    <main className='mt-5'>
+    <main>
       <Button className="mt-5" onClick={toggleTreeViewVisibility}>
         {isTreeViewVisible ? "Hide Panel" : "Show"}
       </Button>
@@ -211,9 +218,9 @@ const Dashboard: React.FC<DashboardProps> = ({ organizations, employees, staffDa
         )}
 
         <div className={`w-full mx-3 p-3 border-2 rounded bg-white ${isTreeViewVisible ? 'md:w-3/4' : 'md:w-full'}`}>
-          <Search search={search} organizationUnits={searchAutoComplete} />
+          {MemoizedSearch}
           <div className="mx-3" style={{ maxHeight: 'calc(100vh - 220px)', overflowY: 'auto' }}>
-            {staffData ? <StaffInformation staffData={staffData} /> : <EmployeeTable dataEmployees={employees} breadcrumbPath={breadcrumbPath} />}
+            {staffData ? MemoizedStaffInformation : MemoizedEmployeeTable}
           </div>
         </div>
       </div>
