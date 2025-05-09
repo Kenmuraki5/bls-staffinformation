@@ -1,6 +1,6 @@
 'use client'
 import { useRouter, useSearchParams } from 'next/navigation';
-import { useState, useEffect, useCallback, useMemo } from 'react';
+import { useState, useEffect, useCallback, useMemo, useRef } from 'react';
 import { RichTreeView } from '@mui/x-tree-view/RichTreeView';
 import { TreeItem, treeItemClasses } from '@mui/x-tree-view/TreeItem';
 import { alpha, Box, Button, styled, SvgIcon, SvgIconProps } from '@mui/material';
@@ -97,10 +97,15 @@ const Dashboard: React.FC<DashboardProps> = ({ organizations, employees, staffDa
 
   const searchAutoComplete = useMemo(() => getAllIdsWithUnits(organizations), [organizations]);
 
+  const breadcrumbRef = useRef<{ path: string[]; ids: string[] }>({ path: [], ids: [] });
+
+
   const clickHandler = useCallback(
     (orgId: string): void => {
       const result = findPathById(organizations, orgId);
-      setBreadcrumbPath(result || { path: [], ids: [] });
+      const pathData = result || { path: [], ids: [] };
+      breadcrumbRef.current = pathData;
+      setBreadcrumbPath(pathData);
       router.push(`?organizationId=${orgId}`);
     },
     [organizations, router]
@@ -121,7 +126,7 @@ const Dashboard: React.FC<DashboardProps> = ({ organizations, employees, staffDa
   // }, [searchParams, initialOrganizationId, organizations]);
 
   useEffect(() => {
-    if (!organizations || organizations.length === 0) return; // 🔒 รอให้ data มา
+    if (!organizations || organizations.length === 0) return;
 
     const searchBy = searchParams.get('searchBy');
     const searchInput = searchParams.get('searchInput');
@@ -129,13 +134,14 @@ const Dashboard: React.FC<DashboardProps> = ({ organizations, employees, staffDa
 
     if (organizationId) {
       const result = findPathById(organizations, organizationId);
-      const newPath = result || { path: [], ids: [] };
+      const pathData = result || { path: [], ids: [] };
 
-      setBreadcrumbPath(prev =>
-        JSON.stringify(prev) === JSON.stringify(newPath) ? prev : newPath
-      );
+      // ใช้ ref ช่วยกันถูก reset
+      breadcrumbRef.current = pathData;
+      setBreadcrumbPath(pathData);
     }
   }, [searchParams, organizations]);
+
 
 
   const toggleTreeViewVisibility = () => {
