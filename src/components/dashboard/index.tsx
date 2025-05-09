@@ -99,8 +99,6 @@ const Dashboard: React.FC<DashboardProps> = ({ organizations, employees, staffDa
 
   const clickHandler = useCallback(
     (orgId: string): void => {
-      const result = findPathById(organizations, orgId);
-      setBreadcrumbPath(result || { path: [], ids: [] });
       router.push(`?organizationId=${orgId}`);
     },
     []
@@ -116,7 +114,7 @@ const Dashboard: React.FC<DashboardProps> = ({ organizations, employees, staffDa
       const result = findPathById(organizations, organizationId);
       setBreadcrumbPath(result || { path: [], ids: [] });
     } 
-  }, [searchParams, initialOrganizationId]);
+  }, [searchParams]);
 
   const toggleTreeViewVisibility = () => {
     setIsTreeViewVisible(!isTreeViewVisible);
