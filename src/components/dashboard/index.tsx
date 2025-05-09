@@ -118,7 +118,7 @@ const Dashboard: React.FC<DashboardProps> = ({ organizations, employees, staffDa
     } else {
       setBreadcrumbPath({ path: [], ids: [] });
     }
-  }, [searchParams, initialOrganizationId, organizations]);
+  }, [searchParams, organizations]);
 
   const toggleTreeViewVisibility = () => {
     setIsTreeViewVisible(!isTreeViewVisible);
