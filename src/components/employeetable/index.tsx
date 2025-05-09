@@ -62,6 +62,7 @@ const EmployeeTable: React.FC<PropsType> = ({ dataEmployees, breadcrumbPath }: a
     if (searchBy) {
       setAlignment("managers");
     }
+    console.log(breadcrumbPath);
   }, [searchBy])
 
   const handleChange = (event: React.MouseEvent<HTMLElement>, newAlignment: string) => {

@@ -103,7 +103,7 @@ const Dashboard: React.FC<DashboardProps> = ({ organizations, employees, staffDa
       setBreadcrumbPath(result || { path: [], ids: [] });
       router.push(`?organizationId=${orgId}`);
     },
-    []
+    [organizations, router]
   );
 
   useEffect(() => {
@@ -170,7 +170,6 @@ const Dashboard: React.FC<DashboardProps> = ({ organizations, employees, staffDa
       </SvgIcon>
     );
   }
-  const MemoizedEmployeeTable = useMemo(() => <EmployeeTable dataEmployees={employees} breadcrumbPath={breadcrumbPath} />, [employees, breadcrumbPath]);
   const MemoizedTreeView = useMemo(() => (
     <RichTreeView
       items={treeItems}
@@ -196,15 +195,9 @@ const Dashboard: React.FC<DashboardProps> = ({ organizations, employees, staffDa
       }}
     />
   ), [treeItems, expandedItems, clickHandler]);
-  const MemoizedSearch = useMemo(() => (
-    <Search search={search} organizationUnits={searchAutoComplete} />
-  ), [searchAutoComplete]);
-  const MemoizedStaffInformation = useMemo(() => (
-    <StaffInformation staffData={staffData} />
-  ), [staffData]);
 
   return (
-    <main>
+    <main className='mt-5'>
       <Button className="mt-5" onClick={toggleTreeViewVisibility}>
         {isTreeViewVisible ? "Hide Panel" : "Show"}
       </Button>
@@ -218,9 +211,9 @@ const Dashboard: React.FC<DashboardProps> = ({ organizations, employees, staffDa
         )}
 
         <div className={`w-full mx-3 p-3 border-2 rounded bg-white ${isTreeViewVisible ? 'md:w-3/4' : 'md:w-full'}`}>
-          {MemoizedSearch}
+          <Search search={search} organizationUnits={searchAutoComplete} />
           <div className="mx-3" style={{ maxHeight: 'calc(100vh - 220px)', overflowY: 'auto' }}>
-            {staffData ? MemoizedStaffInformation : MemoizedEmployeeTable}
+            {staffData ? <StaffInformation staffData={staffData} /> : <EmployeeTable dataEmployees={employees} breadcrumbPath={breadcrumbPath} />}
           </div>
         </div>
       </div>
