@@ -1,6 +1,6 @@
 'use client'
 import { useRouter, useSearchParams } from 'next/navigation';
-import { useState, useEffect, useCallback, useMemo, useRef } from 'react';
+import { useState, useEffect, useCallback, useMemo } from 'react';
 import { RichTreeView } from '@mui/x-tree-view/RichTreeView';
 import { TreeItem, treeItemClasses } from '@mui/x-tree-view/TreeItem';
 import { alpha, Box, Button, styled, SvgIcon, SvgIconProps } from '@mui/material';
@@ -97,63 +97,38 @@ const Dashboard: React.FC<DashboardProps> = ({ organizations, employees, staffDa
 
   const searchAutoComplete = useMemo(() => getAllIdsWithUnits(organizations), [organizations]);
 
-  const breadcrumbRef = useRef<{ path: string[]; ids: string[] }>({ path: [], ids: [] });
-
-
   const clickHandler = useCallback(
     (orgId: string): void => {
       const result = findPathById(organizations, orgId);
-      const pathData = result || { path: [], ids: [] };
-      breadcrumbRef.current = pathData;
-      setBreadcrumbPath(pathData);
+      setBreadcrumbPath(result || { path: [], ids: [] });
       router.push(`?organizationId=${orgId}`);
     },
     [organizations, router]
   );
 
-  // useEffect(() => {
-  //   const searchBy = searchParams.get('searchBy');
-  //   const searchInput = searchParams.get('searchInput');
-
-  //   const organizationId = searchBy === "organizationUnit" ? searchInput : initialOrganizationId;
-
-  //   if (organizationId) {
-  //     const result = findPathById(organizations, organizationId);
-  //     setBreadcrumbPath(result || { path: [], ids: [] });
-  //   } else {
-  //     setBreadcrumbPath({ path: [], ids: [] });
-  //   }
-  // }, [searchParams, initialOrganizationId, organizations]);
-
   useEffect(() => {
-    if (!organizations || organizations.length === 0) return;
-
     const searchBy = searchParams.get('searchBy');
     const searchInput = searchParams.get('searchInput');
-    const organizationId = searchBy === "organizationUnit" ? searchInput : searchParams.get('organizationId');
+
+    const organizationId = searchBy === "organizationUnit" ? searchInput : initialOrganizationId;
 
     if (organizationId) {
       const result = findPathById(organizations, organizationId);
-      const pathData = result || { path: [], ids: [] };
-
-      // ใช้ ref ช่วยกันถูก reset
-      breadcrumbRef.current = pathData;
-      setBreadcrumbPath(pathData);
+      setBreadcrumbPath(result || { path: [], ids: [] });
+    } else {
+      setBreadcrumbPath({ path: [], ids: [] });
     }
-  }, [searchParams, organizations]);
-
-
+  }, [searchParams, initialOrganizationId, organizations]);
 
   const toggleTreeViewVisibility = () => {
     setIsTreeViewVisible(!isTreeViewVisible);
   };
 
-  const search = (searchBy: string, searchInput: string) => {
-    if (searchInput.trim() === '') {
-      return;
-    }
+  const search = useCallback((searchBy: string, searchInput: string) => {
+    if (searchInput.trim() === '') return;
     router.push(`?searchBy=${searchBy}&searchInput=${searchInput}`);
-  };
+  }, [router]);
+  
 
   interface TreeItem {
     id: string;
@@ -180,7 +155,7 @@ const Dashboard: React.FC<DashboardProps> = ({ organizations, employees, staffDa
   };
 
   const [expandedItems, setExpandedItems] = useState<string[]>(() => getAllIds(treeItems));
-
+  
   function CloseSquare(props: SvgIconProps) {
     return (
       <SvgIcon
@@ -194,17 +169,18 @@ const Dashboard: React.FC<DashboardProps> = ({ organizations, employees, staffDa
       </SvgIcon>
     );
   }
+  const MemoizedEmployeeTable = useMemo(() => <EmployeeTable dataEmployees={employees} breadcrumbPath={breadcrumbPath} />, [employees, breadcrumbPath]);
   const MemoizedTreeView = useMemo(() => (
     <RichTreeView
       items={treeItems}
       expandedItems={expandedItems}
-      slots={{
+      slots={{ 
         item: (props: any) => <CustomTreeItem {...props} id={props.itemId} />,
         endIcon: CloseSquare,
         expandIcon: AddBoxIcon,
         collapseIcon: IndeterminateCheckBoxIcon,
       }}
-      slotProps={{
+      slotProps={{ 
         item: { tree: treeItems } as any,
       }}
       onItemSelectionToggle={(event, itemId: any) => clickHandler(itemId)}
@@ -219,6 +195,9 @@ const Dashboard: React.FC<DashboardProps> = ({ organizations, employees, staffDa
       }}
     />
   ), [treeItems, expandedItems, clickHandler]);
+  const MemoizedStaffInformation = useMemo(() => (
+    <StaffInformation staffData={staffData} />
+  ), [staffData]);
 
   return (
     <main className='mt-5'>
@@ -237,7 +216,7 @@ const Dashboard: React.FC<DashboardProps> = ({ organizations, employees, staffDa
         <div className={`w-full mx-3 p-3 border-2 rounded bg-white ${isTreeViewVisible ? 'md:w-3/4' : 'md:w-full'}`}>
           <Search search={search} organizationUnits={searchAutoComplete} />
           <div className="mx-3" style={{ maxHeight: 'calc(100vh - 220px)', overflowY: 'auto' }}>
-            {staffData ? <StaffInformation staffData={staffData} /> : <EmployeeTable dataEmployees={employees} breadcrumbPath={breadcrumbPath} />}
+            {staffData ? MemoizedStaffInformation : MemoizedEmployeeTable}
           </div>
         </div>
       </div>
