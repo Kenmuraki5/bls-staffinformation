@@ -33,7 +33,7 @@ const getAllIdsWithUnits = (data: OrganizationNode[]): Array<{ organizationId: s
 
 const findPathById = (data: OrganizationNode[], id: string): { path: string[], ids: string[] } | null => {
   for (const node of data) {
-    if (node.organizationId === id) return { path: [node.organizationUnit], ids: [node.organizationId] };
+    if (node.organizationId == id) return { path: [node.organizationUnit], ids: [node.organizationId] };
     if (node.children) {
       const result = findPathById(node.children, id);
       if (result) return { path: [node.organizationUnit, ...result.path], ids: [node.organizationId, ...result.ids] };
