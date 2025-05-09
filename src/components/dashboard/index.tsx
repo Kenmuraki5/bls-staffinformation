@@ -103,7 +103,7 @@ const Dashboard: React.FC<DashboardProps> = ({ organizations, employees, staffDa
       setBreadcrumbPath(result || { path: [], ids: [] });
       router.push(`?organizationId=${orgId}`);
     },
-    [organizations, router]
+    []
   );
 
   useEffect(() => {
@@ -115,20 +115,19 @@ const Dashboard: React.FC<DashboardProps> = ({ organizations, employees, staffDa
     if (organizationId) {
       const result = findPathById(organizations, organizationId);
       setBreadcrumbPath(result || { path: [], ids: [] });
-    } else {
-      setBreadcrumbPath({ path: [], ids: [] });
-    }
-  }, [searchParams, initialOrganizationId, organizations]);
+    } 
+  }, [searchParams, initialOrganizationId]);
 
   const toggleTreeViewVisibility = () => {
     setIsTreeViewVisible(!isTreeViewVisible);
   };
 
-  const search = useCallback((searchBy: string, searchInput: string) => {
-    if (searchInput.trim() === '') return;
+  const search = (searchBy: string, searchInput: string) => {
+    if (searchInput.trim() === '') {
+      return;
+    }
     router.push(`?searchBy=${searchBy}&searchInput=${searchInput}`);
-  }, [router]);
-  
+  };
 
   interface TreeItem {
     id: string;
@@ -155,7 +154,7 @@ const Dashboard: React.FC<DashboardProps> = ({ organizations, employees, staffDa
   };
 
   const [expandedItems, setExpandedItems] = useState<string[]>(() => getAllIds(treeItems));
-  
+
   function CloseSquare(props: SvgIconProps) {
     return (
       <SvgIcon
@@ -169,18 +168,17 @@ const Dashboard: React.FC<DashboardProps> = ({ organizations, employees, staffDa
       </SvgIcon>
     );
   }
-  const MemoizedEmployeeTable = useMemo(() => <EmployeeTable dataEmployees={employees} breadcrumbPath={breadcrumbPath} />, [employees, breadcrumbPath]);
   const MemoizedTreeView = useMemo(() => (
     <RichTreeView
       items={treeItems}
       expandedItems={expandedItems}
-      slots={{ 
+      slots={{
         item: (props: any) => <CustomTreeItem {...props} id={props.itemId} />,
         endIcon: CloseSquare,
         expandIcon: AddBoxIcon,
         collapseIcon: IndeterminateCheckBoxIcon,
       }}
-      slotProps={{ 
+      slotProps={{
         item: { tree: treeItems } as any,
       }}
       onItemSelectionToggle={(event, itemId: any) => clickHandler(itemId)}
@@ -195,9 +193,6 @@ const Dashboard: React.FC<DashboardProps> = ({ organizations, employees, staffDa
       }}
     />
   ), [treeItems, expandedItems, clickHandler]);
-  const MemoizedStaffInformation = useMemo(() => (
-    <StaffInformation staffData={staffData} />
-  ), [staffData]);
 
   return (
     <main className='mt-5'>
@@ -216,7 +211,7 @@ const Dashboard: React.FC<DashboardProps> = ({ organizations, employees, staffDa
         <div className={`w-full mx-3 p-3 border-2 rounded bg-white ${isTreeViewVisible ? 'md:w-3/4' : 'md:w-full'}`}>
           <Search search={search} organizationUnits={searchAutoComplete} />
           <div className="mx-3" style={{ maxHeight: 'calc(100vh - 220px)', overflowY: 'auto' }}>
-            {staffData ? MemoizedStaffInformation : MemoizedEmployeeTable}
+            {staffData ? <StaffInformation staffData={staffData} /> : <EmployeeTable dataEmployees={employees} breadcrumbPath={breadcrumbPath}/>}
           </div>
         </div>
       </div>
