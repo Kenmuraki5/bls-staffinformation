@@ -106,19 +106,37 @@ const Dashboard: React.FC<DashboardProps> = ({ organizations, employees, staffDa
     [organizations, router]
   );
 
+  // useEffect(() => {
+  //   const searchBy = searchParams.get('searchBy');
+  //   const searchInput = searchParams.get('searchInput');
+
+  //   const organizationId = searchBy === "organizationUnit" ? searchInput : initialOrganizationId;
+
+  //   if (organizationId) {
+  //     const result = findPathById(organizations, organizationId);
+  //     setBreadcrumbPath(result || { path: [], ids: [] });
+  //   } else {
+  //     setBreadcrumbPath({ path: [], ids: [] });
+  //   }
+  // }, [searchParams, initialOrganizationId, organizations]);
+
   useEffect(() => {
+    if (!organizations || organizations.length === 0) return; // 🔒 รอให้ data มา
+
     const searchBy = searchParams.get('searchBy');
     const searchInput = searchParams.get('searchInput');
-
-    const organizationId = searchBy === "organizationUnit" ? searchInput : initialOrganizationId;
+    const organizationId = searchBy === "organizationUnit" ? searchInput : searchParams.get('organizationId');
 
     if (organizationId) {
       const result = findPathById(organizations, organizationId);
-      setBreadcrumbPath(result || { path: [], ids: [] });
-    } else {
-      setBreadcrumbPath({ path: [], ids: [] });
+      const newPath = result || { path: [], ids: [] };
+
+      setBreadcrumbPath(prev =>
+        JSON.stringify(prev) === JSON.stringify(newPath) ? prev : newPath
+      );
     }
-  }, [searchParams, initialOrganizationId, organizations]);
+  }, [searchParams, organizations]);
+
 
   const toggleTreeViewVisibility = () => {
     setIsTreeViewVisible(!isTreeViewVisible);
@@ -156,7 +174,7 @@ const Dashboard: React.FC<DashboardProps> = ({ organizations, employees, staffDa
   };
 
   const [expandedItems, setExpandedItems] = useState<string[]>(() => getAllIds(treeItems));
-  
+
   function CloseSquare(props: SvgIconProps) {
     return (
       <SvgIcon
@@ -174,13 +192,13 @@ const Dashboard: React.FC<DashboardProps> = ({ organizations, employees, staffDa
     <RichTreeView
       items={treeItems}
       expandedItems={expandedItems}
-      slots={{ 
+      slots={{
         item: (props: any) => <CustomTreeItem {...props} id={props.itemId} />,
         endIcon: CloseSquare,
         expandIcon: AddBoxIcon,
         collapseIcon: IndeterminateCheckBoxIcon,
       }}
-      slotProps={{ 
+      slotProps={{
         item: { tree: treeItems } as any,
       }}
       onItemSelectionToggle={(event, itemId: any) => clickHandler(itemId)}
