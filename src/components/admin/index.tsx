@@ -25,6 +25,8 @@ import BranchModal from '../addModal/addBranch';
 import ManagerModal from '../addModal/addManager';
 import AlertResponse from '../snackbar';
 import UploadFileIcon from '@mui/icons-material/UploadFile';
+import { CSVLink } from 'react-csv';
+
 
 interface EditToolbarProps {
   type: string
@@ -33,38 +35,50 @@ interface EditToolbarProps {
 }
 
 function EditToolbar(props: GridSlotProps['toolbar']) {
-  const { handleOpenAddModal, role, type }: any = props;
+  const { handleOpenAddModal, role, type, rows, columns }: any = props;
 
   const handleClick = () => {
-    handleOpenAddModal(type, null); // Pass null to clear the selectedRow state
+    handleOpenAddModal(type, null);
   };
 
+  const headers = columns.map((col: any) => ({
+    label: col.headerName,
+    key: col.field,
+  }));
+
   return (
-    <Box className="mt-3" display="flex" gap={2}>
+    <Box className="mt-3" display="flex" gap={2} alignItems="center">
       {role === "AdminStaffInformation" && (
         <>
-          <Button
-            color="primary"
-            startIcon={<AddIcon />}
-            onClick={handleClick}
-          >
+          <Button color="primary" startIcon={<AddIcon />} onClick={handleClick}>
             Add record
           </Button>
-          {type == "employees" && (<Button
-            color="secondary"
-            startIcon={<UploadFileIcon />}
-            component="a"
-            href={`/${type}/Management/FileUpload`}
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Update From file
-          </Button>)}
+          {type === "employees" && (
+            <Button
+              color="secondary"
+              startIcon={<UploadFileIcon />}
+              component="a"
+              href={`/${type}/Management/FileUpload`}
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              Update From file
+            </Button>
+          )}
         </>
       )}
+      <CSVLink
+        data={rows}
+        headers={headers}
+        filename={`${type}_export.csv`}
+        target="_blank"
+        style={{ textDecoration: 'none' }}
+      >
+        <Button variant="outlined" color="success">Export CSV</Button>
+      </CSVLink>
     </Box>
   );
-};
+}
 
 
 
@@ -492,7 +506,7 @@ export const StartEditButtonGrid: React.FC<AdminEmployeemanagementProps & { type
             toolbar: EditToolbar,
           }}
           slotProps={{
-            toolbar: { type, role, handleOpenAddModal } as any,
+            toolbar: { type, role, handleOpenAddModal, rows, columns: initialColumns } as any,
           }}
           showToolbar
           sx={{ height: '100%', width: '100%' }}
