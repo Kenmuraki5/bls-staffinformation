@@ -510,8 +510,6 @@ export const StartEditButtonGrid: React.FC<AdminEmployeemanagementProps & { type
             const selected = rows.filter((row: any) =>
               stringIds.includes(String(getRowId(row)))
             );
-          
-            console.log('✅ Selected for export:', selected);
             setSelectedRowsExport(selected);
           }}
           slots={{

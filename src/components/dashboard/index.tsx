@@ -107,14 +107,26 @@ const Dashboard: React.FC<DashboardProps> = ({ organizations, employees, staffDa
   useEffect(() => {
     const searchBy = searchParams.get('searchBy');
     const searchInput = searchParams.get('searchInput');
-
-    const organizationId = searchBy === "organizationUnit" ? searchInput : initialOrganizationId;
-
+    const organizationIdFromQuery = initialOrganizationId;
+  
+    let organizationId = '';
+  
+    if (searchBy === "organizationUnit") {
+      organizationId = searchInput || '';
+    } else if (searchBy === "employeeId") {
+      const found = employees.find((emp:any) => emp?.empId?.toString() === searchInput);
+      organizationId = found?.organizationId || '';
+    } else {
+      organizationId = organizationIdFromQuery || '';
+    }
+  
     if (organizationId) {
       const result = findPathById(organizations, organizationId);
       setBreadcrumbPath(result || { path: [], ids: [] });
-    } 
-  }, [initialOrganizationId, searchParams]);
+    }
+  
+  }, [initialOrganizationId, searchParams, employees, organizations]);
+  
 
   const toggleTreeViewVisibility = () => {
     setIsTreeViewVisible(!isTreeViewVisible);
