@@ -505,6 +505,7 @@ export const StartEditButtonGrid: React.FC<AdminEmployeemanagementProps & { type
           checkboxSelection
           onRowSelectionModelChange={(ids: any) => {
             const stringIds = Array.from(ids).map(String);
+            console.log(stringIds);
             const selected = rows.filter((row: any) =>
               stringIds.includes(String(getRowId(row)))
             );
