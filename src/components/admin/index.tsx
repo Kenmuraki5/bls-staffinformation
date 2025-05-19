@@ -35,11 +35,7 @@ interface EditToolbarProps {
 }
 
 function EditToolbar(props: GridSlotProps['toolbar']) {
-  const { handleOpenAddModal, role, type, rows, columns }: any = props;
-
-  const handleClick = () => {
-    handleOpenAddModal(type, null);
-  };
+  const { handleOpenAddModal, role, type, rows, columns, isFiltered }: any = props;
 
   const headers = columns.map((col: any) => ({
     label: col.headerName,
@@ -50,7 +46,7 @@ function EditToolbar(props: GridSlotProps['toolbar']) {
     <Box className="mt-3" display="flex" gap={2} alignItems="center">
       {role === "AdminStaffInformation" && (
         <>
-          <Button color="primary" startIcon={<AddIcon />} onClick={handleClick}>
+          <Button color="primary" startIcon={<AddIcon />} onClick={() => handleOpenAddModal(type, null)}>
             Add record
           </Button>
           {type === "employees" && (
@@ -67,19 +63,22 @@ function EditToolbar(props: GridSlotProps['toolbar']) {
           )}
         </>
       )}
+
+      {/* ✅ Export CSV */}
       <CSVLink
         data={rows}
         headers={headers}
-        filename={`${type}_export.csv`}
+        filename={`${type}_${isFiltered ? 'selected' : 'all'}_export.csv`}
         target="_blank"
         style={{ textDecoration: 'none' }}
       >
-        <Button variant="outlined" color="success">Export CSV</Button>
+        <Button variant="outlined" color="success">
+          Export {isFiltered ? 'Selected' : 'All'} CSV
+        </Button>
       </CSVLink>
     </Box>
   );
 }
-
 
 
 export const StartEditButtonGrid: React.FC<AdminEmployeemanagementProps & { type: "employees" | "organizations" | 'domains' | 'branchs' | "managers" | "jobs" }> = ({ data, type }) => {
@@ -99,6 +98,7 @@ export const StartEditButtonGrid: React.FC<AdminEmployeemanagementProps & { type
   const [openBranchModal, setOpenBranchModal] = React.useState(false);
   const [openJobModal, setOpenJobModal] = React.useState(false);
   const [selectedRow, setSelectedRow] = React.useState(null);
+  const [selectedRowsforexport, setSelectedRowsExport] = React.useState<any[]>([]);
   const handleOpenAddModal = (type: string, row: any) => {
     setSelectedRow(row || null);
     if (type == "employees") {
@@ -502,11 +502,18 @@ export const StartEditButtonGrid: React.FC<AdminEmployeemanagementProps & { type
           rowModesModel={rowModesModel}
           onRowModesModelChange={handleRowModesModelChange}
           onRowEditStop={handleRowEditStop}
+          checkboxSelection
+          onRowSelectionModelChange={(ids:any) => {
+            const selected = rows.filter((row:any) => ids.includes(getRowId(row)));
+            setSelectedRowsExport(selected);
+          }}
           slots={{
             toolbar: EditToolbar,
           }}
           slotProps={{
-            toolbar: { type, role, handleOpenAddModal, rows, columns: initialColumns } as any,
+            toolbar: { 
+              type, 
+              role, handleOpenAddModal, rows: selectedRowsforexport?.length > 0 ? selectedRowsforexport : rows, columns: initialColumns, isFiltered: selectedRowsforexport.length > 0, } as any,
           }}
           showToolbar
           sx={{ height: '100%', width: '100%' }}
