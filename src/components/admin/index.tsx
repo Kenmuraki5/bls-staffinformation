@@ -504,11 +504,11 @@ export const StartEditButtonGrid: React.FC<AdminEmployeemanagementProps & { type
           onRowEditStop={handleRowEditStop}
           checkboxSelection
           onRowSelectionModelChange={(ids: any) => {
-            console.log('✅ Selected IDs:', ids);
-            const selected = rows.filter((row: any) => ids.includes(getRowId(row)));
-            console.log('🟩 Filtered rows:', selected);
+            const selected = rows.filter((row: any) =>
+              Array.from(ids).includes(String(getRowId(row)))
+            );
             setSelectedRowsExport(selected);
-          }}
+          }}          
           slots={{
             toolbar: EditToolbar,
           }}
