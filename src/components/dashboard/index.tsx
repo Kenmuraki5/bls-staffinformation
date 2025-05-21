@@ -117,7 +117,7 @@ const Dashboard: React.FC<DashboardProps> = ({ organizations, employees, staffDa
       const found = employees.find((emp:any) => emp?.empId?.toString() === searchInput);
       organizationId = found?.organizationId || '';
     } else {
-      organizationId = organizationIdFromQuery || '';
+      organizationId = '';
     }
   
     if (organizationId) {

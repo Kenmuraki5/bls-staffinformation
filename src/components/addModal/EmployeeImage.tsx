@@ -2,8 +2,7 @@ import { useEffect, useState } from 'react';
 import Image from 'next/image';
 
 export const EmployeeImage = ({ fileName }: { fileName: string }) => {
-  const httpsUrl = `https://bualuangstaffinfo.sawasdee.brk1/staff-img/${fileName.split('/').pop()}`;
-  const httpUrl = `http://bualuangintranet.sawasdee.brk1/employee/${fileName.replace(/^(\.\/|\.\.\/)+/, '')}`;
+  const httpsUrl = `https://${process.env.NEXT_PUBLIC_BASEURL_ClIENT_SIDE}/staff-img/${fileName.split('/').pop()}`;
 
   const [imgSrc, setImgSrc] = useState(httpsUrl);
   const [unoptimized, setUnoptimized] = useState(true);
@@ -19,10 +18,8 @@ export const EmployeeImage = ({ fileName }: { fileName: string }) => {
         src={imgSrc}
         alt="Profile"
         onError={() => {
-          if (imgSrc !== httpUrl) {
-            setImgSrc(httpUrl);
+            setImgSrc(`https://${process.env.NEXT_PUBLIC_BASEURL_ClIENT_SIDE}/staff-img/white.PNG`);
             setUnoptimized(false)
-          }
         }}
         fill
         unoptimized={unoptimized}
