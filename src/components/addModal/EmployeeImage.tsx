@@ -18,8 +18,10 @@ export const EmployeeImage = ({ fileName }: { fileName: string }) => {
         src={imgSrc}
         alt="Profile"
         onError={() => {
+          if (imgSrc !== httpsUrl) {
             setImgSrc(`https://${process.env.NEXT_PUBLIC_BASEURL_ClIENT_SIDE}/staff-img/white.PNG`);
             setUnoptimized(false)
+          }
         }}
         fill
         unoptimized={unoptimized}
