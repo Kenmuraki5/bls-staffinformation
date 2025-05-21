@@ -19,7 +19,6 @@ export const EmployeeImage = ({ fileName }: { fileName: string }) => {
         alt="Profile"
         onError={() => {
           setImgSrc(`${process.env.NEXT_PUBLIC_BASEURL_CLIENT_SIDE}/staff-img/white.PNG`);
-          setUnoptimized(false)
         }}
         fill
         unoptimized={unoptimized}
