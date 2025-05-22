@@ -27,11 +27,15 @@ const Home = async ({
       staffData = await getEmployee(params.domain, searchParams?.empId as string);
     }
   } else {
-    employees = await handleSearch(
-      searchParams?.searchBy as string,
-      searchParams?.searchInput as string,
-      params?.domain as string
-    );
+    try {
+      employees = await handleSearch(
+        searchParams?.searchBy as string,
+        searchParams?.searchInput as string,
+        params?.domain as string
+      );
+    } catch (error) {
+      return <PageNotAvailable />;
+    }
   }
 
   const allowedDomains = ['BLS', 'BCAP'];
