@@ -125,6 +125,8 @@ const Dashboard: React.FC<DashboardProps> = ({ organizations, employees, staffDa
     if (organizationId) {
       const result = findPathById(organizations, organizationId);
       setBreadcrumbPath(result || { path: [], ids: [] });
+    } else {
+      setBreadcrumbPath({ path: [], ids: [] });
     }
   
   }, [initialOrganizationId, searchParams, employees, organizations]);
