@@ -20,6 +20,16 @@ const Home = async ({
 
   let employees: any = {};
   let staffData: any = {};
+
+  const rawSearchBy = searchParams?.searchBy;
+  const searchBy = Array.isArray(rawSearchBy) ? rawSearchBy[0] : rawSearchBy;
+
+  const validSearchByFields = ['employeeNickName', 'employeeId', 'employeeName', 'organizationUnit'];
+
+  if (!searchBy || !validSearchByFields.includes(searchBy)) {
+    return <PageNotAvailable />;
+  }
+
   if (!searchParams?.searchBy) {
     employees = await getEmployeesByOrgID(params.domain as string, searchParams?.organizationId as string);
     if (searchParams?.empId) {
