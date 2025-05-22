@@ -24,7 +24,7 @@ const Home = async ({
   const rawSearchBy = searchParams?.searchBy;
   const searchBy = Array.isArray(rawSearchBy) ? rawSearchBy[0] : rawSearchBy;
 
-  const validSearchByFields = ['employeeNickName', 'employeeId', 'employeeName', 'organizationUnit'];
+  const validSearchByFields = ['employeenickName', 'employeeId', 'employeeName', 'organizationUnit'];
 
   if (!searchBy || !validSearchByFields.includes(searchBy)) {
     return <PageNotAvailable />;
