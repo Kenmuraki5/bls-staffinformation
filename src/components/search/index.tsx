@@ -1,6 +1,6 @@
 'use client'
 import { Button, FormControl, InputLabel, MenuItem, Select, SelectChangeEvent, TextField, Autocomplete } from '@mui/material';
-import React, { useState } from 'react';
+import React, { useMemo, useState } from 'react';
 import InputAdornment from '@mui/material/InputAdornment';
 import SearchIcon from '@mui/icons-material/Search';
 
@@ -16,6 +16,12 @@ const Search = React.memo(({ search, organizationUnits }: any) => {
     const handleSearchInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         setSearchInput(event.target.value);
     };
+
+    const sortedOrganizationUnits =  useMemo(() => {
+        return [...organizationUnits].sort((a, b) => 
+            (a.organizationUnit || '').localeCompare(b.organizationUnit || '')
+        );
+    }, [organizationUnits]);
 
     const executeSearch = async (searchBy: string, searchInput: string) => {
         if (searchInput.trim() === '') return;
@@ -81,7 +87,7 @@ const Search = React.memo(({ search, organizationUnits }: any) => {
                     <>
                         <Autocomplete
                             disablePortal
-                            options={organizationUnits}
+                            options={sortedOrganizationUnits}
                             fullWidth
                             size="small"
                             value={organizationUnits.find((org: any) => org.organizationId === searchInput) || null}
