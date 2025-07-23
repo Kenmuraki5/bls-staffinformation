@@ -163,7 +163,7 @@ export default function OrganizationModal({ open, handleClose, addRecord, update
             </Typography>
           </Box>
           <Box sx={{ ml: 'auto', display: 'flex', alignItems: 'center' }}>
-            {role != "AdminStaffInformation" && (
+            {role === "AdminStaffInformation" && (
               <>
                 <Button
                   variant="outlined"
@@ -176,7 +176,7 @@ export default function OrganizationModal({ open, handleClose, addRecord, update
               </>
             )}
           </Box>
-          {role != "AdminStaffInformation" && selectedRow != null && (
+          {role === "AdminStaffInformation" && selectedRow != null && (
             <Box>
               <Button
                 color='error'
