@@ -86,7 +86,7 @@ const StaffProfile: React.FC<StaffInformationProps> = ({ staffData }: any) => {
       let thaiTitle = titlesTh[i] || "";
   
       if (engTitle && thaiTitle) {
-        thaiTitle = (i != 0 && !thaiTitle?.includes("รักษาการหัวหน้าส่วน") && !thaiTitle?.includes("หัวหน้าฝ่าย") && !thaiTitle?.includes("หัวหน้าส่วนงาน")) ? "รักษาการหัวหน้าส่วน " + thaiTitle : thaiTitle;
+        thaiTitle = (i != 0 && !thaiTitle?.includes("รักษาการ") && !thaiTitle?.includes("รักษาการหัวหน้าส่วน") && !thaiTitle?.includes("หัวหน้าฝ่าย") && !thaiTitle?.includes("หัวหน้าส่วนงาน")) ? "รักษาการหัวหน้าส่วน " + thaiTitle : thaiTitle;
         result.push(`${engTitle} / ${thaiTitle}`);
       }
       else if (engTitle) {
