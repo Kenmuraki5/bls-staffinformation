@@ -12,11 +12,11 @@ export async function middleware(request: NextRequest) {
     return NextResponse.redirect(new URL(`${process.env.NEXT_PUBLIC_AUTH_URL}/login`, request.url));
   }
 
-  // const decodedToken: any = await parseJwt(session);
+  const decodedToken: any = await parseJwt(session);
 
-  // if (!decodedToken || !decodedToken.roles || decodedToken.roles.length === 0) {
-  //   return NextResponse.redirect(new URL(`${process.env.NEXT_PUBLIC_AUTH_URL}/login`, request.url));
-  // }
+  if (!decodedToken || !decodedToken.roles || decodedToken.roles.length === 0) {
+    return NextResponse.redirect(new URL(`${process.env.NEXT_PUBLIC_AUTH_URL}/login`, request.url));
+  }
 
   return NextResponse.next();
 }
